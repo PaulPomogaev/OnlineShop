@@ -27,6 +27,12 @@ namespace OnlineShopWebApp.Data
         public static void Add(Product product)
         {
             var products = GetAll();
+            int newId = 1;
+            if(products.Any())
+            {
+                newId = products.Max(p => p.Id) + 1;
+            }
+            product.Id = newId;
             products.Add(product);
             SaveAll(products);
         }
