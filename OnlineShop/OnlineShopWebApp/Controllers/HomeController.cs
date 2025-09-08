@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Data;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -15,6 +17,8 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
+            var products = ProductJsonRepository.GetAll();
+            ViewBag.Products = products;
             return View();
         }
 
