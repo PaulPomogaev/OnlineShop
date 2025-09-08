@@ -15,7 +15,7 @@ namespace OnlineShopWebApp.Controllers
 
             if(c == "/" && num2 == 0)
             {
-                return "Ошибка, делай что хочешь, но на ноль дельить нельзя";
+                return "Ошибка! Делай что хочешь, но на ноль дельить нельзя!";
             }
 
             double result = c switch
