@@ -1,6 +1,6 @@
 ﻿namespace OnlineShopWebApp.Data
 {
-    public static class ProductRepository
+    public static class ProductJsonRepository
     {
     }
 }
