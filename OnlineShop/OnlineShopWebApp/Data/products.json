@@ -1,3 +1,21 @@
-{
+[
+    {
+      "Id": 1,
+      "Name": "1",
+      "Cost": 1,
+      "Description": "1"
+    },
+    {
+      "Id": 2,
+      "Name": "2",
+      "Cost": 2,
+      "Description": "2"
+    },
+    {
+      "Id": 3,
+      "Name": "3",
+      "Cost": 3,
+      "Description": "3"
+    }
+]
 
-}
