@@ -16,14 +16,10 @@ namespace OnlineShopWebApp
 
             app.MapStaticAssets();
 
-            app.MapControllerRoute(
-                name: "calculator",
-                pattern: "calculator/index/{num1?}/{num2?}/{operation?}",
-                defaults: new { controller = "Calculator", action = "Index" });
-
+            
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Home}/{action=Index}/{num1?}/{num2?}/{operation?}")
                 .WithStaticAssets();
 
             app.Run();
