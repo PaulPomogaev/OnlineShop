@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Data;
+using System.Text;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -17,9 +18,24 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            var products = ProductJsonRepository.GetAll();
-            ViewBag.Products = products;
             return View();
+
+        }
+
+        [Route("Home/Index")]
+        public IActionResult HomeIndex()
+        {
+            var products = ProductJsonRepository.GetAll();
+            var stringBuilder = new StringBuilder();
+            foreach (var product in products)
+            {
+                stringBuilder.AppendLine($"Id{product.Id}");
+                stringBuilder.AppendLine($"Name{product.Name}");
+                stringBuilder.AppendLine($"Cost{product.Cost}");
+                stringBuilder.AppendLine();
+            }
+
+            return Content(stringBuilder.ToString(), "text/plain");
         }
 
         public IActionResult Privacy()
