@@ -15,12 +15,7 @@ namespace OnlineShopWebApp
             app.UseRouting();
 
             app.MapStaticAssets();
-
-            app.MapControllerRoute(
-                name: "calculator",
-                pattern: "calculator/index/{num1?}/{num2?}",
-                defaults: new { controller = "Calculator", action = "Index" }); // маршрут для калькулятора
-
+                        
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
