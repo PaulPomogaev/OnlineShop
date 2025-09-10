@@ -18,20 +18,13 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
-
-        }
-
-        [Route("Home/Index")]
-        public IActionResult HomeIndex()
-        {
             var products = ProductJsonRepository.GetAll();
             var stringBuilder = new StringBuilder();
             foreach (var product in products)
             {
-                stringBuilder.AppendLine($"Id{product.Id}");
-                stringBuilder.AppendLine($"Name{product.Name}");
-                stringBuilder.AppendLine($"Cost{product.Cost}");
+                stringBuilder.AppendLine($"{product.Id}");
+                stringBuilder.AppendLine($"{product.Name}");
+                stringBuilder.AppendLine($"{product.Cost}");
                 stringBuilder.AppendLine();
             }
 
