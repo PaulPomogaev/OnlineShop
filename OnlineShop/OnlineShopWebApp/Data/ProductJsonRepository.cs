@@ -36,5 +36,11 @@ namespace OnlineShopWebApp.Data
             products.Add(product);
             SaveAll(products);
         }
+
+        public static Product ReturnById(int id)
+        {
+            var products = GetAll();
+            return products.FirstOrDefault(p => p.Id == id);
+        }
     }
 }
