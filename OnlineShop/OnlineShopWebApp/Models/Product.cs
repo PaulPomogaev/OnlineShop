@@ -8,13 +8,6 @@
         public  string Description { get; set; }
 
         public Product() { }
-
-        public Product(string name, decimal cost, string description)
-        {
-           
-            Name = name;
-            Cost = cost;
-            Description = description;
-        }
+                
     }
 }
