@@ -30,7 +30,7 @@ namespace OnlineShopWebApp.Data
 
         public static List<Product> GetAll()
         {
-            if(!File.Exists(_filePath))
+            if (!File.Exists(_filePath))
             {
                 return new List<Product>();
             }
@@ -38,6 +38,9 @@ namespace OnlineShopWebApp.Data
             var json = File.ReadAllText(_filePath);
             return JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
 
+        }
+
+            return products;
         }
 
         public static void SaveAll(List<Product> products)
@@ -53,6 +56,12 @@ namespace OnlineShopWebApp.Data
             var products = GetAll();
             products.Add(product);
             SaveAll(products);
+        }
+
+        public static Product ReturnById(int id)
+        {
+            var products = GetAll();
+            return products.FirstOrDefault(p => p.Id == id);
         }
     }
 }
