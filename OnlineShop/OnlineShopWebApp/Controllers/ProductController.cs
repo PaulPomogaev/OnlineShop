@@ -21,6 +21,7 @@ namespace OnlineShopWebApp.Controllers
                 stringBuilder.AppendLine($"Id{product.Id}");
                 stringBuilder.AppendLine($"Name{product.Name}");
                 stringBuilder.AppendLine($"Cost{product.Cost}");
+                stringBuilder.AppendLine($"Cost{product.Description}");
                 stringBuilder.AppendLine();
             
             return Content(stringBuilder.ToString(), "text/plain");
