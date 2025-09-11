@@ -6,7 +6,27 @@ namespace OnlineShopWebApp.Data
     public static class ProductJsonRepository
     {
         private static string _filePath = "Data/products.json";
-        private static int _nextId = 1;
+        private static int _nextId;
+
+        static ProductJsonRepository()
+        {
+            InitializeNextId();
+        }
+
+        private static void InitializeNextId()
+        {
+            if(!File.Exists(_filePath))
+            {
+                _nextId = 1;
+                return;
+            }
+
+            var json = File.ReadAllText(_filePath);
+            var products = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
+
+            _nextId = products.Any() ? products.Max(p => p.Id) + 1 : 1;
+
+        }
 
         public static List<Product> GetAll()
         {
@@ -16,14 +36,8 @@ namespace OnlineShopWebApp.Data
             }
 
             var json = File.ReadAllText(_filePath);
-            var products = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
+            return JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
 
-            if(products.Any())
-            {
-                _nextId = products.Max(p => p.Id) + 1;
-            }
-
-            return products;
         }
 
         public static void SaveAll(List<Product> products)
