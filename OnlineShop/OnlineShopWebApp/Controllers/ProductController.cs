@@ -18,10 +18,10 @@ namespace OnlineShopWebApp.Controllers
 
             var stringBuilder = new StringBuilder();
             
-                stringBuilder.AppendLine($"Id{product.Id}");
-                stringBuilder.AppendLine($"Name{product.Name}");
-                stringBuilder.AppendLine($"Cost{product.Cost}");
-                stringBuilder.AppendLine($"Cost{product.Description}");
+                stringBuilder.AppendLine($"{product.Id}");
+                stringBuilder.AppendLine($"{product.Name}");
+                stringBuilder.AppendLine($"{product.Cost}");
+                stringBuilder.AppendLine($"{product.Description}");
                 stringBuilder.AppendLine();
             
             return Content(stringBuilder.ToString(), "text/plain");
