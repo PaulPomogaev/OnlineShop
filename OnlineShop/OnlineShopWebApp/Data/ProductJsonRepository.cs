@@ -40,9 +40,7 @@ namespace OnlineShopWebApp.Data
 
         }
 
-            return products;
-        }
-
+       
         public static void SaveAll(List<Product> products)
         {
             var json = JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true });
