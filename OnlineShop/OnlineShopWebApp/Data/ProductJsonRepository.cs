@@ -1,4 +1,5 @@
 ﻿using OnlineShopWebApp.Models;
+using System.Text;
 using System.Text.Json;
 
 namespace OnlineShopWebApp.Data
@@ -21,7 +22,7 @@ namespace OnlineShopWebApp.Data
                 return;
             }
 
-            var json = File.ReadAllText(_filePath);
+            var json = File.ReadAllText(_filePath, Encoding.UTF8);
             var products = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
 
             _nextId = products.Any() ? products.Max(p => p.Id) + 1 : 1;
@@ -35,7 +36,7 @@ namespace OnlineShopWebApp.Data
                 return new List<Product>();
             }
 
-            var json = File.ReadAllText(_filePath);
+            var json = File.ReadAllText(_filePath, Encoding.UTF8);
             return JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
 
         }
@@ -44,7 +45,7 @@ namespace OnlineShopWebApp.Data
         public static void SaveAll(List<Product> products)
         {
             var json = JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filePath, json);
+            File.WriteAllText(_filePath, json, Encoding.UTF8);
         }
 
         public static void Add(Product product)
