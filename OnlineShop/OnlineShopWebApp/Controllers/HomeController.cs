@@ -29,7 +29,7 @@ namespace OnlineShopWebApp.Controllers
                 stringBuilder.AppendLine();
             }
 
-            return Content(stringBuilder.ToString(), "text/plain");
+            return Content(stringBuilder.ToString(), "text/plain", Encoding.UTF8);
         }
 
         public IActionResult Privacy()

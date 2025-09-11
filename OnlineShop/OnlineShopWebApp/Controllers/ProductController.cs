@@ -24,7 +24,7 @@ namespace OnlineShopWebApp.Controllers
                 stringBuilder.AppendLine($"{product.Description}");
                 stringBuilder.AppendLine();
             
-            return Content(stringBuilder.ToString(), "text/plain");
+            return Content(stringBuilder.ToString(), "text/plain", Encoding.UTF8);
         }
     }
 }
