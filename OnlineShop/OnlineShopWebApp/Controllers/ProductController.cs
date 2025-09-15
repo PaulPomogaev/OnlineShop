@@ -10,21 +10,13 @@ namespace OnlineShopWebApp.Controllers
     {
         public IActionResult Index(int id)
         {
-            var product = ProductJsonRepository.GetAll().FirstOrDefault(p => p.Id == id);
+            var product = ProductJsonRepository.ReturnById(id);
             if(product == null)
             {
-                return Content($"Товар с ID {id} не найден");
+                return View($"Товар с ID {id} не найден");
             }
 
-            var stringBuilder = new StringBuilder();
-            
-                stringBuilder.AppendLine($"{product.Id}");
-                stringBuilder.AppendLine($"{product.Name}");
-                stringBuilder.AppendLine($"{product.Cost}");
-                stringBuilder.AppendLine($"{product.Description}");
-                stringBuilder.AppendLine();
-            
-            return Content(stringBuilder.ToString(), "text/plain", Encoding.UTF8);
+            return View(product);
         }
     }
 }
