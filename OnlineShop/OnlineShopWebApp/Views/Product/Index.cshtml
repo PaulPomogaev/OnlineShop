@@ -1,6 +1,6 @@
 ﻿@model Product
 @{
-    ViewData["Title"] = $"Товар: {Model.Name}";
+    ViewData["Title"] = Model != null ? $"Товар: {Model.Name}" : "Товар не найден";
 }
 
 <div class="row justify-content-center">
