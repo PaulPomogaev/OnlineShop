@@ -13,7 +13,7 @@ namespace OnlineShopWebApp.Controllers
             var product = ProductJsonRepository.ReturnById(id);
             if(product == null)
             {
-                return View($"Товар с ID {id} не найден");
+                return View(null);
             }
 
             return View(product);
