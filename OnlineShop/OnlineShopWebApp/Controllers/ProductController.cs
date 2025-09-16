@@ -11,11 +11,7 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index(int id)
         {
             var product = ProductJsonRepository.ReturnById(id);
-            if(product == null)
-            {
-                return View(null);
-            }
-
+            
             return View(product);
         }
     }
