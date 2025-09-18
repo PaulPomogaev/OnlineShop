@@ -60,14 +60,14 @@ namespace OnlineShopWebApp.Data
 
         public static void AddToCart(int productId, int quantity = 1, string userId = "guest")
         {
-            var cart = GetCart(userId);
             var product = ProductJsonRepository.ReturnById(productId);
-
-            if(product == null)
+            if (product == null)
             {
                 return;
             }
 
+            var cart = GetCart(userId);
+            
             var existingItem = cart.Items.FirstOrDefault(item => item.Product.Id == productId);
 
             if(existingItem != null)
