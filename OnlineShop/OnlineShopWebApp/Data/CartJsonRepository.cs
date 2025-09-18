@@ -6,59 +6,56 @@ namespace OnlineShopWebApp.Data
 {
     public class CartJsonRepository
     {
-        private static string _filepath = "Data/cart.json";
-        private static int _nextCartId = 1;
+        private static string _filepath = "Data/carts.json";
         private static int _nextItemId = 1;
-
-
-        static CartJsonRepository()
+               
+        private static List<Cart> GetAllCarts()
         {
-            InitializeNextIds();
-        }
-
-        private static void InitializeNextIds()
-        {
-            if(!File.Exists(_filepath))
+            if (!File.Exists(_filepath))
             {
-                return;
+                return new List<Cart>();
             }
-
             var json = File.ReadAllText(_filepath, Encoding.UTF8);
-            var cart = JsonSerializer.Deserialize<Cart>(json);
-
-            if(cart != null)
-            {
-                _nextCartId += cart.Id;
-                
-                if(cart.Items.Any())
-                {
-                    _nextItemId = cart.Items.Max(i => i.Id) + 1;
-                }
-            }
+            return JsonSerializer.Deserialize<List<Cart>>(json) ?? new List<Cart>();
         }
 
         public static Cart GetCart(string userId = "guest")
         {
-            if(!File.Exists(_filepath))
-            {
-                return new Cart { Id = _nextCartId++, UserId = userId };
-            }
-
-            var json = File.ReadAllText(_filepath, Encoding.UTF8);
-            var cart = JsonSerializer.Deserialize<Cart>(json);
+            var carts = GetAllCarts();
+            var cart = carts.FirstOrDefault(c => c.UserId == userId);
 
             if(cart == null)
             {
-                return new Cart { Id = _nextCartId++, UserId = userId };
+                cart = new Cart { Id = carts.Any() ? carts.Max(c => c.Id) + 1 : 1, UserId = userId };
+                carts.Add(cart);
+                SaveAllCarts(carts);
             }
 
             return cart;
         }
 
+        public static void SaveAllCarts(List<Cart> carts)
+        {
+            var json = JsonSerializer.Serialize(carts, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_filepath, json, Encoding.UTF8);
+        }
+
         public static void SaveCart (Cart cart)
         {
-            var json = JsonSerializer.Serialize(cart, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filepath, json, Encoding.UTF8);
+            var carts = GetAllCarts();
+            var existingCart = carts.FirstOrDefault(c => c.UserId == cart.UserId);
+
+            if(existingCart != null)
+            {
+                existingCart.Items = cart.Items;
+            }
+            else
+            {
+                cart.Id = carts.Any() ? carts.Max(c => c.Id) + 1 : 1;
+                carts.Add(cart);
+            }
+              
+            SaveAllCarts(carts);
         }
 
         public static void AddToCart(int productId, int quantity = 1, string userId = "guest")
