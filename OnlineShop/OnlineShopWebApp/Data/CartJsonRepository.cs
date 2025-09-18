@@ -9,7 +9,7 @@ namespace OnlineShopWebApp.Data
         private static string _filepath = "Data/carts.json";
         private static int _nextItemId = 1;
                
-        private static List<Cart> GetAllCarts()
+        private static List<Cart> GetAll()
         {
             if (!File.Exists(_filepath))
             {
@@ -21,7 +21,7 @@ namespace OnlineShopWebApp.Data
 
         public static Cart GetCart(string userId = "guest")
         {
-            var carts = GetAllCarts();
+            var carts = GetAll();
             var cart = carts.FirstOrDefault(c => c.UserId == userId);
 
             if(cart == null)
@@ -42,7 +42,7 @@ namespace OnlineShopWebApp.Data
 
         public static void SaveCart (Cart cart)
         {
-            var carts = GetAllCarts();
+            var carts = GetAll();
             var existingCart = carts.FirstOrDefault(c => c.UserId == cart.UserId);
 
             if(existingCart != null)
