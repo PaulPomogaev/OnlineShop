@@ -1,6 +1,8 @@
-﻿{
-  "Id": 0,
-  "UserId": "guest",
-  "Items": [],
-  "TotalCost": 0
-}
+﻿[
+  {
+    "Id": 1,
+    "UserId": "guest",
+    "Items": [],
+    "TotalCost": 0
+  }
+]
