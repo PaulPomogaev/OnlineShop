@@ -1,0 +1,74 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Ваша корзина</h2>
+
+    @if (Model != null && Model.Items.Any())
+    {
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <table class="table table-striped table-hover align-middle mb-4">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Наименование товара</th>
+                            <th>Цена</th>
+                            <th>Количество</th>
+                            <th>Стоимость</th>
+                            <th>Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            var item = Model.Items[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Product.Cost.ToString("C")</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold">@item.Cost.ToString("C")</td>
+                                <td>
+                                    <a asp-controller="Cart" asp-action="Remove" asp-route-itemId="@item.Id"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Удалить товар из корзины?')">
+                                        Удалить
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-success">
+                            <td colspan="4" class="text-end fw-bold">Итого:</td>
+                            <td class="fw-bold">@Model.TotalCost.ToString("C")</td>
+                            <td></td> 
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                    <a asp-controller="Cart" asp-action="Clear"
+                       class="btn btn-outline-danger me-2"
+                       onclick="return confirm('Очистить всю корзину?')">
+                        Очистить корзину
+                    </a>
+                    <a class="btn btn-success btn-lg" href="#">Оформить заказ</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <h4>В корзине нет товаров!</h4>
+        </div>
+    }
+
+    <div class="text-center">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Продолжить покупки</a>
+    </div>
+</div>

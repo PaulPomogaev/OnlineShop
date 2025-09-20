@@ -13,7 +13,9 @@
                     <h4>@Model.Name</h4>
                     <h2 class="text-danger">@Model.Cost.ToString("C")</h2>
 
-                    <a class="btn btn-success" href="#">Добавить в корзину</a>
+                    <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success">
+                        Добавить в корзину
+                    </a>
                 </div>
             </div>
         </div>
