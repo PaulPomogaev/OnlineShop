@@ -95,7 +95,14 @@ namespace OnlineShopWebApp.Data
 
             if(itemToRemove != null)
             {
-                cart.Items.Remove(itemToRemove);
+                if(itemToRemove.Quantity > 1)
+                {
+                    itemToRemove.Quantity--;
+                }
+                else
+                {
+                    cart.Items.Remove(itemToRemove);
+                }
                 SaveCart(cart);
             }
         }
