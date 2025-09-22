@@ -93,15 +93,22 @@ namespace OnlineShopWebApp.Data
             SaveCart(cart);
         }
 
-        public void RemoveFromCart(int itemId, string userId = "guest")
+        public static void RemoveFromCart(int itemId, string userId = "guest")
         {
             var cart = GetCart(userId);
 
             var itemToRemove = cart.Items.FirstOrDefault(item => item.Id == itemId);
 
-            if(itemToRemove != null)
+            if (itemToRemove != null)
             {
-                cart.Items.Remove(itemToRemove);
+                if (itemToRemove.Quantity > 1)
+                {
+                    itemToRemove.Quantity--;
+                }
+                else
+                {
+                    cart.Items.Remove(itemToRemove);
+                }
                 SaveCart(cart);
             }
         }
