@@ -93,7 +93,7 @@ namespace OnlineShopWebApp.Data
             SaveCart(cart);
         }
 
-        public static void RemoveFromCart(int itemId, string userId = "guest")
+        public void RemoveFromCart(int itemId, string userId = "guest")
         {
             var cart = GetCart(userId);
 
