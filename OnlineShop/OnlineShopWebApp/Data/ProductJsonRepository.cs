@@ -4,17 +4,17 @@ using System.Text.Json;
 
 namespace OnlineShopWebApp.Data
 {
-    public static class ProductJsonRepository
+    public class ProductJsonRepository
     {
-        private static string _filePath = "Data/products.json";
-        private static int _nextId;
+        private readonly string _filePath = "Data/products.json";
+        private int _nextId;
 
-        static ProductJsonRepository()
+        public ProductJsonRepository()
         {
             InitializeNextId();
         }
 
-        private static void InitializeNextId()
+        private void InitializeNextId()
         {
             if(!File.Exists(_filePath))
             {
@@ -29,7 +29,7 @@ namespace OnlineShopWebApp.Data
 
         }
 
-        public static List<Product> GetAll()
+        public List<Product> GetAll()
         {
             if (!File.Exists(_filePath))
             {
@@ -42,13 +42,13 @@ namespace OnlineShopWebApp.Data
         }
 
        
-        public static void SaveAll(List<Product> products)
+        public void SaveAll(List<Product> products)
         {
             var json = JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json, Encoding.UTF8);
         }
 
-        public static void Add(Product product)
+        public void Add(Product product)
         {
             
             product.Id = _nextId++;
@@ -57,7 +57,7 @@ namespace OnlineShopWebApp.Data
             SaveAll(products);
         }
 
-        public static Product? ReturnById(int id)
+        public Product? ReturnById(int id)
         {
             var products = GetAll();
             return products.FirstOrDefault(p => p.Id == id);

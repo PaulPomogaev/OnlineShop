@@ -8,9 +8,16 @@ namespace OnlineShopWebApp.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly ProductJsonRepository _productRepository;
+
+        public ProductController(ProductJsonRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
         public IActionResult Index(int id)
         {
-            var product = ProductJsonRepository.ReturnById(id);
+            var product = _productRepository.ReturnById(id);
             
             return View(product);
         }

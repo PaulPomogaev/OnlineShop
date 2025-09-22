@@ -6,10 +6,16 @@ namespace OnlineShopWebApp.Data
 {
     public class CartJsonRepository
     {
-        private static string _filepath = "Data/carts.json";
-        private static int _nextItemId = 1;
-               
-        private static List<Cart> GetAll()
+        private readonly string _filepath = "Data/carts.json";
+        private int _nextItemId = 1;
+        private readonly ProductJsonRepository _productRepository;
+
+        public CartJsonRepository(ProductJsonRepository productJsonRepository)
+        {
+            _productRepository = productJsonRepository;
+        }
+
+        private List<Cart> GetAll()
         {
             if (!File.Exists(_filepath))
             {
@@ -19,7 +25,7 @@ namespace OnlineShopWebApp.Data
             return JsonSerializer.Deserialize<List<Cart>>(json) ?? new List<Cart>();
         }
 
-        public static Cart GetCart(string userId = "guest")
+        public Cart GetCart(string userId = "guest")
         {
             var carts = GetAll();
             var cart = carts.FirstOrDefault(c => c.UserId == userId);
@@ -34,13 +40,13 @@ namespace OnlineShopWebApp.Data
             return cart;
         }
 
-        public static void SaveAllCarts(List<Cart> carts)
+        public void SaveAllCarts(List<Cart> carts)
         {
             var json = JsonSerializer.Serialize(carts, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filepath, json, Encoding.UTF8);
         }
 
-        public static void SaveCart (Cart cart)
+        public void SaveCart (Cart cart)
         {
             var carts = GetAll();
             var existingCart = carts.FirstOrDefault(c => c.UserId == cart.UserId);
@@ -58,9 +64,9 @@ namespace OnlineShopWebApp.Data
             SaveAllCarts(carts);
         }
 
-        public static void AddToCart(int productId, int quantity = 1, string userId = "guest")
+        public void AddToCart(int productId, int quantity = 1, string userId = "guest")
         {
-            var product = ProductJsonRepository.ReturnById(productId);
+            var product = _productRepository.ReturnById(productId);
             if (product == null)
             {
                 return;
@@ -87,7 +93,7 @@ namespace OnlineShopWebApp.Data
             SaveCart(cart);
         }
 
-        public static void RemoveFromCart(int itemId, string userId = "guest")
+        public void RemoveFromCart(int itemId, string userId = "guest")
         {
             var cart = GetCart(userId);
 
@@ -100,7 +106,7 @@ namespace OnlineShopWebApp.Data
             }
         }
 
-        public static void ClearCart(string userId = "guest")
+        public void ClearCart(string userId = "guest")
         {
             var cart = GetCart(userId);
             cart.Items.Clear();
