@@ -8,12 +8,20 @@ namespace OnlineShopWebApp.Data
     public class CartJsonRepository : ICartRepository
     {
         private readonly string _filepath = "Data/carts.json";
-        private int _nextItemId = 1;
+        private int _nextItemId;
         private readonly IProductRepository _productRepository;
 
         public CartJsonRepository(IProductRepository productJsonRepository)
         {
             _productRepository = productJsonRepository;
+            InitializeNextItemId();
+        }
+
+        private void InitializeNextItemId()
+        {
+            var carts = GetAll();
+            var allItemsIds = carts.SelectMany(c => c.Items.Select(i => i.Id)).ToList();
+            _nextItemId = allItemsIds.Any() ? allItemsIds.Max() + 1 : 1;
         }
 
         private List<Cart> GetAll()
@@ -118,6 +126,33 @@ namespace OnlineShopWebApp.Data
         {
             var cart = GetCart(userId);
             cart.Items.Clear();
+            SaveCart(cart);
+        }
+
+        public void UpdateItemQuantity(int itemId, int newQuantity, string userId = "guest")
+        {
+            if (newQuantity < 0)
+            {
+                newQuantity = 0;
+            }
+
+            var cart = GetCart(userId);
+
+            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+
+            if(item == null)
+            {
+                return;
+            }
+
+            if(newQuantity == 0)
+            {
+                cart.Items.Remove(item);
+            }
+            else
+            {
+                item.Quantity = newQuantity;
+            }
             SaveCart(cart);
         }
     }

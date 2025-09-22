@@ -36,5 +36,33 @@ namespace OnlineShopWebApp.Controllers
             _cartRepository.ClearCart();
             return RedirectToAction("Index");
         }
+
+        public IActionResult IncreaseQuantity(int itemId)
+        {
+            var cart = _cartRepository.GetCart();
+
+            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+
+            if(item != null)
+            {
+                _cartRepository.UpdateItemQuantity(itemId, item.Quantity + 1);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DecreaseQuantity(int itemId)
+        {
+            var cart = _cartRepository.GetCart();
+
+            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+
+            if (item != null)
+            {
+                _cartRepository.UpdateItemQuantity(itemId, item.Quantity - 1);
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
