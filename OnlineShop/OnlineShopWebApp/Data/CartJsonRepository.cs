@@ -1,16 +1,17 @@
-﻿using OnlineShopWebApp.Models;
+﻿using OnlineShopWebApp.Interfaces;
+using OnlineShopWebApp.Models;
 using System.Text;
 using System.Text.Json;
 
 namespace OnlineShopWebApp.Data
 {
-    public class CartJsonRepository
+    public class CartJsonRepository : ICartRepository
     {
         private readonly string _filepath = "Data/carts.json";
         private int _nextItemId = 1;
-        private readonly ProductJsonRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public CartJsonRepository(ProductJsonRepository productJsonRepository)
+        public CartJsonRepository(IProductRepository productJsonRepository)
         {
             _productRepository = productJsonRepository;
         }
@@ -66,7 +67,7 @@ namespace OnlineShopWebApp.Data
 
         public void AddToCart(int productId, int quantity = 1, string userId = "guest")
         {
-            var product = _productRepository.ReturnById(productId);
+            var product = _productRepository.GetById(productId);
             if (product == null)
             {
                 return;

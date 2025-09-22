@@ -4,15 +4,16 @@ using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Data;
 using System.Text;
+using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ProductJsonRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public HomeController(ILogger<HomeController> logger, ProductJsonRepository productRepository)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository)
         {
             _logger = logger;
             _productRepository = productRepository;

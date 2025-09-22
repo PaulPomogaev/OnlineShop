@@ -1,10 +1,11 @@
-﻿using OnlineShopWebApp.Models;
+﻿using OnlineShopWebApp.Interfaces;
+using OnlineShopWebApp.Models;
 using System.Text;
 using System.Text.Json;
 
 namespace OnlineShopWebApp.Data
 {
-    public class ProductJsonRepository
+    public class ProductJsonRepository : IProductRepository
     {
         private readonly string _filePath = "Data/products.json";
         private int _nextId;
@@ -42,7 +43,7 @@ namespace OnlineShopWebApp.Data
         }
 
        
-        public void SaveAll(List<Product> products)
+        private void SaveAll(List<Product> products)
         {
             var json = JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json, Encoding.UTF8);
@@ -57,7 +58,7 @@ namespace OnlineShopWebApp.Data
             SaveAll(products);
         }
 
-        public Product? ReturnById(int id)
+        public Product? GetById(int id)
         {
             var products = GetAll();
             return products.FirstOrDefault(p => p.Id == id);
