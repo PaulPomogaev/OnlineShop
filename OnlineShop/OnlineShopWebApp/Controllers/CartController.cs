@@ -45,7 +45,8 @@ namespace OnlineShopWebApp.Controllers
 
             if(item != null)
             {
-                _cartRepository.UpdateItemQuantity(itemId, item.Quantity + 1);
+                var productId = item.Product.Id;
+                _cartRepository.AddToCart(productId, 1);
             }
 
             return RedirectToAction("Index");
