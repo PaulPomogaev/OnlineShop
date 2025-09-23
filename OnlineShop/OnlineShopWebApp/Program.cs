@@ -12,9 +12,9 @@ namespace OnlineShopWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IProductRepository, ProductJsonRepository>();
+            builder.Services.AddSingleton<IProductRepository, ProductJsonRepository>();
 
-            builder.Services.AddScoped<ICartRepository, CartJsonRepository>();
+            builder.Services.AddSingleton<ICartRepository, CartJsonRepository>();
 
             var app = builder.Build();
 
