@@ -9,12 +9,10 @@ namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly ProductJsonRepository _productRepository;
 
-        public HomeController(ILogger<HomeController> logger, ProductJsonRepository productRepository)
+        public HomeController(ProductJsonRepository productRepository)
         {
-            _logger = logger;
             _productRepository = productRepository;
         }
 
