@@ -1,10 +1,11 @@
 ﻿using OnlineShopWebApp.Models;
 using System.Text.Json;
 using System.Text;
+using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp.Data
 {
-    public class OrderJsonRepository
+    public class OrderJsonRepository : IOrderRepository
     {
         private readonly string _filePath = "Data/orders.json";
         private int _nextId;
@@ -60,6 +61,12 @@ namespace OnlineShopWebApp.Data
             var json = JsonSerializer.Serialize(orders, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json, Encoding.UTF8);
         }
+
+        public Order CreateOrder(Cart cart)
+        {
+            return CreateOrder(cart, string.Empty, string.Empty, string.Empty);
+        }
+
         public Order CreateOrder (Cart cart, string customerName, string address, string phone)
         {
             var orderItems = cart.Items.Select(item => new OrderItem

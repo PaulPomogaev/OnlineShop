@@ -16,6 +16,8 @@ namespace OnlineShopWebApp
 
             builder.Services.AddSingleton<ICartRepository, CartJsonRepository>();
 
+            builder.Services.AddSingleton<IOrderRepository, OrderJsonRepository>();
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();
