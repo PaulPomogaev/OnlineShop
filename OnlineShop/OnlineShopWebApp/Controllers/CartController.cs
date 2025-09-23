@@ -39,30 +39,15 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult IncreaseQuantity(int itemId)
         {
-            var cart = _cartRepository.GetCart();
-
-            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
-
-            if(item != null)
-            {
-                var productId = item.Product.Id;
-                _cartRepository.AddToCart(productId, 1);
-            }
+            _cartRepository.IncreaseItemQuantity(itemId);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult DecreaseQuantity(int itemId)
         {
-            var cart = _cartRepository.GetCart();
-
-            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
-
-            if (item != null)
-            {
-                _cartRepository.UpdateItemQuantity(itemId, item.Quantity - 1);
-            }
-
+            _cartRepository.DecreaseItemQuantity(itemId);
+            
             return RedirectToAction("Index");
         }
     }

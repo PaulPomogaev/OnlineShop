@@ -129,29 +129,39 @@ namespace OnlineShopWebApp.Data
             SaveCart(cart);
         }
 
-        public void UpdateItemQuantity(int itemId, int newQuantity, string userId = "guest")
+        public void IncreaseItemQuantity(int itemId, string userId = "guest")
         {
-            if (newQuantity < 0)
-            {
-                newQuantity = 0;
-            }
-
             var cart = GetCart(userId);
 
             var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
 
-            if(item == null)
+            if (item == null)
             {
                 return;
             }
 
-            if(newQuantity == 0)
+            item.Quantity++;
+
+            SaveCart(cart);
+        }
+
+        public void DecreaseItemQuantity(int itemId, string userId = "guest")
+        {
+            var cart = GetCart(userId);
+
+            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+
+            if (item == null)
             {
-                cart.Items.Remove(item);
+                return;
+            }
+            if(item.Quantity > 1)
+            {
+                item.Quantity--;
             }
             else
             {
-                item.Quantity = newQuantity;
+                cart.Items.Remove(item);
             }
             SaveCart(cart);
         }
