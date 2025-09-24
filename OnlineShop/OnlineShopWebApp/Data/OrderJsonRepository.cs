@@ -79,9 +79,12 @@ namespace OnlineShopWebApp.Data
             {
                 UserId = cart.UserId,
                 Items = orderItems,
-                CustomerName = customerName,
-                Address = address,
-                Phone = phone,
+                Customer = new CustomerInfo
+                {
+                    Name = customerName,
+                    Address = address,
+                    Phone = phone
+                },
                 CreatedDate = DateTime.Now
 
             };

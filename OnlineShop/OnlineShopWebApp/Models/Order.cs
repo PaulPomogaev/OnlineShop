@@ -8,8 +8,6 @@
         public decimal TotalCost => Items.Sum(item => item.Cost);
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public string? CustomerName { get; set; }
-        public string? Address { get; set; }
-        public string? Phone { get; set; }
+        public CustomerInfo Customer { get; set; } = new();
     }
 }
