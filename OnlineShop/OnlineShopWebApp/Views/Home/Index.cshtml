@@ -20,6 +20,12 @@
                         <a asp-controller="Cart" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-success w-100">
                             Добавить в корзину
                         </a>
+                        <form asp-controller="Favorite" asp-action="Add" method="post" style="display:inline;">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                В избранное
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
