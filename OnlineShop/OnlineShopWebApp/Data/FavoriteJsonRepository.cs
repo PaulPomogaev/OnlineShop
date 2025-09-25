@@ -26,18 +26,10 @@ namespace OnlineShopWebApp.Data
             File.WriteAllText(_filepath, json, Encoding.UTF8);
         }
 
-        public Favorite Get(string userId = "guest")
+        public Favorite? Get(string userId = "guest")
         {
             var favorites = GetAll();
             var favorite = favorites.FirstOrDefault(f => f.UserId == userId);
-
-            if (favorite == null)
-            {
-                favorite = new Favorite { UserId = userId };
-                favorites.Add(favorite);
-                SaveAll(favorites);
-            }
-
             return favorite;
         }
 
