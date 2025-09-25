@@ -16,7 +16,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            var favorite = _favoriteRepository.GetFavorite();
+            var favorite = _favoriteRepository.Get();
             var products = favorite.ProductIds.Select(id => _productRepository.GetById(id)).Where(p => p != null).ToList();
             return View(products);
         }
@@ -24,21 +24,21 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public IActionResult Add(int productId)
         {
-            _favoriteRepository.AddToFavorite(productId);
+            _favoriteRepository.Add(productId);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult Delete(int productId)
         {
-            _favoriteRepository.RemoveFromFavorite(productId);
+            _favoriteRepository.Remove(productId);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult Clear()
         {
-            _favoriteRepository.ClearFavorite();
+            _favoriteRepository.Clear();
             return RedirectToAction("Index");
         }
     }

@@ -26,7 +26,7 @@ namespace OnlineShopWebApp.Data
             File.WriteAllText(_filepath, json, Encoding.UTF8);
         }
 
-        public Favorite GetFavorite(string userId = "guest")
+        public Favorite Get(string userId = "guest")
         {
             var favorites = GetAll();
             var favorite = favorites.FirstOrDefault(f => f.UserId == userId);
@@ -41,7 +41,7 @@ namespace OnlineShopWebApp.Data
             return favorite;
         }
 
-        public void AddToFavorite(int productId, string userId = "guest")
+        public void Add(int productId, string userId = "guest")
         {
             var favorites = GetAll();
             var favorite = favorites.FirstOrDefault(f => f.UserId == userId);
@@ -59,7 +59,7 @@ namespace OnlineShopWebApp.Data
             }
         }
 
-        public void ClearFavorite(string userId = "guest")
+        public void Clear(string userId = "guest")
         {
             var favorites = GetAll();
             var favorite = favorites.FirstOrDefault(f => f.UserId == userId);
@@ -70,7 +70,7 @@ namespace OnlineShopWebApp.Data
             }
         }
 
-        public void RemoveFromFavorite(int productId, string userId = "guest")
+        public void Remove(int productId, string userId = "guest")
         {
             var favorites = GetAll();
             var favorite = favorites.FirstOrDefault(f => f.UserId == userId);
