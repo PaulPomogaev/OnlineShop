@@ -29,23 +29,18 @@
                            asp-route-productId="@product.Id">
                             Добавить в корзину
                         </a>
-                        <form asp-controller="Favorite" asp-action="Delete" method="post" style="display:inline;">
-                            <input type="hidden" name="productId" value="@product.Id" />
-                            <button type="submit" class="btn btn-outline-danger mt-3">
-                                Убрать из избранного
-                            </button>
-                        </form>
+                        <a asp-controller="Favorite" asp-action="Delete" asp-route-productId="@product.Id" class="btn btn-outline-danger mt-3">
+                            Убрать из избранного
+                        </a>
                     </div>
                 </div>
             </div>
         }
 
         <div class="text-center mt-5">
-            <form asp-controller="Favorite" asp-action="Clear" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-outline-danger">
-                    Очистить список избранного
-                </button>
-            </form>
+            <a asp-controller="Favorite" asp-action="Clear" class="btn btn-outline-danger">
+                Очистить список избранного
+            </a>
         </div>
     </div>
 }

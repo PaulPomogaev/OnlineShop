@@ -27,21 +27,18 @@ namespace OnlineShopWebApp.Controllers
             return View(products);
         }
 
-        [HttpPost]
         public IActionResult Add(int productId)
         {
             _favoriteRepository.Add(productId);
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
         public IActionResult Delete(int productId)
         {
             _favoriteRepository.Remove(productId);
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
         public IActionResult Clear()
         {
             _favoriteRepository.Clear();
