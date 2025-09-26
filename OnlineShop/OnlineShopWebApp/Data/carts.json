@@ -2,20 +2,7 @@
   {
     "Id": 1,
     "UserId": "guest",
-    "Items": [
-      {
-        "Id": 1,
-        "Product": {
-          "PhotoPath": "img/whey-protein.jpg",
-          "Id": 1,
-          "Name": "\u041F\u0440\u043E\u0442\u0435\u0438\u043D Optimum Nutrition 990 g",
-          "Cost": 8500,
-          "Description": "\u0421\u044B\u0432\u043E\u0440\u043E\u0442\u043E\u0447\u043D\u044B\u0439 \u043F\u0440\u043E\u0442\u0435\u0438\u043D \u0441\u0430\u043C\u043E\u0433\u043E \u0432\u044B\u0441\u043E\u043A\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430"
-        },
-        "Quantity": 1,
-        "Cost": 8500
-      }
-    ],
-    "TotalCost": 8500
+    "Items": [],
+    "TotalCost": 0
   }
 ]

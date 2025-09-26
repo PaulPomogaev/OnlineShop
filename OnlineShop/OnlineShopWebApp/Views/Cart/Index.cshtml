@@ -29,7 +29,20 @@
                                 <td>@(i + 1)</td>
                                 <td>@item.Product.Name</td>
                                 <td>@item.Product.Cost.ToString("C")</td>
-                                <td>@item.Quantity</td>
+                                <td class="text-center">
+                                    <div class="input-group" style="width: 150px;">
+                                        <button class="btn btn-outline-danger"
+                                                onclick="location.href='@Url.Action("DecreaseQuantity", new { itemId = item.Id })'"
+                                        @(item.Quantity <= 1 ? "disabled" : "")>
+                                            -
+                                        </button>
+                                        <span class="form-control text-center" style="max-width: 60px;">@item.Quantity</span>
+                                        <button class="btn btn-outline-success"
+                                                onclick="location.href='@Url.Action("IncreaseQuantity", new { itemId = item.Id })'">
+                                            +
+                                        </button>
+                                    </div> 
+                                </td>
                                 <td class="fw-bold">@item.Cost.ToString("C")</td>
                                 <td>
                                     <a asp-controller="Cart" asp-action="Remove" asp-route-itemId="@item.Id"

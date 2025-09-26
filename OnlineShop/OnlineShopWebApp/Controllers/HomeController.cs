@@ -10,7 +10,7 @@ namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-       private readonly IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
         public HomeController(IProductRepository productRepository)
         {

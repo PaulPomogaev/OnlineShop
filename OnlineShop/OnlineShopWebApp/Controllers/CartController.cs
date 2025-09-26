@@ -36,5 +36,19 @@ namespace OnlineShopWebApp.Controllers
             _cartRepository.ClearCart();
             return RedirectToAction("Index");
         }
+
+        public IActionResult IncreaseQuantity(int itemId)
+        {
+            _cartRepository.IncreaseItemQuantity(itemId);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DecreaseQuantity(int itemId)
+        {
+            _cartRepository.DecreaseItemQuantity(itemId);
+            
+            return RedirectToAction("Index");
+        }
     }
 }
