@@ -18,6 +18,8 @@ namespace OnlineShopWebApp
 
             builder.Services.AddSingleton<IOrderRepository, OrderJsonRepository>();
 
+            builder.Services.AddSingleton<IFavoriteRepository, FavoriteJsonRepository>();
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();

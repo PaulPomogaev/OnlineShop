@@ -1,0 +1,24 @@
+﻿[
+  {
+    "UserId": "guest",
+    "ProductIds": []
+  },
+  {
+    "UserId": "guest",
+    "ProductIds": [
+      1
+    ]
+  },
+  {
+    "UserId": "guest",
+    "ProductIds": [
+      2
+    ]
+  },
+  {
+    "UserId": "guest",
+    "ProductIds": [
+      2
+    ]
+  }
+]

@@ -16,6 +16,9 @@
                     <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success">
                         Добавить в корзину
                     </a>
+                    <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-outline-primary">
+                        В избранное
+                    </a>
                 </div>
             </div>
         </div>
