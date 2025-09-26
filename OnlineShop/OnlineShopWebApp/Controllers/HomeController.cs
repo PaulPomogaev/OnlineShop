@@ -9,17 +9,17 @@ namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ProductJsonRepository _productRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ProductJsonRepository productRepository)
         {
-            _logger = logger;
+            _productRepository = productRepository;
         }
 
                
         public IActionResult Index()
         {
-            var products = ProductJsonRepository.GetAll();
+            var products = _productRepository.GetAll();
             
             return View(products);
         }

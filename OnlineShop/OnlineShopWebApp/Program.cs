@@ -1,3 +1,5 @@
+using OnlineShopWebApp.Data;
+
 namespace OnlineShopWebApp
 {
     public class Program
@@ -8,6 +10,10 @@ namespace OnlineShopWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSingleton<ProductJsonRepository>();
+
+            builder.Services.AddSingleton<CartJsonRepository>();
 
             var app = builder.Build();
 
