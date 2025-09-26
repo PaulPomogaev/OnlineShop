@@ -1,4 +1,5 @@
 using OnlineShopWebApp.Data;
+using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp
 {
@@ -11,9 +12,9 @@ namespace OnlineShopWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSingleton<ProductJsonRepository>();
+            builder.Services.AddSingleton<IProductRepository, ProductJsonRepository>();
 
-            builder.Services.AddSingleton<CartJsonRepository>();
+            builder.Services.AddSingleton<ICartRepository, CartJsonRepository>();
 
             var app = builder.Build();
 

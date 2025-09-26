@@ -4,14 +4,15 @@ using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Data;
 using System.Text;
+using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ProductJsonRepository _productRepository;
+       private readonly IProductRepository _productRepository;
 
-        public HomeController(ProductJsonRepository productRepository)
+        public HomeController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

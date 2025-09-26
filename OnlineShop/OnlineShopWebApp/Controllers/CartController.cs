@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Data;
+using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class CartController : Controller
     {
-        private readonly CartJsonRepository _cartRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public CartController(CartJsonRepository cartRepository)
+        public CartController(ICartRepository cartRepository)
         {
             _cartRepository = cartRepository;
         }
