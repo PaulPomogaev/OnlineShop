@@ -9,6 +9,7 @@ namespace OnlineShopWebApp.Controllers
     {
         private readonly ICartRepository _cartRepository;
         private readonly IOrderRepository _orderRepository;
+       
 
         public OrderController(ICartRepository cartRepository, IOrderRepository orderRepository)
         {
@@ -18,6 +19,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.CartItemCount = _cartRepository.GetCartItemCount();
             var cart = _cartRepository.GetCart();
 
             if(cart.Items.Count == 0)

@@ -10,5 +10,6 @@ namespace OnlineShopWebApp.Interfaces
         void ClearCart(string userId = "guest");
         void IncreaseItemQuantity(int itemId, string userId = "guest");
         void DecreaseItemQuantity(int itemId, string userId = "guest");
+        int GetCartItemCount(string userId = "guest");
     }
 }

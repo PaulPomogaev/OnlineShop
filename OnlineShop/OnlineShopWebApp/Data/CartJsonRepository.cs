@@ -165,5 +165,11 @@ namespace OnlineShopWebApp.Data
             }
             SaveCart(cart);
         }
+
+        public int GetCartItemCount(string userId = "guest")
+        {
+            var cart = GetCart(userId);
+            return cart.Items.Sum(i => i.Quantity);
+        }
     }
 }

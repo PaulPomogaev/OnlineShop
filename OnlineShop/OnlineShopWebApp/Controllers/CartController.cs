@@ -15,6 +15,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.CartItemCount = _cartRepository.GetCartItemCount();
             var cart = _cartRepository.GetCart();
             return View(cart);
         }
