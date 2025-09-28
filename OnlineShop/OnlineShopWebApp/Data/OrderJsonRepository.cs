@@ -64,10 +64,10 @@ namespace OnlineShopWebApp.Data
 
         public Order CreateOrder(Cart cart)
         {
-            return CreateOrder(cart, string.Empty, string.Empty, string.Empty);
+            return CreateOrder(cart, string.Empty, string.Empty, string.Empty, null, string.Empty);
         }
 
-        public Order CreateOrder (Cart cart, string customerName, string address, string phone)
+        public Order CreateOrder (Cart cart, string customerName, string address, string phone, DateOnly? deliveryDate, string? comment)
         {
             var orderItems = cart.Items.Select(item => new OrderItem
             {
@@ -85,6 +85,8 @@ namespace OnlineShopWebApp.Data
                     Address = address,
                     Phone = phone
                 },
+                DeliveryDate = deliveryDate,
+                Comment = comment,
                 CreatedDate = DateTime.Now
 
             };

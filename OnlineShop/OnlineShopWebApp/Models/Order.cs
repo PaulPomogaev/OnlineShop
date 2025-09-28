@@ -7,6 +7,8 @@
         public List<OrderItem> Items { get; set; } = new();
         public decimal TotalCost => Items.Sum(item => item.Cost);
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateOnly? DeliveryDate { get; set; }
+        public string? Comment { get; set; }
 
         public CustomerInfo Customer { get; set; } = new();
     }

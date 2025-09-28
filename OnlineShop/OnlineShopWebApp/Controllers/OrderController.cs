@@ -26,12 +26,24 @@ namespace OnlineShopWebApp.Controllers
             {
                 return RedirectToAction("Index", "Cart");
             }
+
             var order = _orderRepository.CreateOrder(cart);
             return View(order);
         }
 
-        public IActionResult Buy()
+        [HttpPost]
+        public IActionResult Buy(string customerName, string address, string phone, DateOnly? deliveryDate, string? comment)
         {
+            var cart = _cartRepository.GetCart();
+            if(cart.Items.Count == 0)
+            {
+                return RedirectToAction("Index", "Cart");
+            }
+
+            var oder = _orderRepository.CreateOrder(cart, customerName, address, phone, deliveryDate, comment);
+
+            _orderRepository.AddOrder(oder);
+
             _cartRepository.ClearCart();
 
             return RedirectToAction("Success");

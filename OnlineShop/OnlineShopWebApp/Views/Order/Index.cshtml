@@ -34,6 +34,16 @@
                                     <label>Телефон</label><br />
                                     <input type="tel" name="phone" class="w-100" />
                                 </p>
+                                <p>
+                                    <label>Дата доставки</label><br />
+                                    <input type="date" name="deliveryDate"
+                                           value="@DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd")"
+                                           min="@DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd")" />
+                                </p>
+                                <p>
+                                    <label>Комментарий</label><br />
+                                    <textarea name="comment" class="w-100"></textarea>
+                                </p>
                             </td>
 
                             <td class="w-50 p-4">

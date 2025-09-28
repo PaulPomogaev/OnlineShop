@@ -8,6 +8,6 @@ namespace OnlineShopWebApp.Interfaces
         void AddOrder(Order order);
         Order? GetOrderById(int id);
         Order CreateOrder(Cart cart);
-        Order CreateOrder(Cart cart, string customerName, string address, string phone);
+        Order CreateOrder(Cart cart, string customerName, string address, string phone, DateOnly? deliveryDate, string? comment);
     }
 }
