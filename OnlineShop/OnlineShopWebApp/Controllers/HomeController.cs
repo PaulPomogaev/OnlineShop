@@ -11,20 +11,17 @@ namespace OnlineShopWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly IProductRepository _productRepository;
-        private readonly ICartRepository _cartRepository;
-        
+               
 
-        public HomeController(IProductRepository productRepository, ICartRepository cartRepository)
+        public HomeController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
-            _cartRepository = cartRepository;
         }
 
                
         public IActionResult Index()
         {
-            ViewBag.CartItemCount = _cartRepository.GetCartItemCount();
-            var products = _productRepository.GetAll();
+           var products = _productRepository.GetAll();
             
             return View(products);
         }
