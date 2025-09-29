@@ -31,7 +31,7 @@ namespace OnlineShopWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(string customerName, string address, string phone, DateOnly? deliveryDate, string? comment)
+        public IActionResult Buy(OrderInputModel model)
         {
             var cart = _cartRepository.GetCart();
             if(cart.Items.Count == 0)
@@ -39,7 +39,7 @@ namespace OnlineShopWebApp.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var oder = _orderRepository.CreateOrder(cart, customerName, address, phone, deliveryDate, comment);
+            var oder = _orderRepository.CreateOrder(cart, model);
 
             _orderRepository.AddOrder(oder);
 
