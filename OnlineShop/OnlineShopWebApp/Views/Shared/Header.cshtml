@@ -23,10 +23,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
                             🛒 Корзина
-                            @if (ViewBag.CartItemCount > 0)
-                            {
-                                <span class="badge bg-success">@ViewBag.CartItemCount</span>
-                            }
+                            @await Component.InvokeAsync("Cart")
                         </a>
                     </li>
                 </ul>
