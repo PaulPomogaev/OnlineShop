@@ -19,7 +19,6 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.CartItemCount = _cartRepository.GetCartItemCount();
             var cart = _cartRepository.GetCart();
 
             if(cart.Items.Count == 0)
