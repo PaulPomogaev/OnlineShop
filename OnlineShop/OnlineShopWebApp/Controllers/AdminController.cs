@@ -21,23 +21,23 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Orders()
         {
-            return View("Orders");
+            return View();
         }
 
         public IActionResult Users()
         {
-            return View("Users");
+            return View();
         }
 
         public IActionResult Roles()
         {
-           return View("Roles");
+           return View();
         }
 
         public IActionResult Products()
         {
             var products = _productRepository.GetAll();
-            return View("Products", products);
+            return View(products);
         }
 
         public IActionResult ProductDetails(int id)
@@ -48,7 +48,7 @@ namespace OnlineShopWebApp.Controllers
             {
                 return NotFound();
             }
-            return View("ProductDetails", product);
+            return View(product);
         }
 
         public IActionResult EditProduct(int id)
@@ -59,7 +59,7 @@ namespace OnlineShopWebApp.Controllers
             {
                 return NotFound();
             }
-            return View("EditProduct", product);
+            return View(product);
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace OnlineShopWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("EditProduct", product);
+                return View(product);
             }
             _productRepository.Update(product);
             return RedirectToAction("Products");
@@ -81,7 +81,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult CreateProduct()
         {
-            return View("CreateProduct");
+            return View();
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace OnlineShopWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("CreateProduct", product);
+                return View(product);
             }
 
             product.PhotoPath = "img/whey-protein.jpg";
