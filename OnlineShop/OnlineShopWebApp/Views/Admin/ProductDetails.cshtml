@@ -1,0 +1,25 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Посмотреть подробно";
+}
+
+<div class="row mt-3">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-9 mb-3">
+        <div class="text-center text-uppercase text-success mb-5 mt-5">
+            <h2 class="row-title">Посмотреть подробно</h2>
+        </div>
+
+        <div class="card shadow">
+            <img class="card-img-top" src="@Model.PhotoPath" alt="@Model.Name" />
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">Цена: @Model.Cost.ToString("C")</p>
+                <p class="card-text">Описание: @Model.Description</p>
+                <a class="btn btn-outline-secondary" asp-controller="Admin" asp-action="Products">
+                    Назад к списку
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
