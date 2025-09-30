@@ -16,32 +16,27 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Title"] = "Панель администратора";
-            return View();
+           return View();
         }
 
         public IActionResult Orders()
         {
-            ViewData["Title"] = "Заказы";
             return View("Orders");
         }
 
         public IActionResult Users()
         {
-            ViewData["Title"] = "Пользователи";
             return View("Users");
         }
 
         public IActionResult Roles()
         {
-            ViewData["Title"] = "Роли";
-            return View("Roles");
+           return View("Roles");
         }
 
         public IActionResult Products()
         {
             var products = _productRepository.GetAll();
-            ViewData["Title"] = "Товары";
             return View("Products", products);
         }
 
@@ -53,7 +48,6 @@ namespace OnlineShopWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["Title"] = "Посмотреть подробно";
             return View("ProductDetails", product);
         }
 
@@ -65,7 +59,6 @@ namespace OnlineShopWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["Title"] = "Редактирование товара";
             return View("EditProduct", product);
         }
 
@@ -74,7 +67,6 @@ namespace OnlineShopWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Title"] = "Редактирование товара";
                 return View("EditProduct", product);
             }
             _productRepository.Update(product);
@@ -89,7 +81,6 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult CreateProduct()
         {
-            ViewData["Title"] = "Добавление нового продукта";
             return RedirectToAction("CreateProduct");
         }
 
@@ -98,7 +89,6 @@ namespace OnlineShopWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Title"] = "Добавление нового продукта";
                 return View("CreateProduct", product);
             }
 
