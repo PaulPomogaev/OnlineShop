@@ -81,7 +81,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult CreateProduct()
         {
-            return RedirectToAction("CreateProduct");
+            return View("CreateProduct");
         }
 
         [HttpPost]
