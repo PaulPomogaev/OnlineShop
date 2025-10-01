@@ -1,0 +1,31 @@
+﻿@model RegisterModel
+@{
+    ViewData["Title"] = "Регистрация пользователя";
+}
+
+<div class="text-center text-uppercase text-success mb-5 mt-5">
+    <h2 class="row-title">Регистрация</h2>
+</div>
+<form method="post">
+    <div class="row justify-content-center mt-3">
+        <div class="col-6 mb-3">
+            <p>
+                <label class="form-label">Логин</label><br />
+                <input class="form-control" placeholder="Ваш логин" required name="Login" />
+            </p>
+            <p>
+                <label class="form-label">Пароль</label><br />
+                <input class="form-control" placeholder="Ваш пароль" required name="Password" />
+            </p>
+            <p>
+                <label class="form-label">Подтвердите пароль</label><br />
+                <input class="form-control" placeholder="Подтвердите пароль" required name="ConfirmPassword" />
+            </p>
+        </div>
+    </div>
+    <div class="text-center m-3">
+        <button class="btn btn-outline-success" type="submit">
+            Зарегистрироваться
+        </button>
+    </div>
+</form>
