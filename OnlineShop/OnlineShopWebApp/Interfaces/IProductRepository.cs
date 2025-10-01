@@ -9,5 +9,6 @@ namespace OnlineShopWebApp.Interfaces
         void Add(Product product);
         void Update(Product product);
         void Delete(int id);
+        List<Product> SearchEngine(string qwery);
     }
 }

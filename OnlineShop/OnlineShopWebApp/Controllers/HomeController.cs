@@ -27,6 +27,12 @@ namespace OnlineShopWebApp.Controllers
             return View(products);
         }
 
+        public IActionResult Search(string query)
+        {
+            var products = _productRepository.SearchEngine(query);
+            return View(products);
+        }
+
         public IActionResult Privacy()
         {
             return View();

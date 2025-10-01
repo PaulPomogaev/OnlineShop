@@ -85,6 +85,17 @@ namespace OnlineShopWebApp.Data
             }
         }
 
+        public List<Product> SearchEngine(string query)
+        {
+            if(string.IsNullOrWhiteSpace(query))
+            {
+                return GetAll();
+            }
+
+            var allProducts = GetAll();
+            return allProducts.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
         public Product? GetById(int id)
         {
             var products = GetAll();
