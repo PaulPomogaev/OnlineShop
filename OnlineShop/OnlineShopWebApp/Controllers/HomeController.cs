@@ -16,12 +16,14 @@ namespace OnlineShopWebApp.Controllers
         public HomeController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
+            
         }
 
                
         public IActionResult Index()
         {
-           var products = _productRepository.GetAll();
+            var products = _productRepository.GetAll();
+            var products = _productRepository.GetAll();
             
             return View(products);
         }

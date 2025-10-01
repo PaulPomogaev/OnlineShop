@@ -13,7 +13,7 @@ namespace OnlineShopWebApp.Controllers
 
         public ProductController(IProductRepository productRepository)
         {
-            _productRepository = productRepository;
+           _productRepository = productRepository;
         }
 
         public IActionResult Index(int id)

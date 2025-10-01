@@ -8,7 +8,7 @@ namespace OnlineShopWebApp.Controllers
     {
         private readonly IFavoriteRepository _favoriteRepository;
         private readonly IProductRepository _productRepository;
-       
+        
         public FavoriteController(IFavoriteRepository favoriteRepository, IProductRepository productRepository)
         {
             _favoriteRepository = favoriteRepository;
