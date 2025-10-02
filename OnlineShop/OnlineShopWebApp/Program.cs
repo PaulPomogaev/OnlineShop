@@ -20,6 +20,8 @@ namespace OnlineShopWebApp
 
             builder.Services.AddSingleton<IFavoriteRepository, FavoriteJsonRepository>();
 
+            builder.Services.AddSingleton<IComparisonRepository, ComparisonJsonRepository>();
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();
