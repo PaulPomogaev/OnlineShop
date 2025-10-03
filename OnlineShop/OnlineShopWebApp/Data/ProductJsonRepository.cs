@@ -1,4 +1,5 @@
-﻿using OnlineShopWebApp.Interfaces;
+﻿using OnlineShopWebApp.Controllers;
+using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
 using System.Text;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace OnlineShopWebApp.Data
 
         private void InitializeNextId()
         {
-            if(!File.Exists(_filePath))
+            if (!File.Exists(_filePath))
             {
                 _nextId = 1;
                 return;
@@ -42,7 +43,7 @@ namespace OnlineShopWebApp.Data
 
         }
 
-       
+
         private void SaveAll(List<Product> products)
         {
             var json = JsonSerializer.Serialize(products, new JsonSerializerOptions { WriteIndented = true });
@@ -51,11 +52,37 @@ namespace OnlineShopWebApp.Data
 
         public void Add(Product product)
         {
-            
+
             product.Id = _nextId++;
             var products = GetAll();
             products.Add(product);
             SaveAll(products);
+        }
+
+        public void Update(Product updateProduct)
+        {
+            var products = GetAll();
+            var existingProduct = products.FirstOrDefault(p => p.Id == updateProduct.Id);
+
+            if (existingProduct != null)
+            {
+                existingProduct.Name = updateProduct.Name;
+                existingProduct.Cost = updateProduct.Cost;
+                existingProduct.Description = updateProduct.Description;
+                SaveAll(products);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var products = GetAll();
+            var productToRemove = products.FirstOrDefault(p => p.Id == id);
+
+            if (productToRemove != null)
+            {
+                products.Remove(productToRemove);
+                SaveAll(products);
+            }
         }
 
         public Product? GetById(int id)

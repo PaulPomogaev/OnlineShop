@@ -1,0 +1,38 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Редактирование товара";
+}
+
+<div class="row mt-3">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-9 mb-3">
+        <div class="text-center text-uppercase text-success mb-5 mt-5">
+            <h2 class="row-title">Редактирование товара</h2>
+        </div>
+
+        <form method="post" asp-action="EditProduct">
+            <div class="row justify-content-center mt-3">
+                <div class="col-6 mb-3">
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <p>
+                        <label class="form-label">Наименование товара</label><br />
+                        <input class="form-control" name="Name" value="@Model.Name" required />
+                    </p>
+                    <p>
+                        <label class="form-label">Цена, руб.</label><br />
+                        <input class="form-control" name="Cost" value="@Model.Cost" type="number" step="0.01" required />
+                    </p>
+                    <p>
+                        <label class="form-label">Описание товара</label><br />
+                        <input class="form-control" name="Description" value="@Model.Description" />
+                    </p>
+                </div>
+            </div>
+            <div class="text-center m-3">
+                <button class="btn btn-outline-success" type="submit">
+                    Редактировать
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
