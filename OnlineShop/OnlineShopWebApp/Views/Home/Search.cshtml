@@ -19,13 +19,9 @@
     {
         @foreach (var product in Model)
         {
-            var photoPath = string.IsNullOrEmpty(product.PhotoPath)
-                            ? "/img/whey-protein.jpg"
-                            : "/" + product.PhotoPath.TrimStart('/');
-           
             <div class="col-3 mb-3">
                 <div class="card shadow">
-                    <img class="card-img-top" src="@photoPath" alt="@product.Name" />
+                    <img class="card-img-top" src="/img/whey-protein.jpg" alt="@product.Name" />
                     <div class="card-body text-center">
                         <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">
                             <h5>@product.Name</h5>
