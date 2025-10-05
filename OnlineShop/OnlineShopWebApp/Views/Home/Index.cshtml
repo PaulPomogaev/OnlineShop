@@ -20,26 +20,7 @@
     {
         @foreach (var product in Model)
         {
-            <div class="col-3 mb-3">
-                <div class="card shadow">
-                    <img class="card-img-top" src="@product.PhotoPath">
-                    <div class="card-body text-center">
-                        <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">
-                            <h5>@product.Name</h5>
-                        </a>
-                        <h2 class="text-danger">@product.Cost.ToString("C")</h2>
-                        <a asp-controller="Cart" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-success w-100">
-                            Добавить в корзину
-                        </a>
-                        <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-outline-primary w-100">
-                            В избранное
-                        </a>
-                        <a asp-controller="Comparison" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-outline-secondary w-100 mt-2">
-                            В сравнение
-                        </a>
-                    </div>
-                </div>
-            </div>
+            @await Html.PartialAsync("ProductCard", product)
         }
     }
     else

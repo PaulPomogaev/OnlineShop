@@ -1,0 +1,19 @@
+﻿@model Product
+
+<div class="col-3 mb-3">
+    <div class="card shadow">
+        <img class="card-img-top" src="/img/whey-protein.jpg" alt="@Model.Name" />
+        <div class="card-body text-center">
+            <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@Model.Id">
+                <h5>@Model.Name</h5>
+            </a>
+            <h2 class="text-danger">@Model.Cost.ToString("C")</h2>
+            <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success w-100">
+                Добавить в корзину
+            </a>
+            <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-outline-primary w-100 mt-2">
+                В избранное
+            </a>
+        </div>
+    </div>
+</div>
