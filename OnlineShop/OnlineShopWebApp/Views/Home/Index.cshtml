@@ -4,28 +4,23 @@
     ViewData["Title"] = "Product Catalog";
 }
 
+<div class="row justify-content-end mb-4">
+    <form asp-controller="Home" asp-action="Search" class="d-flex w-50" method="get">
+        <input class="form-control me-2" type="search" placeholder="Поиск по названию..." name="query" />
+        <button class="btn btn-outline-success" type="submit">Искать</button>
+    </form>
+</div>
+
+<div class="text-center text-uppercase text-success mb-5 mt-5">
+    <h2 class="row-title">Каталог товаров</h2>
+</div>
+
 <div class="row">
     @if (Model != null)
     {
         @foreach (var product in Model)
         {
-            <div class="col-3 mb-3">
-                <div class="card shadow">
-                    <img class="card-img-top" src=@product.PhotoPath>
-                    <div class="card-body text-center">
-                        <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">
-                            <h5>@product.Name</h5>
-                        </a>
-                        <h2 class="text-danger">@product.Cost.ToString("C")</h2>
-                        <a asp-controller="Cart" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-success w-100">
-                            Добавить в корзину
-                        </a>
-                        <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-outline-primary w-100">
-                            В избранное
-                        </a>
-                    </div>
-                </div>
-            </div>
+            @await Html.PartialAsync("ProductCard", product)
         }
     }
     else
