@@ -27,7 +27,9 @@ namespace OnlineShopWebApp.Controllers
             }
 
             var order = _orderRepository.CreateOrder(cart);
-            return View(order);
+            ViewBag.Order = order; 
+            return View(new OrderInputModel());
+            
         }
 
         [HttpPost]
@@ -39,9 +41,16 @@ namespace OnlineShopWebApp.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var oder = _orderRepository.CreateOrder(cart, model);
+            if(!ModelState.IsValid)
+            {
+                var orderForView = _orderRepository.CreateOrder(cart);
+                ViewBag.Order = orderForView;
+                return View("Index", model);
+            }
 
-            _orderRepository.AddOrder(oder);
+            var order = _orderRepository.CreateOrder(cart, model);
+
+            _orderRepository.AddOrder(order);
 
             _cartRepository.ClearCart();
 
