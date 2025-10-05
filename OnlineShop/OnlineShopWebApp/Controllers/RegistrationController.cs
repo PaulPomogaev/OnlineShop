@@ -10,9 +10,19 @@ namespace OnlineShopWebApp.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Register(RegisterModel model)
         {
-            return RedirectToAction("Index", "Registration");
+            if(ModelState.IsValid)
+            {
+                if(model.Password == model.Login)
+                {
+                    ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");
+                    return View("Index", model);
+                }
+                return RedirectToAction("Index", "Authorization");
+            }
+            return View("Index", model);
         }
     }
 }

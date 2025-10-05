@@ -13,7 +13,11 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public IActionResult Login(LoginModel model)
         {
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+            return View("Index", model);
         }
 
     }
