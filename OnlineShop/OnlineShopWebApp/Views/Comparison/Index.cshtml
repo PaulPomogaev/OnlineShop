@@ -1,10 +1,10 @@
 ﻿@model List<Product>
 @{
-    ViewData["Title"] = "Избранное";
+    ViewData["Title"] = "Comparison";
 }
 
 <div class="text-center text-uppercase text-success mb-5 mt-5">
-    <h2 class="row-title">Избранное</h2>
+    <h2 class="row-title">Сравнение товаров</h2>
 </div>
 
 @if (Model != null && Model.Count > 0)
@@ -14,26 +14,23 @@
         {
             <div class="col-3 mb-3">
                 <div class="card shadow">
-                    <img class="card-img-top" src=@product.PhotoPath alt="@product.Name" />
+                    <img class="card-img-top" src="@("/" + product.PhotoPath.TrimStart('/'))" alt="@product.Name" />
                     <div class="card-body text-center">
                         <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">
                             <h5>@product.Name</h5>
                         </a>
                         <h2 class="text-danger">@product.Cost.ToString("C")</h2>
-                        <hr />
-                        <h6>@product.Description</h6>
-                        <hr />
-                        <a class="btn btn-success"
+                        <a class="btn btn-success w-100"
                            asp-controller="Cart"
                            asp-action="Add"
                            asp-route-productId="@product.Id">
                             Добавить в корзину
                         </a>
-                        <a asp-controller="Favorite" asp-action="Delete" asp-route-productId="@product.Id" class="btn btn-outline-danger mt-3">
-                            Убрать из избранного
-                        </a>
-                        <a asp-controller="Comparison" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-outline-secondary w-100 mt-2">
-                            В сравнение
+                        <a class="btn btn-outline-danger w-100 mt-2"
+                           asp-controller="Comparison"
+                           asp-action="Remove"
+                           asp-route-productId="@product.Id">
+                            Убрать из сравнения
                         </a>
                     </div>
                 </div>
@@ -41,8 +38,11 @@
         }
 
         <div class="text-center mt-5">
-            <a asp-controller="Favorite" asp-action="Clear" class="btn btn-outline-danger">
-                Очистить список избранного
+            <a class="btn btn-outline-danger"
+               asp-controller="Comparison"
+               asp-action="Clear"
+               onclick="return confirm('Очистить всё сравнение?')">
+                Очистить список сравнения
             </a>
         </div>
     </div>
@@ -50,7 +50,7 @@
 else
 {
     <div class="text-center">
-        <h2 class="row-title">В списке избранного нет товаров!</h2>
+        <h2 class="row-title">В списке сравнения нет товаров!</h2>
     </div>
 }
 
