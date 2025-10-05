@@ -16,9 +16,5 @@ namespace OnlineShopWebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Register()
-        {
-            return RedirectToAction("Index");
-        }
     }
 }
