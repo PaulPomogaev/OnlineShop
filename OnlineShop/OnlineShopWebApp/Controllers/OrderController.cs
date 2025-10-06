@@ -27,8 +27,12 @@ namespace OnlineShopWebApp.Controllers
             }
 
             var order = _orderRepository.CreateOrder(cart);
-            ViewBag.Order = order; 
-            return View(new OrderInputModel());
+            var viewModel = new OrderViewModel
+            {
+                Order = order,
+                InputModel = new OrderInputModel()
+            };
+            return View(viewModel);
             
         }
 
@@ -44,8 +48,12 @@ namespace OnlineShopWebApp.Controllers
             if(!ModelState.IsValid)
             {
                 var orderForView = _orderRepository.CreateOrder(cart);
-                ViewBag.Order = orderForView;
-                return View("Index", model);
+                var viewModel = new OrderViewModel
+                {
+                    Order = orderForView,
+                    InputModel = model
+                };
+                return View("Index", viewModel);
             }
 
             var order = _orderRepository.CreateOrder(cart, model);
