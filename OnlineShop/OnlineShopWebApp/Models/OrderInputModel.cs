@@ -13,7 +13,6 @@ namespace OnlineShopWebApp.Models
         public string Address { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Укажите телефон")]
-        [Phone(ErrorMessage = "Некорректный формат телефона")]
         [StringLength(20, MinimumLength = 10, ErrorMessage = "Телефон должен содержать от 10 до 20 цифр")]
         public string Phone { get; set; } = string.Empty;
 

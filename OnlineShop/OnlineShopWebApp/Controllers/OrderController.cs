@@ -37,7 +37,7 @@ namespace OnlineShopWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(OrderInputModel model)
+        public IActionResult Buy(OrderViewModel orderViewModel)
         {
             var cart = _cartRepository.GetCart();
             if(cart.Items.Count == 0)
@@ -48,15 +48,11 @@ namespace OnlineShopWebApp.Controllers
             if(!ModelState.IsValid)
             {
                 var orderForView = _orderRepository.CreateOrder(cart);
-                var viewModel = new OrderViewModel
-                {
-                    Order = orderForView,
-                    InputModel = model
-                };
-                return View("Index", viewModel);
+                orderViewModel.Order = orderForView; 
+                return View("Index", orderViewModel);
             }
 
-            var order = _orderRepository.CreateOrder(cart, model);
+            var order = _orderRepository.CreateOrder(cart, orderViewModel.InputModel);
 
             _orderRepository.AddOrder(order);
 
