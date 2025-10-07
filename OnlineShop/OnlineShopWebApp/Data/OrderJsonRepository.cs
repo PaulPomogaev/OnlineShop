@@ -100,5 +100,16 @@ namespace OnlineShopWebApp.Data
             };
         }
 
+        public void UpdateOrder(Order updateOrder)
+        {
+            var orders = GetAllOrders();
+            var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);
+
+            if(existingOrder != null)
+            {
+                existingOrder.Status = updateOrder.Status;
+                SaveAllOrders(orders);
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@
         public string? Comment { get; set; }
 
         public CustomerInfo Customer { get; set; } = new();
+        public OrderStatus Status { get; set; } = OrderStatus.Created;
     }
 }
