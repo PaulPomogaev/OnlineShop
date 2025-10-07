@@ -13,17 +13,16 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public IActionResult Register(RegisterModel model)
         {
-            if(!ModelState.IsValid)
+            if (model.Password == model.Login)
+            {
+                ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");  
+            }
+
+            if (!ModelState.IsValid)
             {
                 return View("Index", model);
             }
 
-            if (model.Password == model.Login)
-            {
-                ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");
-                return View("Index", model);
-            }
-            
             return RedirectToAction("Index", "Authorization");
         }
     }
