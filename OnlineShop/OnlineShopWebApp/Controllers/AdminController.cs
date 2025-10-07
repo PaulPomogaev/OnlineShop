@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
-using System.Reflection;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -38,17 +37,15 @@ namespace OnlineShopWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateOrder(int orderId, OrderStatus status)
+        public IActionResult UpdateOrder(Order order)
         {
-            var order = _orderRepository.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || _orderRepository.GetOrderById(order.Id) == null)
             {
                 return NotFound();
             }
 
-            order.Status = status;
             _orderRepository.UpdateOrder(order);
-            return RedirectToAction("DetailOrder", new { orderId });
+            return RedirectToAction("DetailOrder", new { orderId = order.Id });
         }
 
         public IActionResult Users()
