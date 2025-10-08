@@ -24,13 +24,13 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Orders()
         {
-            var orders = _orderRepository.GetAllOrders();
+            var orders = _orderRepository.GetAll();
             return View(orders);
         }
 
         public IActionResult DetailOrder(int orderId)
         {
-            var order = _orderRepository.GetOrderById(orderId);
+            var order = _orderRepository.GetById(orderId);
             if(order == null)
             {
                 return NotFound();
@@ -41,12 +41,12 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public IActionResult UpdateOrder(Order order)
         {
-            if (order == null || _orderRepository.GetOrderById(order.Id) == null)
+            if (order == null || _orderRepository.GetById(order.Id) == null)
             {
                 return NotFound();
             }
 
-            _orderRepository.UpdateOrder(order);
+            _orderRepository.Update(order);
             return RedirectToAction("DetailOrder", new { orderId = order.Id });
         }
 
