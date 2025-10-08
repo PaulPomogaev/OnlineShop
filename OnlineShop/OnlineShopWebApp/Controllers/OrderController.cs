@@ -26,7 +26,7 @@ namespace OnlineShopWebApp.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var order = _orderRepository.CreateOrder(cart);
+            var order = _orderRepository.Create(cart);
             var viewModel = new OrderViewModel
             {
                 Order = order,
@@ -47,14 +47,14 @@ namespace OnlineShopWebApp.Controllers
 
             if(!ModelState.IsValid)
             {
-                var orderForView = _orderRepository.CreateOrder(cart);
+                var orderForView = _orderRepository.Create(cart);
                 orderViewModel.Order = orderForView; 
                 return View("Index", orderViewModel);
             }
 
-            var order = _orderRepository.CreateOrder(cart, orderViewModel.InputModel);
+            var order = _orderRepository.Create(cart, orderViewModel.InputModel);
 
-            _orderRepository.AddOrder(order);
+            _orderRepository.Add(order);
 
             _cartRepository.ClearCart();
 
