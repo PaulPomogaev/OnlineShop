@@ -35,7 +35,7 @@ namespace OnlineShopWebApp.Data
 
         public void Add(Role role)
         {
-            role.Id = _nextId;
+            role.Id = _nextId++;
             var roles = GetAll();
             roles.Add(role);
             SaveAll(roles);
