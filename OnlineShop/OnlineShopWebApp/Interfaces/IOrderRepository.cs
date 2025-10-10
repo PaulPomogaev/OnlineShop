@@ -4,10 +4,11 @@ namespace OnlineShopWebApp.Interfaces
 {
     public interface IOrderRepository
     {
-        List<Order> GetAllOrders();
-        void AddOrder(Order order);
-        Order? GetOrderById(int id);
-        Order CreateOrder(Cart cart);
-        Order CreateOrder(Cart cart, OrderInputModel input);
+        List<Order> GetAll();
+        void Add(Order order);
+        Order? GetById(int id);
+        Order Create(Cart cart);
+        Order Create(Cart cart, OrderInputModel input);
+        void Update(Order order);
     }
 }

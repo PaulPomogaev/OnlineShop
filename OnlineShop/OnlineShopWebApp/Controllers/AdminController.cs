@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
-using System.Reflection;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public AdminController(IProductRepository productRepository)
+        public AdminController(IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _productRepository = productRepository;
+            _orderRepository = orderRepository;
         }
 
         public IActionResult Index()
@@ -21,7 +22,30 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Orders()
         {
-            return View();
+            var orders = _orderRepository.GetAll();
+            return View(orders);
+        }
+
+        public IActionResult DetailOrder(int orderId)
+        {
+            var order = _orderRepository.GetById(orderId);
+            if(order == null)
+            {
+                return NotFound();
+            }
+            return View(order);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateOrder(Order order)
+        {
+            if (order == null || _orderRepository.GetById(order.Id) == null)
+            {
+                return NotFound();
+            }
+
+            _orderRepository.Update(order);
+            return RedirectToAction("DetailOrder", new { orderId = order.Id });
         }
 
         public IActionResult Users()

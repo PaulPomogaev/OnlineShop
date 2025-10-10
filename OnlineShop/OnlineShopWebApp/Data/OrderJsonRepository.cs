@@ -18,14 +18,14 @@ namespace OnlineShopWebApp.Data
 
         private void InitializeNextIds()
         {
-            var orders = GetAllOrders();
+            var orders = GetAll();
             _nextId = orders.Any() ? orders.Max(o => o.Id) + 1 : 1;
 
             var allItemIds = orders.SelectMany(o => o.Items.Select(i => i.Id)).ToList();
             _nextItemId = allItemIds.Any() ? allItemIds.Max() + 1 : 1;
         }
 
-        public List<Order> GetAllOrders()
+        public List<Order> GetAll()
         {
             if (!File.Exists(_filePath))
             {
@@ -36,7 +36,7 @@ namespace OnlineShopWebApp.Data
             return JsonSerializer.Deserialize<List<Order>>(json) ?? new List<Order>();
         }
 
-        public void AddOrder(Order order)
+        public void Add(Order order)
         {
             order.Id = _nextId++;
 
@@ -45,24 +45,24 @@ namespace OnlineShopWebApp.Data
                 item.Id = _nextItemId++;
             }
 
-            var orders = GetAllOrders();
+            var orders = GetAll();
             orders.Add(order);
-            SaveAllOrders(orders);
+            SaveAll(orders);
         }
 
-        public Order? GetOrderById(int id)
+        public Order? GetById(int id)
         {
-            var orders = GetAllOrders();
+            var orders = GetAll();
             return orders.FirstOrDefault(o => o.Id == id);
         }
 
-        private void SaveAllOrders(List<Order> orders)
+        private void SaveAll(List<Order> orders)
         {
             var json = JsonSerializer.Serialize(orders, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json, Encoding.UTF8);
         }
 
-        public Order CreateOrder(Cart cart)
+        public Order Create(Cart cart)
         {
             var input = new OrderInputModel
             {
@@ -72,10 +72,10 @@ namespace OnlineShopWebApp.Data
                 DeliveryDate = null,
                 Comment = string.Empty
             };
-            return CreateOrder(cart, input);
+            return Create(cart, input);
         }
 
-        public Order CreateOrder (Cart cart, OrderInputModel input)
+        public Order Create (Cart cart, OrderInputModel input)
         {
             var orderItems = cart.Items.Select(item => new OrderItem
             {
@@ -100,5 +100,16 @@ namespace OnlineShopWebApp.Data
             };
         }
 
+        public void Update(Order updateOrder)
+        {
+            var orders = GetAll();
+            var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);
+
+            if(existingOrder != null)
+            {
+                existingOrder.Status = updateOrder.Status;
+                SaveAll(orders);
+            }
+        }
     }
 }
