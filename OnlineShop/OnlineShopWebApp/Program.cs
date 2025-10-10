@@ -22,6 +22,8 @@ namespace OnlineShopWebApp
 
             builder.Services.AddSingleton<IComparisonRepository, ComparisonJsonRepository>();
 
+            builder.Services.AddSingleton<IRolesRepository, RolesJsonRepository>();
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();

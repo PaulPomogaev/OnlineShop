@@ -8,11 +8,13 @@ namespace OnlineShopWebApp.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IRolesRepository _rolesRepository;
 
-        public AdminController(IProductRepository productRepository, IOrderRepository orderRepository)
+        public AdminController(IProductRepository productRepository, IOrderRepository orderRepository, IRolesRepository rolesRepository)
         {
             _productRepository = productRepository;
             _orderRepository = orderRepository;
+            _rolesRepository = rolesRepository;
         }
 
         public IActionResult Index()
@@ -55,7 +57,40 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Roles()
         {
-           return View();
+           var roles = _rolesRepository.GetAll();
+           return View(roles);
+        }
+
+        public IActionResult AddRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddRole(Role role)
+        {
+            if(_rolesRepository.Exist(role.Name))
+            {
+                ModelState.AddModelError("Name", "Роль с таким наименованием уже существует!");
+                return View(role);
+            }
+
+            if(!ModelState.IsValid)
+            {
+                return View(role);
+            }
+
+            _rolesRepository.Add(role);
+
+
+            return RedirectToAction("Roles");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteRole(int roleId)
+        {
+            _rolesRepository.Delete(roleId);
+            return RedirectToAction("Roles");
         }
 
         public IActionResult Products()
