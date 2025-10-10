@@ -15,7 +15,7 @@ namespace OnlineShopWebApp.Controllers
         {
             if (model.Password == model.Login)
             {
-                ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");  
+                ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");
             }
 
             if (!ModelState.IsValid)
