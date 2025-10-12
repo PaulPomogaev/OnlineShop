@@ -1,5 +1,6 @@
 using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Interfaces;
+using Serilog;
 
 namespace OnlineShopWebApp
 {
@@ -8,6 +9,13 @@ namespace OnlineShopWebApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseSerilog((context, services, configuration) =>
+            {
+                configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .Enrich.WithProperty("ApplicationName", "OnlineShopWebApp");
+            });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -25,6 +33,7 @@ namespace OnlineShopWebApp
             builder.Services.AddSingleton<IRolesRepository, RolesJsonRepository>();
 
             var app = builder.Build();
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
             app.UseRouting();
