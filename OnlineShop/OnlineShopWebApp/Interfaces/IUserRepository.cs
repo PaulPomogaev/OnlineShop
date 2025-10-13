@@ -5,7 +5,7 @@ namespace OnlineShopWebApp.Interfaces
     public interface IUserRepository
     {
         User? GetByLogin(string login);
-        void Add(User user);
+        void Add(string login, string password);
         bool Exists(string login);
     }
 }

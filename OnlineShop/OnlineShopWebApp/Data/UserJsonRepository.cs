@@ -39,9 +39,15 @@ namespace OnlineShopWebApp.Data
             File.WriteAllText(_filepath, json, Encoding.UTF8);
         }
 
-        public void Add(User user)
+        public void Add(string login, string password)
         {
-            user.Id = _nextId++;
+            var user = new User
+            {
+                Id = _nextId++,
+                Login = login,
+                PasswordHash = HashPassword(password)
+            };
+
             var users = GetAll();
             users.Add(user);
             SaveAll(users);

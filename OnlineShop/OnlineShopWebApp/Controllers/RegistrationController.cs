@@ -37,13 +37,7 @@ namespace OnlineShopWebApp.Controllers
                 return View("Index", model);
             }
 
-            var user = new User
-            {
-                Login = model.Login,
-                PasswordHash = UserJsonRepository.HashPassword(model.Password)
-            };
-
-            _userRepository.Add(user);
+            _userRepository.Add(model.Login, model.Password);
 
             return RedirectToAction("Index", "Authorization");
         }
