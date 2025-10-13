@@ -32,6 +32,8 @@ namespace OnlineShopWebApp
 
             builder.Services.AddSingleton<IRolesRepository, RolesJsonRepository>();
 
+            builder.Services.AddSingleton<IUserRepository, UserJsonRepository>();
+
             var app = builder.Build();
             app.UseSerilogRequestLogging();
 
