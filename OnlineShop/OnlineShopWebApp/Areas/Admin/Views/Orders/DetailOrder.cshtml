@@ -10,7 +10,7 @@
             <h2 class="row-title">Детали заказа</h2>
         </div>
 
-        <form method="post" asp-action="UpdateOrder">
+        <form method="post" asp-area="Admin" asp-controller="Orders" asp-action="UpdateOrder">
             @if (Model != null)
             {
                 <input type="hidden" asp-for="Id" />

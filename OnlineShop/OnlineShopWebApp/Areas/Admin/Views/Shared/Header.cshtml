@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OnlineShopWebApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -15,28 +15,28 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Contacts" asp-action="Index">Контакты</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Contacts" asp-action="Index">Контакты</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Favorite" asp-action="Index">❤️ Избранное</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Favorite" asp-action="Index">❤️ Избранное</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">
                             🛒 Корзина
                             @await Component.InvokeAsync("Cart")
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Authorization" asp-action="Index">Авторизация</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Authorization" asp-action="Index">Авторизация</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Registration" asp-action="Index">Регистрация</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Registration" asp-action="Index">Регистрация</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Панель администратора</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Comparison" asp-action="Index">🔍 Сравнение</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Comparison" asp-action="Index">🔍 Сравнение</a>
                     </li>
                 </ul>
             </div>

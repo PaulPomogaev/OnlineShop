@@ -1,6 +1,9 @@
 ﻿[
   {
     "UserId": "guest",
-    "ProductIds": []
+    "ProductIds": [
+      2,
+      4
+    ]
   }
 ]

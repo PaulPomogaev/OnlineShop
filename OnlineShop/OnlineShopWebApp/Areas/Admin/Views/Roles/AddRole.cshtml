@@ -10,7 +10,7 @@
             <h2 class="row-title">Добавление новой роли</h2>
         </div>
 
-        <form method="post" asp-action="AddRole">
+        <form method="post" asp-area="Admin" asp-controller="Roles" asp-action="AddRole">
             <div asp-validation-summary="All" class="text-danger fw-bold text-uppercase mb-3"></div>
             <div class="row justify-content-center mt-3">
                 <div class="col-6 mb-3">

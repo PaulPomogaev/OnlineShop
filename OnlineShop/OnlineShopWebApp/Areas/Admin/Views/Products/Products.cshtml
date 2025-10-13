@@ -16,7 +16,7 @@
                 <div class="col-12">
                     <div class="text-end">
                         <a class="btn btn-outline-success mb-2 mt-2"
-                           asp-controller="Admin" asp-action="CreateProduct">
+                           asp-controller="Products" asp-action="CreateProduct">
                             Добавить новый продукт
                         </a>
                     </div>
@@ -37,7 +37,7 @@
                                     <td class="fw-bold">@(i + 1)</td>
                                     <td align="left">
                                         <a class="text-success"
-                                           asp-controller="Admin"
+                                           asp-controller="Products"
                                            asp-action="ProductDetails"
                                            asp-route-id="@Model[i].Id">
                                             <h5>@Model[i].Name</h5>
@@ -46,7 +46,7 @@
                                     <td>@Model[i].Cost.ToString("C")</td>
                                     <td>
                                         <a class="btn btn-outline-success"
-                                           asp-controller="Admin"
+                                           asp-controller="Products"
                                            asp-action="EditProduct"
                                            asp-route-id="@Model[i].Id">
                                             Редактировать
@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                         <a class="btn btn-outline-danger"
-                                           asp-controller="Admin"
+                                           asp-controller="Products"
                                            asp-action="DeleteProduct"
                                            asp-route-id="@Model[i].Id"
                                            onclick="return confirm('Удалить товар?')">
@@ -83,7 +83,7 @@
             </div>
             <div class="text-center mt-5">
                 <a class="btn btn-outline-success mb-2 mt-2"
-                   asp-controller="Admin" asp-action="CreateProduct">
+                   asp-controller="Products" asp-action="CreateProduct">
                     Добавить новый продукт
                 </a>
             </div>

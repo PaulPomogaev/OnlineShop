@@ -1,20 +1,19 @@
 ﻿@model Product
 @{
-    ViewData["Title"] = "Редактирование товара";
+    ViewData["Title"] = "Добавление нового продукта";
 }
 
 <div class="row mt-3">
     @await Html.PartialAsync("AdminMenu")
     <div class="col-9 mb-3">
         <div class="text-center text-uppercase text-success mb-5 mt-5">
-            <h2 class="row-title">Редактирование товара</h2>
+            <h2 class="row-title">Добавление нового продукта</h2>
         </div>
 
-        <form method="post" asp-action="EditProduct">
+        <form method="post" asp-area="Admin" asp-controller="Products" asp-action="CreateProduct">
             <div asp-validation-summary="All" class="text-danger fw-bold text-uppercase mb-3"></div>
             <div class="row justify-content-center mt-3">
                 <div class="col-6 mb-3">
-                    <input type="hidden" asp-for="Id" />
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label"></label>
                         <input asp-for="Name" class="form-control" />
@@ -36,7 +35,7 @@
             </div>
             <div class="text-center m-3">
                 <button class="btn btn-outline-success" type="submit">
-                    Редактировать
+                    Добавить
                 </button>
             </div>
         </form>
