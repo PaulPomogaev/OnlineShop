@@ -53,7 +53,7 @@ namespace OnlineShopWebApp.Data
             return users.FirstOrDefault(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
         }
 
-        public bool UserExists(string login)
+        public bool Exists(string login)
         {
             return GetByLogin(login) != null;
         }

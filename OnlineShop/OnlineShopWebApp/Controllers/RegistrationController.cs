@@ -27,7 +27,7 @@ namespace OnlineShopWebApp.Controllers
                 ModelState.AddModelError("Password", "Пароль не должен совпадать с логином.");
             }
 
-            if (_userRepository.UserExists(model.Login))
+            if (_userRepository.Exists(model.Login))
             {
                 ModelState.AddModelError("Login", "Пользователь с таким логином уже существует.");
             }

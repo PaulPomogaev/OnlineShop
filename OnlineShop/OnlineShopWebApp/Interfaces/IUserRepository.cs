@@ -6,6 +6,6 @@ namespace OnlineShopWebApp.Interfaces
     {
         User? GetByLogin(string login);
         void Add(User user);
-        bool UserExists(string login);
+        bool Exists(string login);
     }
 }
