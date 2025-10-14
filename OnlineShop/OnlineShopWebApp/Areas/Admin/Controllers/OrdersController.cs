@@ -14,13 +14,13 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _orderRepository = orderRepository;
         }
 
-        public IActionResult Orders()
+        public IActionResult Index()
         {
             var orders = _orderRepository.GetAll();
             return View(orders);
         }
 
-        public IActionResult DetailOrder(int orderId)
+        public IActionResult Detail(int orderId)
         {
             var order = _orderRepository.GetById(orderId);
             if (order == null)
@@ -31,7 +31,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateOrder(Order order)
+        public IActionResult Update(Order order)
         {
             if (order == null || _orderRepository.GetById(order.Id) == null)
             {
@@ -39,7 +39,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             _orderRepository.Update(order);
-            return RedirectToAction("DetailOrder", new { orderId = order.Id });
+            return RedirectToAction("Detail", new { orderId = order.Id });
         }
     }
 }

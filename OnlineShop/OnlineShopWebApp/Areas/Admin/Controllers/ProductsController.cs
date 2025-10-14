@@ -14,13 +14,13 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _productRepository = productRepository;
         }
 
-        public IActionResult Products()
+        public IActionResult Index()
         {
             var products = _productRepository.GetAll();
             return View(products);
         }
 
-        public IActionResult ProductDetails(int id)
+        public IActionResult Details(int id)
         {
             var product = _productRepository.GetById(id);
 
@@ -31,7 +31,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             return View(product);
         }
 
-        public IActionResult EditProduct(int id)
+        public IActionResult Edit(int id)
         {
             var product = _productRepository.GetById(id);
 
@@ -43,29 +43,29 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditProduct(Product product)
+        public IActionResult Edit(Product product)
         {
             if (!ModelState.IsValid)
             {
                 return View(product);
             }
             _productRepository.Update(product);
-            return RedirectToAction("Products");
+            return RedirectToAction("Index");
         }
 
-        public IActionResult DeleteProduct(int id)
+        public IActionResult Delete(int id)
         {
             _productRepository.Delete(id);
-            return RedirectToAction("Products");
+            return RedirectToAction("Index");
         }
 
-        public IActionResult CreateProduct()
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        public IActionResult Create(Product product)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             product.PhotoPath = "img/whey-protein.jpg";
             _productRepository.Add(product);
-            return RedirectToAction("Products");
+            return RedirectToAction("Index");
         }
     }
 }

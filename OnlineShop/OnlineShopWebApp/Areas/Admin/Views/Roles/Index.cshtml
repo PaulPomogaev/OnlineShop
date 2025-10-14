@@ -17,7 +17,7 @@
                     <div class="text-end">
                         <a class="btn btn-outline-success mb-2 mt-2"
                            asp-controller="Roles"
-                           asp-action="AddRole">
+                           asp-action="Add">
                             Добавить новую роль
                         </a>
                     </div>
@@ -38,7 +38,7 @@
                                         <h5>@Model[i].Name</h5>
                                     </td>
                                     <td>
-                                        <form method="post" asp-action="DeleteRole" asp-route-roleId="@Model[i].Id" onsubmit="return confirm('Удалить роль @Model[i].Name?')">
+                                        <form method="post" asp-action="Delete" asp-route-roleId="@Model[i].Id" onsubmit="return confirm('Удалить роль @Model[i].Name?')">
                                             <button type="submit" class="btn btn-outline-success">Удалить</button>
                                         </form>
                                     </td>
@@ -65,7 +65,7 @@
             <div class="text-center mt-5">
                 <a class="btn btn-outline-success mb-2 mt-2"
                    asp-controller="Roles"
-                   asp-action="AddRole">
+                   asp-action="Add">
                     Добавить новую роль
                 </a>
             </div>

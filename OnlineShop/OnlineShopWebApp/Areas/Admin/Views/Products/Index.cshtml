@@ -16,7 +16,7 @@
                 <div class="col-12">
                     <div class="text-end">
                         <a class="btn btn-outline-success mb-2 mt-2"
-                           asp-controller="Products" asp-action="CreateProduct">
+                           asp-controller="Products" asp-action="Create">
                             Добавить новый продукт
                         </a>
                     </div>
@@ -38,7 +38,7 @@
                                     <td align="left">
                                         <a class="text-success"
                                            asp-controller="Products"
-                                           asp-action="ProductDetails"
+                                           asp-action="Details"
                                            asp-route-id="@Model[i].Id">
                                             <h5>@Model[i].Name</h5>
                                         </a>
@@ -47,7 +47,7 @@
                                     <td>
                                         <a class="btn btn-outline-success"
                                            asp-controller="Products"
-                                           asp-action="EditProduct"
+                                           asp-action="Edit"
                                            asp-route-id="@Model[i].Id">
                                             Редактировать
                                         </a>
@@ -55,7 +55,7 @@
                                     <td>
                                         <a class="btn btn-outline-danger"
                                            asp-controller="Products"
-                                           asp-action="DeleteProduct"
+                                           asp-action="Delete"
                                            asp-route-id="@Model[i].Id"
                                            onclick="return confirm('Удалить товар?')">
                                             Удалить
@@ -83,7 +83,7 @@
             </div>
             <div class="text-center mt-5">
                 <a class="btn btn-outline-success mb-2 mt-2"
-                   asp-controller="Products" asp-action="CreateProduct">
+                   asp-controller="Products" asp-action="Create">
                     Добавить новый продукт
                 </a>
             </div>

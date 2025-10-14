@@ -5,7 +5,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class UsersController : Controller
     {
-        public IActionResult Users()
+        public IActionResult Index()
         {
             return View();
         }

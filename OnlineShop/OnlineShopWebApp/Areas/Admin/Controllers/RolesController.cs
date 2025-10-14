@@ -15,19 +15,19 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
         
 
-        public IActionResult Roles()
+        public IActionResult Index()
         {
             var roles = _rolesRepository.GetAll();
             return View(roles);
         }
 
-        public IActionResult AddRole()
+        public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddRole(Role role)
+        public IActionResult Add(Role role)
         {
             if (_rolesRepository.Exist(role.Name))
             {
@@ -43,14 +43,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _rolesRepository.Add(role);
 
 
-            return RedirectToAction("Roles");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult DeleteRole(int roleId)
+        public IActionResult Delete(int roleId)
         {
             _rolesRepository.Delete(roleId);
-            return RedirectToAction("Roles");
+            return RedirectToAction("Index");
         }
 
     }
