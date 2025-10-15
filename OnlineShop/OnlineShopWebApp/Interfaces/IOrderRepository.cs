@@ -9,6 +9,6 @@ namespace OnlineShopWebApp.Interfaces
         Order? GetById(int id);
         Order Create(Cart cart);
         Order Create(Cart cart, OrderInputModel input);
-        void Update(Order order);
+        void Edit(Order order);
     }
 }

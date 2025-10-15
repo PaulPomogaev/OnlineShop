@@ -7,7 +7,7 @@ namespace OnlineShopWebApp.Interfaces
         List<Product> GetAll();
         Product? GetById(int id);
         void Add(Product product);
-        void Update(Product product);
+        void Edit(Product product);
         void Delete(int id);
         List<Product> SearchEngine(string qwery);
     }

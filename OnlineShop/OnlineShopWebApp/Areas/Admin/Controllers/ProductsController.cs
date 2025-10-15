@@ -17,10 +17,10 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = _productRepository.GetAll();
-            return View(products);
+            return View(products); 
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Detail(int id)
         {
             var product = _productRepository.GetById(id);
 
@@ -49,7 +49,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 return View(product);
             }
-            _productRepository.Update(product);
+            _productRepository.Edit(product);
             return RedirectToAction("Index");
         }
 

@@ -59,7 +59,7 @@ namespace OnlineShopWebApp.Data
             SaveAll(products);
         }
 
-        public void Update(Product updateProduct)
+        public void Edit(Product updateProduct)
         {
             var products = GetAll();
             var existingProduct = products.FirstOrDefault(p => p.Id == updateProduct.Id);

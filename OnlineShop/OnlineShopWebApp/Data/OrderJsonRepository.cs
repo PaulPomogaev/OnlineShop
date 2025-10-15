@@ -100,7 +100,7 @@ namespace OnlineShopWebApp.Data
             };
         }
 
-        public void Update(Order updateOrder)
+        public void Edit(Order updateOrder)
         {
             var orders = GetAll();
             var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);

@@ -31,14 +31,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Order order)
+        public IActionResult Edit(Order order)
         {
             if (order == null || _orderRepository.GetById(order.Id) == null)
             {
                 return NotFound();
             }
 
-            _orderRepository.Update(order);
+            _orderRepository.Edit(order);
             return RedirectToAction("Detail", new { orderId = order.Id });
         }
     }
