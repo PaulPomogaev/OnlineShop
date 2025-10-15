@@ -21,7 +21,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             return View(users);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Detail(int id)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             _userService.UpdateUserProfile(model);
-            return RedirectToAction("Details", new { id = model.Id });
+            return RedirectToAction("Detail", new { id = model.Id });
         }
 
         public IActionResult ChangePassword(int id)
@@ -80,7 +80,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 ModelState.AddModelError("OldPassword", ex.Message);
                 return View(model);
             }
-            return RedirectToAction("Details", new { id = model.UserId });
+            return RedirectToAction("Detail", new { id = model.UserId });
         }
 
 
@@ -98,7 +98,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult AssignRoles(UserRole model)
         {
             _userService.AssignUserRoles(model);
-            return RedirectToAction("Details", new { id = model.UserId });
+            return RedirectToAction("Detail", new { id = model.UserId });
         }
 
         [HttpPost]
