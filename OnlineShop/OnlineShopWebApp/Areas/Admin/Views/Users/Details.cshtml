@@ -1,0 +1,62 @@
+﻿@model UserDetails
+@{
+    ViewData["Title"] = $"Пользователь {Model.Login}";
+}
+
+<div class="row mt-3">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-9 mb-3">
+        <div class="text-center text-uppercase text-success mb-5 mt-5">
+            <h2 class="row-title">Пользователь @Model.Login</h2>
+        </div>
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">Информация о пользователе</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>ID:</strong> @Model.Id</p>
+                        <p><strong>Email (логин):</strong> @Model.Login</p>
+                        <p><strong>Имя:</strong> @Model.FirstName</p>
+                        <p><strong>Фамилия:</strong> @Model.LastName</p>
+                        <p><strong>Телефон:</strong> @Model.Phone</p>
+                        <p><strong>Дата регистрации:</strong> @Model.CreatedDate</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Роль:</strong>
+                            @if (Model.RoleNames.Any())
+                            {
+                                @string.Join(", ", Model.RoleNames)
+                            }
+                            else
+                            {
+                                    <span>Нет ролей</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+                <!-- остальное без изменений -->
+                <div class="text-end">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Действия
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-action="ChangePassword" asp-route-id="@Model.Id">Смена пароля</a></li>
+                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@Model.Id">Редактирование данных</a></li>
+                            <li><a class="dropdown-item" asp-action="AssignRoles" asp-route-id="@Model.Id">Права доступа</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" asp-action="Delete" asp-route-id="@Model.Id" onsubmit="return confirm('Удалить пользователя @Model.Login?')">
+                                    <button type="submit" class="dropdown-item text-danger">Удалить пользователя</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a class="btn btn-outline-secondary" asp-action="Index">Назад к списку</a>
+        </div>
+    </div>
+</div>

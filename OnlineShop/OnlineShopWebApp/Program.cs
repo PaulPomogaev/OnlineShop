@@ -1,5 +1,6 @@
 using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Interfaces;
+using OnlineShopWebApp.Services;
 using Serilog;
 
 namespace OnlineShopWebApp
@@ -33,6 +34,8 @@ namespace OnlineShopWebApp
             builder.Services.AddSingleton<IRolesRepository, RolesJsonRepository>();
 
             builder.Services.AddSingleton<IUserRepository, UserJsonRepository>();
+
+            builder.Services.AddSingleton<IUserService, UserService>();
 
             var app = builder.Build();
             app.UseSerilogRequestLogging();

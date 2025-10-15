@@ -76,5 +76,114 @@ namespace OnlineShopWebApp.Data
             var hashOfInput = HashPassword(password);
             return hashOfInput == hash;
         }
+
+        public User? GetById(int id)
+        {
+            var users = GetAll();
+            return users.FirstOrDefault(u => u.Id == id);
+        }
+
+        public void Update(User user)
+        {
+            var users = GetAll();
+            var existingUser = users.FirstOrDefault(u => u.Id == user.Id);
+            
+            if(existingUser != null)
+            {
+                existingUser.Login = user.Login;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.Phone = user.Phone;
+                SaveAll(users);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var users = GetAll();
+            var user = users.FirstOrDefault(u => u.Id == id);
+
+            if (user != null)
+            {
+                users.Remove(user);
+                SaveAll(users);
+            }
+
+        }
+
+        public void UpdateProfile(int userId, string firstName, string lastName, string email, string phone)
+        {
+            var users = GetAll();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                user.Email = email;
+                user.Phone = phone;
+                SaveAll(users);
+            }
+        }
+
+        public void ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            var users = GetAll();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new InvalidOperationException("Пользователь не найден");
+            }
+
+            if(!VerifyPassword(oldPassword, user.PasswordHash))
+            {
+                throw new InvalidOperationException("Введён неверный старый пароль");
+            }
+
+            user.PasswordHash = HashPassword(newPassword);
+            SaveAll(users);
+        }
+
+        public List<int> GetUserRoleIds(int userId)
+        {
+            var user = GetById(userId);
+            if(user == null)
+            {
+                return new List<int>();
+            }
+            return user.RoleIds;
+        }
+
+        public void AssignRoles(int userId, List<int> roleIds)
+        {
+            var users = GetAll();
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                if(roleIds == null)
+                {
+                    roleIds = new List<int>();
+                }
+                user.RoleIds = roleIds;
+                SaveAll(users);
+            }
+        }
+
+        public void AddFull(string login, string password, string firstName, string lastName, string email, string phone)
+        {
+            var user = new User
+            {
+                Id = _nextId++,
+                Login = login,
+                PasswordHash = HashPassword(password),
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Phone = phone,
+                RoleIds = new List<int>()
+            };
+            var users = GetAll();
+            users.Add(user);
+            SaveAll(users);
+        }
     }
 }
