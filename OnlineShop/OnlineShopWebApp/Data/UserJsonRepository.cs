@@ -119,6 +119,7 @@ namespace OnlineShopWebApp.Data
             {
                 user.FirstName = firstName;
                 user.LastName = lastName;
+                user.Login = email;
                 user.Email = email;
                 user.Phone = phone;
                 SaveAll(users);
