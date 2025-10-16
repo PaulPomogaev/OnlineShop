@@ -53,6 +53,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             _productRepository.Delete(id);

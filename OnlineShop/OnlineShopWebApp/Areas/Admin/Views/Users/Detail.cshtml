@@ -46,11 +46,30 @@
                             <li><a class="dropdown-item" asp-action="AssignRoles" asp-route-id="@Model.Id">Права доступа</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form method="post" asp-action="Delete" asp-route-id="@Model.Id" onsubmit="return confirm('Удалить пользователя @Model.Login?')">
-                                    <button type="submit" class="dropdown-item text-danger">Удалить пользователя</button>
-                                </form>
+                                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                                    Удалить пользователя
+                                </a>
                             </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteUserModalLabel">Удаление пользователя</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Вы действительно хотите удалить пользователя "<strong>@Model.Login</strong>"?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" asp-area="Admin" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id">
+                            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                        </form>
+                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Отмена</button>
                     </div>
                 </div>
             </div>

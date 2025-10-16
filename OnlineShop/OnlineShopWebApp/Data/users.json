@@ -11,18 +11,5 @@
       1
     ],
     "CreatedDate": "2025-10-15T14:55:17.3628285+04:00"
-  },
-  {
-    "Id": 4,
-    "Login": "cratos@mail.ru",
-    "PasswordHash": "glSDmjwqmzsxZdA2tWfhhfj/Gg7KaKaCwihk4GuYqNQ=",
-    "FirstName": "\u041A\u0440\u0430\u0442\u043E\u0441",
-    "LastName": "\u0410\u0432\u0440\u0435\u043B\u0438\u0439",
-    "Email": "cratos@gmail.ru",
-    "Phone": "\u002B79282782828",
-    "RoleIds": [
-      2
-    ],
-    "CreatedDate": "2025-10-15T16:03:24.1540845+04:00"
   }
 ]

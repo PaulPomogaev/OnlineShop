@@ -38,9 +38,28 @@
                                         <h5>@Model[i].Name</h5>
                                     </td>
                                     <td>
-                                        <form method="post" asp-action="Delete" asp-route-roleId="@Model[i].Id" onsubmit="return confirm('Удалить роль @Model[i].Name?')">
-                                            <button type="submit" class="btn btn-outline-success">Удалить</button>
-                                        </form>
+                                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#deleteRoleModal_@Model[i].Id">
+                                            Удалить
+                                        </button>
+                                        <div class="modal fade" id="deleteRoleModal_@Model[i].Id" tabindex="-1" aria-labelledby="deleteRoleModalLabel_@Model[i].Id" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteRoleModalLabel_@Model[i].Id">Удаление роли</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Вы действительно хотите удалить роль "<strong>@Model[i].Name</strong>"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post" asp-area="Admin" asp-controller="Roles" asp-action="Delete" asp-route-roleId="@Model[i].Id">
+                                                            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                                                        </form>
+                                                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Отмена</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }

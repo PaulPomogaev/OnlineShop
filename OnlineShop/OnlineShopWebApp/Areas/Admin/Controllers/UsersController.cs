@@ -54,7 +54,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             _userService.UpdateUserProfile(model);
-            return RedirectToAction("Detail", new { id = model.Id });
+            return RedirectToAction("Index");
         }
 
         public IActionResult ChangePassword(int id)

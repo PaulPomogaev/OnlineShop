@@ -53,13 +53,28 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger"
-                                           asp-controller="Products"
-                                           asp-action="Delete"
-                                           asp-route-id="@Model[i].Id"
-                                           onclick="return confirm('Удалить товар?')">
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal_@Model[i].Id">
                                             Удалить
-                                        </a>
+                                        </button>
+                                        <div class="modal fade" id="deleteProductModal_@Model[i].Id" tabindex="-1" aria-labelledby="deleteProductModalLabel_@Model[i].Id" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteProductModalLabel_@Model[i].Id">Удаление товара</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Вы действительно хотите удалить товар "<strong>@Model[i].Name</strong>"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post" asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@Model[i].Id">
+                                                            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                                                        </form>
+                                                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Отмена</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
