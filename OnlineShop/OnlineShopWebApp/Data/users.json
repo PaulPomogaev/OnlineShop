@@ -1,12 +1,12 @@
 ﻿[
   {
     "Id": 3,
-    "Login": "paulus@mail.ruuu",
+    "Login": "paulus@mail.ru",
     "PasswordHash": "Bx\u002BfQEo2vWHXjqsuma20h8ceYuPqFe3KfW4Ujlq6pa0=",
     "FirstName": "\u041F\u0430\u0432\u0435\u043B",
     "LastName": "\u041F\u043E\u043C\u043E\u0433\u0430\u0435\u0432",
-    "Email": "paulus@mail.ruuu",
-    "Phone": "87777777777",
+    "Email": "paulus@mail.ru",
+    "Phone": "87777777728",
     "RoleIds": [
       1
     ],
