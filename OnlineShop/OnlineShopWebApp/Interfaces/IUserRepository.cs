@@ -2,15 +2,12 @@
 
 namespace OnlineShopWebApp.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        List<User> GetAll();
-        User? GetById(int id);
         User? GetByLogin(string login);
         void Add(string login, string password);
         bool Exists(string login);
         void Update(User user);
-        void Delete(int id);
         void UpdateProfile(int userId, string firstName, string lastName, string email, string phone);
         void ChangePassword(int userId, string oldPassword, string newPassword);
         List<int> GetUserRoleIds(int userId);

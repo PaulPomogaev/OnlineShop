@@ -2,11 +2,8 @@
 
 namespace OnlineShopWebApp.Interfaces
 {
-    public interface IOrderRepository
+    public interface IOrderRepository : IRepository<Order>
     {
-        List<Order> GetAll();
-        void Add(Order order);
-        Order? GetById(int id);
         Order Create(Cart cart);
         Order Create(Cart cart, OrderInputModel input);
         void Edit(Order order);

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OnlineShopWebApp.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWebApp.Models
 {
-    public class Product
+    public class Product : IBaseId
     {
         public string PhotoPath { get; set; } = "img/whey-protein.jpg";
         public required int Id { get; set; }

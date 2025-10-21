@@ -1,6 +1,8 @@
-﻿namespace OnlineShopWebApp.Models
+﻿using OnlineShopWebApp.Interfaces;
+
+namespace OnlineShopWebApp.Models
 {
-    public class Order
+    public class Order : IBaseId
     {
         public int Id { get; set; }
         public string UserId { get; set; } = "guest";
