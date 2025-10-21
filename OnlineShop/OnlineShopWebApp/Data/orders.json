@@ -178,5 +178,33 @@
       "Phone": "87777777777"
     },
     "Status": 3
+  },
+  {
+    "Id": 7,
+    "UserId": "guest",
+    "Items": [
+      {
+        "Id": 8,
+        "Product": {
+          "PhotoPath": "img/whey-protein.jpg",
+          "Id": 3,
+          "Name": "BCAA 500 g",
+          "Cost": 3500,
+          "Description": "BCAA \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0438\u0432\u0430\u044E\u0442 \u044D\u043D\u0435\u0440\u0433\u0438\u044E \u0438 \u0437\u0430\u0449\u0438\u0449\u0430\u044E\u0442 \u043C\u044B\u0448\u0446\u044B \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0442\u0440\u0435\u043D\u0438\u0440\u043E\u0432\u043A\u0438"
+        },
+        "Quantity": 4,
+        "Cost": 14000
+      }
+    ],
+    "TotalCost": 14000,
+    "CreatedDate": "2025-10-21T16:36:43.782664+04:00",
+    "DeliveryDate": "2025-10-26",
+    "Comment": "\u0422\u0435\u0441\u0442\u0438\u043C",
+    "Customer": {
+      "Name": "\u041F\u0430\u0432\u0435\u043B \u041F\u0430\u0432\u043B\u043E\u0432\u0438\u0447",
+      "Address": "\u041B\u0435\u043D\u0438\u043D\u0430 \u0434. 23",
+      "Phone": "87777777777"
+    },
+    "Status": 0
   }
 ]

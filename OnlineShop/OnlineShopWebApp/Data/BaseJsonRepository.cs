@@ -29,13 +29,13 @@ namespace OnlineShopWebApp.Data
             return GetAllInternal();
         }
 
-        private void SaveAll(List<T> items)
+        protected void SaveAll(List<T> items)
         {
             var json = JsonSerializer.Serialize(items, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(FilePath, json, Encoding.UTF8);
         }
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             var items = GetAllInternal();
             var nextId = items.Any() ? items.Max(i => i.Id) + 1 : 1;

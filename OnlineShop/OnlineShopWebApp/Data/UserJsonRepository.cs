@@ -6,56 +6,24 @@ using System.Security.Cryptography;
 
 namespace OnlineShopWebApp.Data
 {
-    public class UserJsonRepository : IUserRepository
+    public class UserJsonRepository : BaseJsonRepository<User>, IUserRepository
     {
-        private readonly string _filepath = "Data/users.json";
-        private int _nextId;
-
-        public UserJsonRepository()
-        {
-            InitializeNextIds();
-        }
-
-        public void InitializeNextIds()
-        {
-            var users = GetAll();
-            _nextId = users.Any() ? users.Max(u => u.Id) + 1 : 1;
-        }
-
-        public List<User> GetAll()
-        {
-            if(!File.Exists(_filepath))
-            {
-                return new List<User>();
-            }
-
-            var json = File.ReadAllText(_filepath, Encoding.UTF8);
-            return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
-        }
-
-        private void SaveAll(List<User> users)
-        {
-            var json = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filepath, json, Encoding.UTF8);
-        }
-
+        public UserJsonRepository() : base("Data/users.json") { }
+        
         public void Add(string login, string password)
         {
             var user = new User
             {
-                Id = _nextId++,
                 Login = login,
                 PasswordHash = HashPassword(password)
             };
 
-            var users = GetAll();
-            users.Add(user);
-            SaveAll(users);
+            Add(user);
         }
 
         public User? GetByLogin(string login)
         {
-            var users = GetAll();
+            var users = GetAllInternal();
             return users.FirstOrDefault(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -77,15 +45,9 @@ namespace OnlineShopWebApp.Data
             return hashOfInput == hash;
         }
 
-        public User? GetById(int id)
-        {
-            var users = GetAll();
-            return users.FirstOrDefault(u => u.Id == id);
-        }
-
         public void Update(User user)
         {
-            var users = GetAll();
+            var users = GetAllInternal();
             var existingUser = users.FirstOrDefault(u => u.Id == user.Id);
             
             if(existingUser != null)
@@ -98,22 +60,9 @@ namespace OnlineShopWebApp.Data
             }
         }
 
-        public void Delete(int id)
-        {
-            var users = GetAll();
-            var user = users.FirstOrDefault(u => u.Id == id);
-
-            if (user != null)
-            {
-                users.Remove(user);
-                SaveAll(users);
-            }
-
-        }
-
         public void UpdateProfile(int userId, string firstName, string lastName, string email, string phone)
         {
-            var users = GetAll();
+            var users = GetAllInternal();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
@@ -128,7 +77,7 @@ namespace OnlineShopWebApp.Data
 
         public void ChangePassword(int userId, string oldPassword, string newPassword)
         {
-            var users = GetAll();
+            var users = GetAllInternal();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
@@ -156,7 +105,7 @@ namespace OnlineShopWebApp.Data
 
         public void AssignRoles(int userId, List<int> roleIds)
         {
-            var users = GetAll();
+            var users = GetAllInternal();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
@@ -173,7 +122,6 @@ namespace OnlineShopWebApp.Data
         {
             var user = new User
             {
-                Id = _nextId++,
                 Login = login,
                 PasswordHash = HashPassword(password),
                 FirstName = firstName,
@@ -182,9 +130,7 @@ namespace OnlineShopWebApp.Data
                 Phone = phone,
                 RoleIds = new List<int>()
             };
-            var users = GetAll();
-            users.Add(user);
-            SaveAll(users);
+            Add(user);
         }
     }
 }

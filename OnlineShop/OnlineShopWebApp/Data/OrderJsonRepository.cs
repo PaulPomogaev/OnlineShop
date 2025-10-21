@@ -5,61 +5,29 @@ using OnlineShopWebApp.Interfaces;
 
 namespace OnlineShopWebApp.Data
 {
-    public class OrderJsonRepository : IOrderRepository
+    public class OrderJsonRepository : BaseJsonRepository<Order>, IOrderRepository
     {
-        private readonly string _filePath = "Data/orders.json";
-        private int _nextId;
         private int _nextItemId;
 
-        public OrderJsonRepository()
+        public OrderJsonRepository() : base("Data/orders.json") 
         {
-            InitializeNextIds();
-        }
-
-        private void InitializeNextIds()
-        {
-            var orders = GetAll();
-            _nextId = orders.Any() ? orders.Max(o => o.Id) + 1 : 1;
-
+            var orders = GetAllInternal();
             var allItemIds = orders.SelectMany(o => o.Items.Select(i => i.Id)).ToList();
             _nextItemId = allItemIds.Any() ? allItemIds.Max() + 1 : 1;
         }
-
-        public List<Order> GetAll()
+               
+        public override void Add(Order order)
         {
-            if (!File.Exists(_filePath))
-            {
-                return new List<Order>();
-            }
-
-            var json = File.ReadAllText(_filePath, Encoding.UTF8);
-            return JsonSerializer.Deserialize<List<Order>>(json) ?? new List<Order>();
-        }
-
-        public void Add(Order order)
-        {
-            order.Id = _nextId++;
+            var orders = GetAllInternal();
+            order.Id = orders.Any() ? orders.Max(o => o.Id) + 1 : 1;
 
             foreach (var item in order.Items)
             {
                 item.Id = _nextItemId++;
             }
 
-            var orders = GetAll();
             orders.Add(order);
             SaveAll(orders);
-        }
-
-        public Order? GetById(int id)
-        {
-            var orders = GetAll();
-            return orders.FirstOrDefault(o => o.Id == id);
-        }
-
-        private void SaveAll(List<Order> orders)
-        {
-            var json = JsonSerializer.Serialize(orders, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filePath, json, Encoding.UTF8);
         }
 
         public Order Create(Cart cart)
@@ -102,7 +70,7 @@ namespace OnlineShopWebApp.Data
 
         public void Edit(Order updateOrder)
         {
-            var orders = GetAll();
+            var orders = GetAllInternal();
             var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);
 
             if(existingOrder != null)

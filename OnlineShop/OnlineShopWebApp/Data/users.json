@@ -11,5 +11,16 @@
       1
     ],
     "CreatedDate": "2025-10-15T14:55:17.3628285+04:00"
+  },
+  {
+    "Id": 4,
+    "Login": "testPerson@gmail.com",
+    "PasswordHash": "rulClyJdM4\u002BzVY1csAWTYYgK06w9CGItsi7emYdqo2A=",
+    "FirstName": "\u0410\u043D\u0442\u043E\u043D",
+    "LastName": "\u0412\u0430\u0441\u0435\u043D\u0446\u043E\u0432",
+    "Email": "testPerson@gmail.com",
+    "Phone": "\u002B79054436565",
+    "RoleIds": [],
+    "CreatedDate": "2025-10-21T16:41:08.505561+04:00"
   }
 ]
