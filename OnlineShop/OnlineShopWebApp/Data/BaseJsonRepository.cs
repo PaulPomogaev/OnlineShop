@@ -7,14 +7,14 @@ namespace OnlineShopWebApp.Data
 {
     public abstract class BaseJsonRepository<T> : IRepository<T> where T : class, IBaseId
     {
-        protected readonly string FilePath;
+        public readonly string FilePath;
         
-        protected BaseJsonRepository(string filePath)
+        public BaseJsonRepository(string filePath)
         {
             FilePath = filePath;
         }
 
-        protected List<T> GetAllInternal()
+        public List<T> GetAll()
         {
             if (!File.Exists(FilePath))
             {
@@ -24,12 +24,8 @@ namespace OnlineShopWebApp.Data
             var json = File.ReadAllText(FilePath, Encoding.UTF8);
             return JsonSerializer.Deserialize<List<T>>(json) ?? new List<T>();
         }
-        public List<T> GetAll()
-        {
-            return GetAllInternal();
-        }
-
-        protected void SaveAll(List<T> items)
+        
+        public void SaveAll(List<T> items)
         {
             var json = JsonSerializer.Serialize(items, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(FilePath, json, Encoding.UTF8);
@@ -37,7 +33,7 @@ namespace OnlineShopWebApp.Data
 
         public virtual void Add(T item)
         {
-            var items = GetAllInternal();
+            var items = GetAll();
             var nextId = items.Any() ? items.Max(i => i.Id) + 1 : 1;
             item.Id = nextId;
             items.Add(item);
@@ -46,7 +42,7 @@ namespace OnlineShopWebApp.Data
 
         public void Delete(int id)
         {
-            var items = GetAllInternal();
+            var items = GetAll();
             var item = items.FirstOrDefault(p => p.Id == id);
 
             if (item != null)
@@ -58,7 +54,7 @@ namespace OnlineShopWebApp.Data
 
         public T? GetById(int id)
         {
-            var items = GetAllInternal();
+            var items = GetAll();
             return items.FirstOrDefault(i => i.Id == id);
         }
     }

@@ -23,7 +23,7 @@ namespace OnlineShopWebApp.Data
 
         public User? GetByLogin(string login)
         {
-            var users = GetAllInternal();
+            var users = GetAll();
             return users.FirstOrDefault(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -47,7 +47,7 @@ namespace OnlineShopWebApp.Data
 
         public void Update(User user)
         {
-            var users = GetAllInternal();
+            var users = GetAll();
             var existingUser = users.FirstOrDefault(u => u.Id == user.Id);
             
             if(existingUser != null)
@@ -62,7 +62,7 @@ namespace OnlineShopWebApp.Data
 
         public void UpdateProfile(int userId, string firstName, string lastName, string email, string phone)
         {
-            var users = GetAllInternal();
+            var users = GetAll();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
@@ -77,7 +77,7 @@ namespace OnlineShopWebApp.Data
 
         public void ChangePassword(int userId, string oldPassword, string newPassword)
         {
-            var users = GetAllInternal();
+            var users = GetAll();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
@@ -105,7 +105,7 @@ namespace OnlineShopWebApp.Data
 
         public void AssignRoles(int userId, List<int> roleIds)
         {
-            var users = GetAllInternal();
+            var users = GetAll();
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {

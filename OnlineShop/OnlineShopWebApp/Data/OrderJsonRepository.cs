@@ -11,14 +11,14 @@ namespace OnlineShopWebApp.Data
 
         public OrderJsonRepository() : base("Data/orders.json") 
         {
-            var orders = GetAllInternal();
+            var orders = GetAll();
             var allItemIds = orders.SelectMany(o => o.Items.Select(i => i.Id)).ToList();
             _nextItemId = allItemIds.Any() ? allItemIds.Max() + 1 : 1;
         }
                
         public override void Add(Order order)
         {
-            var orders = GetAllInternal();
+            var orders = GetAll();
             order.Id = orders.Any() ? orders.Max(o => o.Id) + 1 : 1;
 
             foreach (var item in order.Items)
@@ -70,7 +70,7 @@ namespace OnlineShopWebApp.Data
 
         public void Edit(Order updateOrder)
         {
-            var orders = GetAllInternal();
+            var orders = GetAll();
             var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);
 
             if(existingOrder != null)
