@@ -13,7 +13,7 @@ namespace OnlineShopWebApp.Data
                 
         public void Edit(Product updateProduct)
         {
-            var products = GetAllInternal();
+            var products = GetAll();
             var existingProduct = products.FirstOrDefault(p => p.Id == updateProduct.Id);
 
             if (existingProduct != null)
@@ -30,10 +30,10 @@ namespace OnlineShopWebApp.Data
         {
             if(string.IsNullOrWhiteSpace(query))
             {
-                return GetAllInternal();
+                return GetAll();
             }
 
-            var allProducts = GetAllInternal();
+            var allProducts = GetAll();
             return allProducts.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
                 

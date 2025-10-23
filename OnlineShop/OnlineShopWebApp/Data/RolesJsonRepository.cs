@@ -11,7 +11,7 @@ namespace OnlineShopWebApp.Data
 
         public bool Exist(string roleName)
         {
-            var roles = GetAllInternal();
+            var roles = GetAll();
             return roles.Any(r => r.Name.Equals(roleName, StringComparison.OrdinalIgnoreCase));
         }
 
