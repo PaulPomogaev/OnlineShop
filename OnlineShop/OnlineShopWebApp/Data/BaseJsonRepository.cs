@@ -27,7 +27,13 @@ namespace OnlineShopWebApp.Data
         
         public void SaveAll(List<T> items)
         {
-            var json = JsonSerializer.Serialize(items, new JsonSerializerOptions { WriteIndented = true });
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+            var json = JsonSerializer.Serialize(items, options);
             File.WriteAllText(FilePath, json, Encoding.UTF8);
         }
 
