@@ -1,15 +1,19 @@
-﻿using OnlineShopWebApp.Interfaces;
-using OnlineShopWebApp.Models;
+﻿using OnlineShop.Db.Interfaces;
+using OnlineShop.Db.Models;
 using System.Text;
-using System.Text.Json;
 using System.Security.Cryptography;
 
-namespace OnlineShopWebApp.Data
+namespace OnlineShop.Db.Repostories
 {
-    public class UserJsonRepository : BaseJsonRepository<User>, IUserRepository
+    public class UserDbRepository : BaseDbRepository<User>, IUserRepository
     {
-        public UserJsonRepository() : base("Data/users.json") { }
-        
+        private readonly DatabaseContext _context;
+
+        public UserDbRepository(DatabaseContext context) : base(context)
+        {
+            _context = context;
+        }
+
         public void Add(string login, string password)
         {
             var user = new User
@@ -23,8 +27,8 @@ namespace OnlineShopWebApp.Data
 
         public User? GetByLogin(string login)
         {
-            var users = GetAll();
-            return users.FirstOrDefault(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
+            return _context.Users.FirstOrDefault(u =>
+                u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool Exists(string login)
@@ -47,23 +51,21 @@ namespace OnlineShopWebApp.Data
 
         public void Update(User user)
         {
-            var users = GetAll();
-            var existingUser = users.FirstOrDefault(u => u.Id == user.Id);
-            
-            if(existingUser != null)
+            var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+
+            if (existingUser != null)
             {
                 existingUser.Login = user.Login;
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
                 existingUser.Phone = user.Phone;
-                SaveAll(users);
+                _context.SaveChanges();
             }
         }
 
         public void UpdateProfile(int userId, string firstName, string lastName, string email, string phone)
         {
-            var users = GetAll();
-            var user = users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
                 user.FirstName = firstName;
@@ -71,32 +73,31 @@ namespace OnlineShopWebApp.Data
                 user.Login = email;
                 user.Email = email;
                 user.Phone = phone;
-                SaveAll(users);
+                _context.SaveChanges();
             }
         }
 
         public void ChangePassword(int userId, string oldPassword, string newPassword)
         {
-            var users = GetAll();
-            var user = users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
                 throw new InvalidOperationException("Пользователь не найден");
             }
 
-            if(!VerifyPassword(oldPassword, user.PasswordHash))
+            if (!VerifyPassword(oldPassword, user.PasswordHash))
             {
                 throw new InvalidOperationException("Введён неверный старый пароль");
             }
 
             user.PasswordHash = HashPassword(newPassword);
-            SaveAll(users);
+            _context.SaveChanges();
         }
 
         public List<int> GetUserRoleIds(int userId)
         {
             var user = GetById(userId);
-            if(user == null)
+            if (user == null)
             {
                 return new List<int>();
             }
@@ -105,16 +106,11 @@ namespace OnlineShopWebApp.Data
 
         public void AssignRoles(int userId, List<int> roleIds)
         {
-            var users = GetAll();
-            var user = users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
-                if(roleIds == null)
-                {
-                    roleIds = new List<int>();
-                }
-                user.RoleIds = roleIds;
-                SaveAll(users);
+                user.RoleIds = roleIds ?? new List<int>();
+                _context.SaveChanges();
             }
         }
 

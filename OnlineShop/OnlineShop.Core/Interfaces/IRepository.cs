@@ -1,4 +1,4 @@
-﻿namespace OnlineShopWebApp.Interfaces
+﻿namespace OnlineShop.Core.Interfaces
 {
     public interface IRepository<T> where T: class, IBaseId
     {

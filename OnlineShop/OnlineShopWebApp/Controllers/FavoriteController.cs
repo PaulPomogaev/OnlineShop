@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShop.Db.Interfaces;
+using OnlineShop.Db.Models;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -18,13 +20,26 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index()
         {
             var favorite = _favoriteRepository.Get();
-            if(favorite == null)
+            if (favorite == null)
             {
-                return View(new List<Product>());
+                return View(new List<ProductViewModel>());
             }
+                        
+            var products = favorite.ProductIds
+                .Select(id => _productRepository.GetById(id))
+                .Where(p => p != null)
+                .ToList();
 
-            var products = favorite.ProductIds.Select(id => _productRepository.GetById(id)).Where(p => p != null).ToList();
-            return View(products);
+            var productViewModels = products.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Cost = p.Cost,
+                Description = p.Description
+                
+            }).ToList();
+
+            return View(productViewModels);
         }
 
         public IActionResult Add(int productId)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWebApp.Interfaces;
+using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShop.Db.Models;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -17,39 +18,64 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = _productRepository.GetAll();
-            return View(products); 
+            var viewModels = products.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Cost = p.Cost,
+                Description = p.Description
+            }).ToList();
+
+            return View(viewModels);
         }
 
         public IActionResult Detail(int id)
         {
             var product = _productRepository.GetById(id);
+            if (product == null) return NotFound();
 
-            if (product == null)
+            var viewModel = new ProductViewModel
             {
-                return NotFound();
-            }
-            return View(product);
+                Id = product.Id,
+                Name = product.Name,
+                Cost = product.Cost,
+                Description = product.Description,
+                PhotoPath = "img/whey-protein.jpg"
+            };
+            return View(viewModel);
         }
 
         public IActionResult Edit(int id)
         {
             var product = _productRepository.GetById(id);
+            if (product == null) return NotFound();
 
-            if (product == null)
+            var viewModel = new ProductViewModel
             {
-                return NotFound();
-            }
-            return View(product);
+                Id = product.Id,
+                Name = product.Name,
+                Cost = product.Cost,
+                Description = product.Description
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(ProductViewModel model) 
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(model);
             }
-            _productRepository.Edit(product);
+                        
+            var existingProduct = _productRepository.GetById(model.Id);
+            if (existingProduct == null) return NotFound();
+
+            existingProduct.Name = model.Name;
+            existingProduct.Cost = model.Cost;
+            existingProduct.Description = model.Description;
+
+            _productRepository.Edit(existingProduct);
             return RedirectToAction("Index");
         }
 
@@ -66,15 +92,21 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Create(ProductViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(model);
             }
 
-            product.PhotoPath = "img/whey-protein.jpg";
-            _productRepository.Add(product);
+            var dbProduct = new Product
+            {
+                Name = model.Name,
+                Cost = model.Cost,
+                Description = model.Description
+            };
+
+            _productRepository.Add(dbProduct);
             return RedirectToAction("Index");
         }
     }

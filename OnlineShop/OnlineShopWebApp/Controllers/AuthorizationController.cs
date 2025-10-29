@@ -2,6 +2,8 @@
 using OnlineShopWebApp.Data;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShop.Db.Repostories;
+using OnlineShop.Db.Interfaces;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -23,7 +25,7 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Login(LoginModel model)
         {
             var user = _userRepository.GetByLogin(model.Login);
-            if(user == null || !UserJsonRepository.VerifyPassword(model.Password, user.PasswordHash))
+            if(user == null || !UserDbRepository.VerifyPassword(model.Password, user.PasswordHash))
             {
                 ModelState.AddModelError("", "Неверный логин или пароль");
             }

@@ -1,9 +1,9 @@
-﻿using OnlineShopWebApp.Interfaces;
+﻿using OnlineShop.Core.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWebApp.Models
 {
-    public class Role : IBaseId
+    public class RoleViewModel
     {
         public int Id { get; set; }
 

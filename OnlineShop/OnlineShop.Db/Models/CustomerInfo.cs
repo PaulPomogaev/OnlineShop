@@ -1,4 +1,4 @@
-﻿namespace OnlineShopWebApp.Models
+﻿namespace OnlineShop.Db.Models
 {
     public class CustomerInfo
     {

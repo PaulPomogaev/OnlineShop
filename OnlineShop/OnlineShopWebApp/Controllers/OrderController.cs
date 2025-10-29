@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShop.Db.Interfaces;
+using OnlineShop.Core.Models;
 
 
 namespace OnlineShopWebApp.Controllers

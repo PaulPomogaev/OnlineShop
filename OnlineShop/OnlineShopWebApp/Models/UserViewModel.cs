@@ -1,9 +1,9 @@
-﻿using OnlineShopWebApp.Interfaces;
+﻿using OnlineShop.Core.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWebApp.Models
 {
-    public class User : IBaseId
+    public class UserViewModel
     {
         public int Id { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Models;
+using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Data;
 

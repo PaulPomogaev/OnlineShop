@@ -1,6 +1,7 @@
-﻿using OnlineShopWebApp.Models;
+﻿using OnlineShop.Db.Models;
+using OnlineShop.Core.Interfaces;
 
-namespace OnlineShopWebApp.Interfaces
+namespace OnlineShop.Db.Interfaces
 {
     public interface IProductRepository : IRepository<Product>
     {

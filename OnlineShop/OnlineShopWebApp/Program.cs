@@ -1,4 +1,8 @@
 using OnlineShopWebApp.Data;
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.Db;
+using OnlineShop.Db.Repostories;
+using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Services;
 using Serilog;
@@ -21,21 +25,25 @@ namespace OnlineShopWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSingleton<IProductRepository, ProductJsonRepository>();
+            string connection = builder.Configuration.GetConnectionString("online_shop");
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseSqlServer(connection));
 
-            builder.Services.AddSingleton<ICartRepository, CartJsonRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductDbRepository>();
 
-            builder.Services.AddSingleton<IOrderRepository, OrderJsonRepository>();
+            builder.Services.AddScoped<ICartRepository, CartDbRepository>();
+
+            builder.Services.AddScoped<IOrderRepository, OrderDbRepository>();
 
             builder.Services.AddSingleton<IFavoriteRepository, FavoriteJsonRepository>();
 
             builder.Services.AddSingleton<IComparisonRepository, ComparisonJsonRepository>();
 
-            builder.Services.AddSingleton<IRolesRepository, RolesJsonRepository>();
+            builder.Services.AddScoped<IRolesRepository, RolesDbRepository>();
 
-            builder.Services.AddSingleton<IUserRepository, UserJsonRepository>();
+            builder.Services.AddScoped<IUserRepository, UserDbRepository>();
 
-            builder.Services.AddSingleton<IUserService, UserService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
             app.UseSerilogRequestLogging();

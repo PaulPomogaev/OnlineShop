@@ -1,4 +1,6 @@
-﻿namespace OnlineShopWebApp.Models
+﻿using OnlineShop.Db.Models;
+
+namespace OnlineShopWebApp.Models
 {
     public class OrderItem
     {

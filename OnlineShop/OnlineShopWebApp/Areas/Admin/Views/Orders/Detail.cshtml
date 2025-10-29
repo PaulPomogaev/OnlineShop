@@ -1,4 +1,6 @@
-﻿@model Order
+﻿@using OnlineShop.Core.Models
+
+@model OnlineShop.Db.Models.Order
 @{
     ViewData["Title"] = "Детали заказа";
 }
@@ -42,7 +44,7 @@
                                         <p>
                                             <select asp-for="Status"
                                                     class="form-select list-group-item-success w-50"
-                                                    asp-items="@Html.GetEnumSelectList<OnlineShopWebApp.Models.OrderStatus>()">
+                                                    asp-items="@Html.GetEnumSelectList<OnlineShop.Core.Models.OrderStatus>()">
                                             </select>
                                         </p>
                                     </td>

@@ -2,6 +2,8 @@
 using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
 using System;
+using OnlineShop.Db.Models;
+using OnlineShop.Db.Interfaces;
 
 namespace OnlineShopWebApp.Services
 {

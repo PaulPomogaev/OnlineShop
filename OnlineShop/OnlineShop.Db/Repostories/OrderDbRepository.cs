@@ -1,33 +1,24 @@
-﻿using OnlineShopWebApp.Models;
-using System.Text.Json;
+﻿using OnlineShop.Db.Interfaces;
+using OnlineShop.Db.Models;
 using System.Text;
-using OnlineShopWebApp.Interfaces;
+using OnlineShop.Core.Models;
 
-namespace OnlineShopWebApp.Data
+
+namespace OnlineShop.Db.Repostories
 {
-    public class OrderJsonRepository : BaseJsonRepository<Order>, IOrderRepository
+    public class OrderDbRepository : BaseDbRepository<Order>, IOrderRepository
     {
-        private int _nextItemId;
+        private readonly DatabaseContext _context;
 
-        public OrderJsonRepository() : base("Data/orders.json") 
+        public OrderDbRepository(DatabaseContext context) : base(context)
         {
-            var orders = GetAll();
-            var allItemIds = orders.SelectMany(o => o.Items.Select(i => i.Id)).ToList();
-            _nextItemId = allItemIds.Any() ? allItemIds.Max() + 1 : 1;
+            _context = context;
         }
-               
+
         public override void Add(Order order)
         {
-            var orders = GetAll();
-            order.Id = orders.Any() ? orders.Max(o => o.Id) + 1 : 1;
-
-            foreach (var item in order.Items)
-            {
-                item.Id = _nextItemId++;
-            }
-
-            orders.Add(order);
-            SaveAll(orders);
+            _context.Orders.Add(order);
+            _context.SaveChanges();
         }
 
         public Order Create(Cart cart)
@@ -43,7 +34,7 @@ namespace OnlineShopWebApp.Data
             return Create(cart, input);
         }
 
-        public Order Create (Cart cart, OrderInputModel input)
+        public Order Create(Cart cart, OrderInputModel input)
         {
             var orderItems = cart.Items.Select(item => new OrderItem
             {
@@ -64,20 +55,19 @@ namespace OnlineShopWebApp.Data
                 DeliveryDate = input.DeliveryDate,
                 Comment = input.Comment,
                 CreatedDate = DateTime.Now
-
             };
         }
 
         public void Edit(Order updateOrder)
         {
-            var orders = GetAll();
-            var existingOrder = orders.FirstOrDefault(o => o.Id == updateOrder.Id);
+            var existingOrder = _context.Orders.FirstOrDefault(o => o.Id == updateOrder.Id);
 
-            if(existingOrder != null)
+            if (existingOrder != null)
             {
                 existingOrder.Status = updateOrder.Status;
-                SaveAll(orders);
+                _context.SaveChanges();
             }
         }
     }
 }
+
