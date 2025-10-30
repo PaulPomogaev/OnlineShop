@@ -1,6 +1,8 @@
-﻿using OnlineShopWebApp.Models;
+﻿using OnlineShop.Db.Models;
+using OnlineShop.Core.Interfaces;
+using OnlineShop.Core.Models;
 
-namespace OnlineShopWebApp.Interfaces
+namespace OnlineShop.Db.Interfaces
 {
     public interface IComparisonRepository
     {

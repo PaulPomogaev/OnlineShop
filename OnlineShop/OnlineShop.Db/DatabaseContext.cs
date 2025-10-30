@@ -13,7 +13,9 @@ namespace OnlineShop.Db
         public DbSet<Role> Roles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-       
+        public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Comparison> Comparisons { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -30,6 +32,26 @@ namespace OnlineShop.Db
             modelBuilder.Entity<Product>()
                 .Property(p => p.Cost)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Favorite>()
+                .HasMany(f => f.Items)
+                .WithOne(fi => fi.Favorite)
+                .HasForeignKey(fi => fi.FavoriteId);
+
+            modelBuilder.Entity<Comparison>()
+                .HasMany(c => c.Items)
+                .WithOne(ci => ci.Comparison)
+                .HasForeignKey(ci => ci.ComparisonId);
+
+            modelBuilder.Entity<FavoriteItem>()
+                .HasOne(fi => fi.Product)
+                .WithMany()
+                .HasForeignKey(fi => fi.ProductId);
+
+            modelBuilder.Entity<ComparisonItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductId);
         }
     }
 }

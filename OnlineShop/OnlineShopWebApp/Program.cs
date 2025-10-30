@@ -1,4 +1,3 @@
-using OnlineShopWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
@@ -35,9 +34,9 @@ namespace OnlineShopWebApp
 
             builder.Services.AddScoped<IOrderRepository, OrderDbRepository>();
 
-            builder.Services.AddSingleton<IFavoriteRepository, FavoriteJsonRepository>();
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteDbRepository>();
 
-            builder.Services.AddSingleton<IComparisonRepository, ComparisonJsonRepository>();
+            builder.Services.AddScoped<IComparisonRepository, ComparisonDbRepository>();
 
             builder.Services.AddScoped<IRolesRepository, RolesDbRepository>();
 

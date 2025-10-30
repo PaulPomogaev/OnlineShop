@@ -26,8 +26,8 @@ namespace OnlineShopWebApp.Controllers
                 return View(new List<ProductViewModel>());
             }
                         
-            var products = favorite.ProductIds
-                .Select(id => _productRepository.GetById(id))
+            var products = favorite.Items
+                .Select(item => item.Product)
                 .Where(p => p != null)
                 .ToList();
 
