@@ -9,8 +9,6 @@ namespace OnlineShop.Db.Models
         public Product Product { get; set; }
         public Cart Cart { get; set; }
         public int Quantity { get; set; }
-
-        [NotMapped]
-        public decimal Cost => Product.Cost * Quantity; // нужен для отображения цены на странице "Корзина" 
+                
     }
 }

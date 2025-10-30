@@ -7,8 +7,6 @@ namespace OnlineShop.Db.Models
         public int Id { get; set; } // идентификатор корзины
         public string UserId { get; set; } = "guest"; // идентификатор пользователя
         public List<CartItem> Items { get; set; } = new();
-
-        [NotMapped]
-        public decimal TotalCost => Items.Sum(item => item.Cost); // нужен для отображения  TotalCost на странице "Корзина"
+                
     }
 }

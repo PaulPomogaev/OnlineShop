@@ -22,34 +22,77 @@ namespace OnlineShopWebApp.Controllers
         {
             var cart = _cartRepository.GetCart();
 
-            if(cart.Items.Count == 0)
+            if (cart.Items.Count == 0)
             {
                 return RedirectToAction("Index", "Cart");
             }
 
             var order = _orderRepository.Create(cart);
+
             var viewModel = new OrderViewModel
             {
-                Order = order,
+                Id = order.Id,
+                UserId = order.UserId,
+                CreatedDate = order.CreatedDate,
+                DeliveryDate = order.DeliveryDate,
+                Comment = order.Comment,
+                Status = order.Status,
+                Customer = order.Customer,
+                Items = order.Items.Select(item => new OrderItemViewModel
+                {
+                    Id = item.Id,
+                    Quantity = item.Quantity,
+                    Product = new ProductViewModel
+                    {
+                        Id = item.Product.Id,
+                        Name = item.Product.Name,
+                        Cost = item.Product.Cost,
+                        Description = item.Product.Description
+                    }
+                }).ToList(),
                 InputModel = new OrderInputModel()
             };
+
             return View(viewModel);
-            
         }
 
         [HttpPost]
         public IActionResult Buy(OrderViewModel orderViewModel)
         {
             var cart = _cartRepository.GetCart();
-            if(cart.Items.Count == 0)
+            if (cart.Items.Count == 0)
             {
                 return RedirectToAction("Index", "Cart");
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var orderForView = _orderRepository.Create(cart);
-                orderViewModel.Order = orderForView; 
+
+                orderViewModel = new OrderViewModel
+                {
+                    Id = orderForView.Id,
+                    UserId = orderForView.UserId,
+                    CreatedDate = orderForView.CreatedDate,
+                    DeliveryDate = orderForView.DeliveryDate,
+                    Comment = orderForView.Comment,
+                    Status = orderForView.Status,
+                    Customer = orderForView.Customer,
+                    Items = orderForView.Items.Select(item => new OrderItemViewModel
+                    {
+                        Id = item.Id,
+                        Quantity = item.Quantity,
+                        Product = new ProductViewModel
+                        {
+                            Id = item.Product.Id,
+                            Name = item.Product.Name,
+                            Cost = item.Product.Cost,
+                            Description = item.Product.Description
+                        }
+                    }).ToList(),
+                    InputModel = orderViewModel.InputModel
+                };
+
                 return View("Index", orderViewModel);
             }
 

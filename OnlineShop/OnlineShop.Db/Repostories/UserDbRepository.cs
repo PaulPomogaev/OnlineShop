@@ -49,7 +49,7 @@ namespace OnlineShop.Db.Repostories
             return hashOfInput == hash;
         }
 
-        public void Update(User user)
+        public void Edit(User user)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
 

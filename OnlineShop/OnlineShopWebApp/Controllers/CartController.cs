@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWebApp.Data;
+using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
+using OnlineShopWebApp.Models;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -16,7 +17,25 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index()
         {
             var cart = _cartRepository.GetCart();
-            return View(cart);
+            var cartViewModel = new CartViewModel
+            {
+                Id = cart.Id,
+                UserId = cart.UserId,
+                Items = cart.Items.Select(item => new CartItemViewModel
+                {
+                    Id = item.Id,
+                    Quantity = item.Quantity,
+                    Product = new ProductViewModel
+                    {
+                        Id = item.Product.Id,
+                        Name = item.Product.Name,
+                        Cost = item.Product.Cost,
+                        Description = item.Product.Description
+                    }
+                }).ToList()
+            };
+
+            return View(cartViewModel);
         }
 
         public IActionResult Add(int productId, int quantity = 1)

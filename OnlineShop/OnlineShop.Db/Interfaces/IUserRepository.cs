@@ -8,7 +8,7 @@ namespace OnlineShop.Db.Interfaces
         User? GetByLogin(string login);
         void Add(string login, string password);
         bool Exists(string login);
-        void Update(User user);
+        void Edit(User user);
         void UpdateProfile(int userId, string firstName, string lastName, string email, string phone);
         void ChangePassword(int userId, string oldPassword, string newPassword);
         List<int> GetUserRoleIds(int userId);

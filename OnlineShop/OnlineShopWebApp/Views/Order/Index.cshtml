@@ -1,13 +1,13 @@
-﻿@model OrderViewModel
+﻿@model OnlineShopWebApp.Models.OrderViewModel
 @{
-    ViewData["Title"] = "Оформление заказа";  
+    ViewData["Title"] = "Оформление заказа";
 }
 
 <div class="text-center text-uppercase text-success mb-5 mt-5">
     <h2 class="row-title">Оформление заказа</h2>
 </div>
 
-@if (Model.Order != null && Model.Order.Items.Count > 0)
+@if (Model != null && Model.Items.Count > 0)
 {
     <div class="row justify-content-center mt-3">
         <div class="col">
@@ -67,21 +67,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (var i = 0; i < Model.Order.Items.Count; i++)
+                                        @for (var i = 0; i < Model.Items.Count; i++)
                                         {
                                             <tr align="center" class="align-baseline">
                                                 <td class="fw-bold">@(i + 1)</td>
-                                                <td align="left">@Model.Order.Items[i].Product.Name</td>
-                                                <td align="left">@Model.Order.Items[i].Product.Cost.ToString("C")</td>
-                                                <td>@Model.Order.Items[i].Quantity</td>
-                                                <td class="fw-bold">@Model.Order.Items[i].Cost.ToString("C")</td>
+                                                <td align="left">@Model.Items[i].Product.Name</td>
+                                                <td align="left">@Model.Items[i].Product.Cost.ToString("C")</td>
+                                                <td>@Model.Items[i].Quantity</td>
+                                                <td class="fw-bold">@Model.Items[i].Cost.ToString("C")</td>
                                             </tr>
                                         }
                                     </tbody>
                                     <tfoot class="table-borderless">
                                         <tr align="center">
                                             <th colspan="5">
-                                                Общая стоимость заказа: @Model.Order.TotalCost.ToString("C")
+                                                Общая стоимость заказа: @Model.TotalCost.ToString("C")
                                             </th>
                                         </tr>
                                     </tfoot>

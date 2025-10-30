@@ -3,6 +3,7 @@ using OnlineShopWebApp.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -26,15 +27,8 @@ namespace OnlineShopWebApp.Controllers
             }
 
             var products = comparison.ProductIds.Select(id => _productRepository.GetById(id)).Where(p => p != null).ToList();
-                        
-            var productViewModels = products.Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Cost = p.Cost,
-                Description = p.Description,
-                PhotoPath = "/images/products/whey-protein.jpg" 
-            }).ToList();
+
+            var productViewModels = products.ToViewModels();
 
             return View(productViewModels);
         }

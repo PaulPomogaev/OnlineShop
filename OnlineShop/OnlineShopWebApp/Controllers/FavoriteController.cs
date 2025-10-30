@@ -3,6 +3,7 @@ using OnlineShopWebApp.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -30,14 +31,7 @@ namespace OnlineShopWebApp.Controllers
                 .Where(p => p != null)
                 .ToList();
 
-            var productViewModels = products.Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Cost = p.Cost,
-                Description = p.Description
-                
-            }).ToList();
+            var productViewModels = products.ToViewModels();
 
             return View(productViewModels);
         }

@@ -32,10 +32,9 @@ namespace OnlineShop.Db
         {
             if(string.IsNullOrWhiteSpace(query))
             {
-                return GetAll();
+                return _context.Products.ToList();
             }
-
-            var allProducts = GetAll();
+                        
             return _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
                 

@@ -1,4 +1,4 @@
-﻿@model OnlineShop.Db.Models.Cart
+﻿@model OnlineShopWebApp.Models.CartViewModel
 @{
     ViewData["Title"] = "Корзина";
 }
@@ -41,7 +41,7 @@
                                                 onclick="location.href='@Url.Action("IncreaseQuantity", new { itemId = item.Id })'">
                                             +
                                         </button>
-                                    </div> 
+                                    </div>
                                 </td>
                                 <td class="fw-bold">@item.Cost.ToString("C")</td>
                                 <td>
@@ -58,7 +58,7 @@
                         <tr class="table-success">
                             <td colspan="4" class="text-end fw-bold">Итого:</td>
                             <td class="fw-bold">@Model.TotalCost.ToString("C")</td>
-                            <td></td> 
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
