@@ -4,6 +4,7 @@ using OnlineShop.Core.Models;
 using OnlineShopWebApp.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -20,31 +21,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var orders = _orderRepository.GetAll();
-            var orderViewModels = orders.Select(o => new OrderViewModel
-            {
-                Id = o.Id,
-                UserId = o.UserId,
-                CreatedDate = o.CreatedDate,
-                DeliveryDate = o.DeliveryDate,
-                Comment = o.Comment,
-                Status = o.Status,
-                Customer = o.Customer,
-                Items = o.Items.Select(item => new OrderItemViewModel
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    Product = new ProductViewModel
-                    {
-                        Id = item.Product.Id,
-                        Name = item.Product.Name,
-                        Cost = item.Product.Cost,
-                        Description = item.Product.Description
-                    }
-                }).ToList(),
-                InputModel = new OrderInputModel()
-            }).ToList();
-
-            return View(orderViewModels);
+            return View(orders.ToViewModels());
         }
 
         public IActionResult Detail(int orderId)
@@ -54,31 +31,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new OrderViewModel
-            {
-                Id = order.Id,
-                UserId = order.UserId,
-                CreatedDate = order.CreatedDate,
-                DeliveryDate = order.DeliveryDate,
-                Comment = order.Comment,
-                Status = order.Status,
-                Customer = order.Customer,
-                Items = order.Items.Select(item => new OrderItemViewModel
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    Product = new ProductViewModel
-                    {
-                        Id = item.Product.Id,
-                        Name = item.Product.Name,
-                        Cost = item.Product.Cost,
-                        Description = item.Product.Description
-                    }
-                }).ToList(),
-                InputModel = new OrderInputModel()
-            };
-
-            return View(viewModel);
+            return View(order.ToViewModel());
         }
 
         [HttpPost]

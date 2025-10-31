@@ -2,6 +2,7 @@
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShop.Db.Models;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -18,15 +19,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = _productRepository.GetAll();
-            var viewModels = products.Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Cost = p.Cost,
-                Description = p.Description
-            }).ToList();
-
-            return View(viewModels);
+            return View(products.ToViewModels());
         }
 
         public IActionResult Detail(int id)
@@ -34,14 +27,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var product = _productRepository.GetById(id);
             if (product == null) return NotFound();
 
-            var viewModel = new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Cost = product.Cost,
-                Description = product.Description,
-                PhotoPath = "img/whey-protein.jpg"
-            };
+            var viewModel = product.ToViewModel();
             return View(viewModel);
         }
 
@@ -49,15 +35,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var product = _productRepository.GetById(id);
             if (product == null) return NotFound();
-
-            var viewModel = new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Cost = product.Cost,
-                Description = product.Description
-            };
-            return View(viewModel);
+            return View(product.ToViewModel());
         }
 
         [HttpPost]

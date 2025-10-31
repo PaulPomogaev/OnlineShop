@@ -2,6 +2,7 @@
 using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -17,25 +18,7 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index()
         {
             var cart = _cartRepository.GetCart();
-            var cartViewModel = new CartViewModel
-            {
-                Id = cart.Id,
-                UserId = cart.UserId,
-                Items = cart.Items.Select(item => new CartItemViewModel
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    Product = new ProductViewModel
-                    {
-                        Id = item.Product.Id,
-                        Name = item.Product.Name,
-                        Cost = item.Product.Cost,
-                        Description = item.Product.Description
-                    }
-                }).ToList()
-            };
-
-            return View(cartViewModel);
+            return View(cart.ToViewModel());
         }
 
         public IActionResult Add(int productId, int quantity = 1)
