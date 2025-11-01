@@ -21,15 +21,19 @@ namespace OnlineShop.Db.Repostories
 
             if(comparison == null)
             {
-                comparison = new Comparison { UserId = userId, Items = new List<ComparisonItem>() };
+                comparison = new Comparison { UserId = userId};
                 _context.Comparisons.Add(comparison);
                 
             }
 
-            if(!comparison.Items.Any(i => i.ProductId == productId))
+            if (!comparison.Products.Any(p => p.Id == productId))
             {
-                comparison.Items.Add(new ComparisonItem { ProductId = productId });
-                _context.SaveChanges();
+                var product = _context.Products.Find(productId);
+                if (product != null)
+                {
+                    comparison.Products.Add(product);
+                    _context.SaveChanges();
+                }
             }
         }
 
@@ -39,26 +43,25 @@ namespace OnlineShop.Db.Repostories
             
             if(comparison != null)
             {
-                comparison.Items.Clear();
+                comparison.Products.Clear();
                 _context.SaveChanges();
             }
         }
 
         public Comparison? Get(string userId = "guest")
         {
-           return _context.Comparisons.Include(f => f.Items).ThenInclude(cp => cp.Product).FirstOrDefault(c => c.UserId == userId);
+           return _context.Comparisons.Include(c => c.Products).FirstOrDefault(c => c.UserId == userId);
         }
 
         public void Remove(int productId, string userId = "guest")
         {
             var comparison = Get(userId);
-
             if (comparison != null)
             {
-                var itemToRemove = comparison.Items.FirstOrDefault(i => i.ProductId == productId);
-                if (itemToRemove != null)
+                var productToRemove = comparison.Products.FirstOrDefault(p => p.Id == productId);
+                if (productToRemove != null)
                 {
-                    comparison.Items.Remove(itemToRemove);
+                    comparison.Products.Remove(productToRemove);
                     _context.SaveChanges();
                 }
             }

@@ -1,8 +1,6 @@
 ﻿using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace OnlineShop.Db.Repostories
 {
@@ -18,7 +16,7 @@ namespace OnlineShop.Db.Repostories
         public Favorite? Get(string userId = "guest")
         {
 
-            return _context.Favorites.Include(f => f.Items).ThenInclude(cp => cp.Product).FirstOrDefault(c => c.UserId == userId);
+            return _context.Favorites.Include(f => f.Products).FirstOrDefault(f => f.UserId == userId);
         }
             
 
@@ -28,13 +26,14 @@ namespace OnlineShop.Db.Repostories
 
             if (favorite == null)
             {
-                favorite = new Favorite { UserId = userId, Items = new List<FavoriteItem>() };
+                favorite = new Favorite { UserId = userId};
                 _context.Favorites.Add(favorite);
             }
 
-            if (!favorite.Items.Any(i => i.ProductId == productId))
+            var product = _context.Products.Find(productId);
+            if (product != null && !favorite.Products.Any(p => p.Id == productId))
             {
-                favorite.Items.Add(new FavoriteItem { ProductId = productId });
+                favorite.Products.Add(product);
                 _context.SaveChanges();
             }
         }
@@ -44,7 +43,7 @@ namespace OnlineShop.Db.Repostories
             var favorite = Get(userId);
             if (favorite != null)
             {
-                favorite.Items.Clear();
+                favorite.Products.Clear();
                 _context.SaveChanges();
             }
         }
@@ -55,10 +54,10 @@ namespace OnlineShop.Db.Repostories
 
             if (favorite != null)
             {
-                var itemToRemove = favorite.Items.FirstOrDefault(i => i.ProductId == productId);
-                if(itemToRemove != null)
+                var productToRemove = favorite.Products.FirstOrDefault(p => p.Id == productId);
+                if (productToRemove != null)
                 {
-                    favorite.Items.Remove(itemToRemove);
+                    favorite.Products.Remove(productToRemove);
                     _context.SaveChanges();
                 }
             }

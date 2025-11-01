@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string UserId { get; set; } = "guest";
-        public List<ComparisonItem> Items { get; set; } = new();
-                
+        public List<Product> Products { get; set; } = new();
+
     }
 }

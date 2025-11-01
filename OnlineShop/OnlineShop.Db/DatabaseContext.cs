@@ -34,24 +34,15 @@ namespace OnlineShop.Db
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Favorite>()
-                .HasMany(f => f.Items)
-                .WithOne(fi => fi.Favorite)
-                .HasForeignKey(fi => fi.FavoriteId);
+                 .HasMany(f => f.Products)
+                 .WithMany()
+                 .UsingEntity("FavoriteProducts");
 
             modelBuilder.Entity<Comparison>()
-                .HasMany(c => c.Items)
-                .WithOne(ci => ci.Comparison)
-                .HasForeignKey(ci => ci.ComparisonId);
-
-            modelBuilder.Entity<FavoriteItem>()
-                .HasOne(fi => fi.Product)
+                .HasMany(c => c.Products)
                 .WithMany()
-                .HasForeignKey(fi => fi.ProductId);
-
-            modelBuilder.Entity<ComparisonItem>()
-                .HasOne(ci => ci.Product)
-                .WithMany()
-                .HasForeignKey(ci => ci.ProductId);
+                .UsingEntity("ComparisonProducts");
+           
         }
     }
 }

@@ -26,7 +26,7 @@ namespace OnlineShopWebApp.Controllers
                 return View(new List<ProductViewModel>()); 
             }
 
-            var products = comparison.Items.Select(item => item.Product).Where(p => p != null).ToList();
+            var products = comparison.Products.ToList();
 
             var productViewModels = products.ToViewModels();
 
