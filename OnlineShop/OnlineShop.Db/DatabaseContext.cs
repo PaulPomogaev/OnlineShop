@@ -18,7 +18,7 @@ namespace OnlineShop.Db
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,15 +34,15 @@ namespace OnlineShop.Db
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Favorite>()
-                 .HasMany(f => f.Products)
-                 .WithMany()
-                 .UsingEntity("FavoriteProducts");
+                .HasMany(f => f.Products)
+                .WithMany()
+                .UsingEntity("FavoriteProducts");
 
             modelBuilder.Entity<Comparison>()
                 .HasMany(c => c.Products)
                 .WithMany()
                 .UsingEntity("ComparisonProducts");
-           
+
         }
     }
 }
