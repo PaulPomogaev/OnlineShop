@@ -25,6 +25,6 @@ namespace OnlineShop.Db.Models
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public List<Order> Orders { get; set; } = new List<Order>();
+        //public List<Order> Orders { get; set; } = new List<Order>();
     }
 }
