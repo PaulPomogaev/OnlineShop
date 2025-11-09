@@ -4,6 +4,7 @@ using OnlineShopWebApp.Models;
 using System;
 using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineShopWebApp.Services
 {
@@ -11,16 +12,11 @@ namespace OnlineShopWebApp.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IRolesRepository _rolesRepository;
-
+        
         public UserService(IUserRepository userRepository, IRolesRepository rolesRepository)
         {
             _userRepository = userRepository;
             _rolesRepository = rolesRepository;
-        }
-
-        public void AssignUserRoles(UserRole model)
-        {
-            _userRepository.AssignRoles(model.UserId, model.UserRoleIds);
         }
 
         public void CreateUser(UserCreate model)
@@ -63,8 +59,7 @@ namespace OnlineShopWebApp.Services
                 throw new InvalidOperationException("Пользоваетль не найден");
             }
 
-            var allRoles = _rolesRepository.GetAll();
-            var roleNames = allRoles.Where(r => user.RoleIds.Contains(r.Id)).Select(r => r.Name).ToList();
+           
             return new UserDetails
             {
                 Id = user.Id,
@@ -72,9 +67,9 @@ namespace OnlineShopWebApp.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Phone = user.Phone,
+                Phone = user.PhoneNumber,     
                 CreatedDate = user.CreatedDate,
-                RoleNames = roleNames
+                RoleNames = _userRepository.GetUserRoles(userId)
             };
         }
 
@@ -112,7 +107,7 @@ namespace OnlineShopWebApp.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Phone = user.Phone
+                Phone = user.PhoneNumber
             };
 
         }
@@ -121,22 +116,25 @@ namespace OnlineShopWebApp.Services
         {
             var user = _userRepository.GetById(userId);
             if (user == null)
-            {
-                throw new InvalidOperationException("Пользователь не найден"); ;
-            }
+                throw new InvalidOperationException("Пользователь не найден");
 
             return new UserRole
             {
                 UserId = userId,
                 UserLogin = user.Login,
                 AllRoles = _rolesRepository.GetAll(),
-                UserRoleIds = _userRepository.GetUserRoleIds(userId)
+                UserRoleIds = _userRepository.GetUserRoleIds(userId) 
             };
         }
 
         public void UpdateUserProfile(UserEdit model)
         {
             _userRepository.UpdateProfile(model.Id, model.FirstName, model.LastName, model.Email, model.Phone);
+        }
+
+        public void AssignUserRoles(UserRole model)
+        {
+            _userRepository.AssignRoles(model.UserId, model.UserRoleIds);
         }
     }
 }

@@ -2,33 +2,41 @@
 using OnlineShop.Db.Models;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineShop.Db.Repostories
 {
     public class UserDbRepository : BaseDbRepository<User>, IUserRepository
     {
-        private readonly DatabaseContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserDbRepository(DatabaseContext context) : base(context)
+        public UserDbRepository(DatabaseContext context, UserManager<User> userManager) : base(context)
         {
-            _context = context;
+            
+            _userManager = userManager;
         }
 
         public void Add(string login, string password)
         {
             var user = new User
             {
+                UserName = login,
                 Login = login,
-                PasswordHash = HashPassword(password)
+                Email = login, 
+                EmailConfirmed = true,
+                CreatedDate = DateTime.Now
             };
 
-            Add(user);
+            var result = _userManager.CreateAsync(user, password).Result;
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Ошибка при создании пользователя: {string.Join(", ", result.Errors)}");
+            }
         }
 
         public User? GetByLogin(string login)
         {
-            return _context.Users.FirstOrDefault(u =>
-                u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
+            return _userManager.FindByNameAsync(login).Result;
         }
 
         public bool Exists(string login)
@@ -36,97 +44,143 @@ namespace OnlineShop.Db.Repostories
             return GetByLogin(login) != null;
         }
 
-        public static string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
-        }
-
-        public static bool VerifyPassword(string password, string hash)
-        {
-            var hashOfInput = HashPassword(password);
-            return hashOfInput == hash;
-        }
-
+       
         public void Edit(User user)
         {
-            var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
-
-            if (existingUser != null)
+            if (user == null)
             {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (string.IsNullOrWhiteSpace(user.Login))
+            {
+                throw new ArgumentException("Логин не может быть пустым", nameof(user.Login));
+            }
+
+            var existingUser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
+
+            if (existingUser == null)
+            {
+                throw new InvalidOperationException($"Пользователь с ID {user.Id} не найден.");
+            }    
                 existingUser.Login = user.Login;
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
-                existingUser.Phone = user.Phone;
-                _context.SaveChanges();
-            }
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.Email = user.Login;
+                existingUser.UserName = user.Login;
+
+                var result = _userManager.UpdateAsync(existingUser).Result;
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException($"Ошибка обновления данных пользователя: {string.Join(", ", result.Errors)}");
+                }
+            
         }
 
         public void UpdateProfile(int userId, string firstName, string lastName, string email, string phone)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            if (user != null)
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            if (user == null)
             {
+                throw new InvalidOperationException($"Пользователь с ID {userId} не найден.");
+            }
+                        
                 user.FirstName = firstName;
                 user.LastName = lastName;
                 user.Login = email;
                 user.Email = email;
-                user.Phone = phone;
-                _context.SaveChanges();
-            }
+                user.UserName = email;
+                user.PhoneNumber = phone; 
+                user.EmailConfirmed = true;
+
+                var result = _userManager.UpdateAsync(user).Result;
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException($"Ошибка обновления профиля: {string.Join(", ", result.Errors)}");
+                }
+            
         }
 
         public void ChangePassword(int userId, string oldPassword, string newPassword)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
             if (user == null)
             {
                 throw new InvalidOperationException("Пользователь не найден");
             }
 
-            if (!VerifyPassword(oldPassword, user.PasswordHash))
+            var result = _userManager.ChangePasswordAsync(user, oldPassword, newPassword).Result;
+            if (!result.Succeeded)
             {
-                throw new InvalidOperationException("Введён неверный старый пароль");
-            }
-
-            user.PasswordHash = HashPassword(newPassword);
-            _context.SaveChanges();
-        }
-
-        public List<int> GetUserRoleIds(int userId)
-        {
-            var user = GetById(userId);
-            if (user == null)
-            {
-                return new List<int>();
-            }
-            return user.RoleIds;
-        }
-
-        public void AssignRoles(int userId, List<int> roleIds)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            if (user != null)
-            {
-                user.RoleIds = roleIds ?? new List<int>();
-                _context.SaveChanges();
+                throw new InvalidOperationException($"Ошибка при смене пароля: {string.Join(", ", result.Errors)}");
             }
         }
+          
 
         public void AddFull(string login, string password, string firstName, string lastName, string email, string phone)
         {
             var user = new User
             {
-                Login = login,
-                PasswordHash = HashPassword(password),
+                UserName = email,          
+                Login = email,            
+                Email = email,
+                EmailConfirmed = true,     
+                PhoneNumber = phone,
                 FirstName = firstName,
                 LastName = lastName,
-                Email = email,
-                Phone = phone,
-                RoleIds = new List<int>()
+                CreatedDate = DateTime.Now,
             };
-            Add(user);
+            var result = _userManager.CreateAsync(user, password).Result;
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Ошибка при создании пользователя: {string.Join(", ", result.Errors)}");
+            }
+        }
+
+        public List<string> GetUserRoles(int userId)
+        {
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            if (user == null)
+            {
+                return new List<string>();
+            }    
+            return _userManager.GetRolesAsync(user).Result.ToList();
+        }
+
+        public List<int> GetUserRoleIds(int userId)
+        {
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            if (user == null)
+            {
+                return new List<int>();
+            }    
+            
+            var roleNames = _userManager.GetRolesAsync(user).Result;
+
+            
+            var allRoles = _context.Roles.ToList(); 
+
+            return allRoles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
+
+        }
+
+        public void AssignRoles(int userId, List<int> roleIds)
+        {
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            if (user == null)
+                return;
+
+            var currentRoles = _userManager.GetRolesAsync(user).Result;
+            _userManager.RemoveFromRolesAsync(user, currentRoles).Wait();
+
+            if (roleIds?.Any() == true)
+            {
+                var roleNames = _context.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.Name).ToList();
+
+                _userManager.AddToRolesAsync(user, roleNames).Wait();
+
+            }
         }
     }
 }

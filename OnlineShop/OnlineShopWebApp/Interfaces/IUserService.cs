@@ -13,11 +13,11 @@ namespace OnlineShopWebApp.Interfaces
         void UpdateUserProfile(UserEdit model);
         ChangePassword GetChangePasswordModel(int userId);
         void ChangeUserPassword(ChangePassword model);
-        UserRole GetUserRoleModel(int userId);
-        void AssignUserRoles(UserRole model);
         void DeleteUser(int id);
         UserCreate GetUserCreateModel();
         void CreateUser(UserCreate model);
         UserDetails GetUserDetails(int userId);
+        UserRole GetUserRoleModel(int userId);
+        void AssignUserRoles(UserRole model);
     }
 }

@@ -3,9 +3,11 @@ using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShopWebApp.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;

@@ -3,10 +3,13 @@ using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using OnlineShop.Db;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;

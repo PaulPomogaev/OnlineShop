@@ -4,9 +4,11 @@ using OnlineShopWebApp.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShopWebApp.Controllers
 {
+    [Authorize]
     public class FavoriteController : Controller
     {
         private readonly IFavoriteRepository _favoriteRepository;

@@ -1,7 +1,7 @@
 ﻿@model LoginModel
 
 @{
-    ViewData["Title"] = "Авторизация пользователя";
+    ViewData["Title"] = "Вход";
 }
 
 <div class="text-center text-uppercase text-success mb-5 mt-5">
@@ -17,13 +17,11 @@
                 <input asp-for="Login" class="form-control" placeholder="Ваш логин" />
                 <span asp-validation-for="Login" class="text-danger"></span>
             </div>
-
             <div class="form-group mt-3">
                 <label asp-for="Password" class="form-label"></label>
                 <input asp-for="Password" class="form-control" placeholder="Ваш пароль" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-
             <div class="form-check mt-3">
                 <input asp-for="RememberMe" class="form-check-input" />
                 <label asp-for="RememberMe" class="form-check-label"></label>
@@ -36,9 +34,8 @@
         </button>
     </div>
     <div class="text-center m-3">
-        <a class="btn text-decoration-underline" asp-controller="Registration" asp-action="Index">
+        <a class="btn text-decoration-underline" asp-controller="Account" asp-action="Register">
             Регистрация нового пользователя
         </a>
     </div>
 </form>
-

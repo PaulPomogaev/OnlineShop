@@ -4,10 +4,14 @@ using OnlineShopWebApp.Models;
 using System;
 using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using OnlineShop.Db;
+
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Constants.AdminRoleName)]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;

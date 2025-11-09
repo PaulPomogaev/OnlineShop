@@ -1,17 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using OnlineShop.Db.Models;
 
 
 namespace OnlineShop.Db
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<User, Role, int>
     {
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
@@ -19,12 +18,14 @@ namespace OnlineShop.Db
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            Database.Migrate();
+           // Database.Migrate();
            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Order>().OwnsOne(o => o.Customer);
 
             modelBuilder.Entity<Order>()
@@ -58,6 +59,12 @@ namespace OnlineShop.Db
             };
 
             modelBuilder.Entity<Product>().HasData(defaultProducts);
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Login).HasMaxLength(256); 
+                entity.HasIndex(e => e.Login).IsUnique(); 
+            });
         }
     }
 }
