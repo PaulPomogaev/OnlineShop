@@ -118,20 +118,20 @@ namespace OnlineShop.Db.Repostories
         }
           
 
-        public void AddFull(string login, string password, string firstName, string lastName, string email, string phone)
+        public void AddFull(UserCreationData data)
         {
             var user = new User
             {
-                UserName = email,          
-                Login = email,            
-                Email = email,
+                UserName = data.Email,          
+                Login = data.Email,            
+                Email = data.Email,
                 EmailConfirmed = true,     
-                PhoneNumber = phone,
-                FirstName = firstName,
-                LastName = lastName,
+                PhoneNumber = data.Phone,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
                 CreatedDate = DateTime.Now,
             };
-            var result = _userManager.CreateAsync(user, password).Result;
+            var result = _userManager.CreateAsync(user, data.Password).Result;
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException($"Ошибка при создании пользователя: {string.Join(", ", result.Errors)}");

@@ -26,14 +26,17 @@ namespace OnlineShopWebApp.Services
                 throw new InvalidOperationException("Пользователь с таким логином уже существует");
             }
 
-            _userRepository.AddFull(
-                model.Login,
-                model.Password,
-                model.FirstName,
-                model.LastName,
-                model.Email,
-                model.Phone
-                );
+            var data = new UserCreationData
+            {
+                Login = model.Login,
+                Password = model.Password,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Phone = model.Phone
+            };
+
+            _userRepository.AddFull(data);
         }
 
         public void DeleteUser(int id)
