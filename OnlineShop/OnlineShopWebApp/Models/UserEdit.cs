@@ -20,6 +20,6 @@ namespace OnlineShopWebApp.Models
 
         [Required(ErrorMessage = "Телефон обязателен")]
         [Phone(ErrorMessage = "Неверный формат телефона")]
-        public string Phone { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
     }
 }

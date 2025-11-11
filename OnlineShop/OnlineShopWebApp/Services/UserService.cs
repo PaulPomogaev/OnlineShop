@@ -33,7 +33,7 @@ namespace OnlineShopWebApp.Services
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
-                Phone = model.Phone
+                Phone = model.PhoneNumber
             };
 
             _userRepository.AddFull(data);
@@ -70,7 +70,7 @@ namespace OnlineShopWebApp.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Phone = user.PhoneNumber,     
+                PhoneNumber = user.PhoneNumber,     
                 CreatedDate = user.CreatedDate,
                 RoleNames = _userRepository.GetUserRoles(userId)
             };
@@ -110,7 +110,7 @@ namespace OnlineShopWebApp.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Phone = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber
             };
 
         }
@@ -132,7 +132,7 @@ namespace OnlineShopWebApp.Services
 
         public void UpdateUserProfile(UserEdit model)
         {
-            _userRepository.UpdateProfile(model.Id, model.FirstName, model.LastName, model.Email, model.Phone);
+            _userRepository.UpdateProfile(model.Id, model.FirstName, model.LastName, model.Email, model.PhoneNumber);
         }
 
         public void AssignUserRoles(UserRole model)
