@@ -67,26 +67,29 @@ namespace OnlineShopWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(string returnUrl = null)
         {
             if (User.Identity?.IsAuthenticated == true)
             {
                 return RedirectToAction("Index", "Home");
             }
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterModel model)
+        public IActionResult Register(RegisterModel model, string returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
+                ViewData["ReturnUrl"] = returnUrl;
                 return View(model);
             }
 
             if(_userManager.FindByNameAsync(model.Login).Result != null)
             {
                 ModelState.AddModelError("Login", "Пользователь с таким логином уже существует");
+                ViewData["ReturnUrl"] = returnUrl;
                 return View(model);
             }
 
@@ -109,6 +112,12 @@ namespace OnlineShopWebApp.Controllers
                 }
                    
                 _signInManager.SignInAsync(user, isPersistent: false).Wait();
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -117,6 +126,7 @@ namespace OnlineShopWebApp.Controllers
                 ModelState.AddModelError("", error.Description);
             }
 
+            ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
     }

@@ -34,7 +34,7 @@
         </button>
     </div>
     <div class="text-center m-3">
-        <a class="btn text-decoration-underline" asp-controller="Account" asp-action="Register">
+        <a class="btn text-decoration-underline" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]">
             Регистрация нового пользователя
         </a>
     </div>
