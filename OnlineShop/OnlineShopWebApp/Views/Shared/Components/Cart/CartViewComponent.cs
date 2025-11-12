@@ -14,7 +14,12 @@ namespace OnlineShopWebApp.Views.Shared.Components.Cart
 
         public IViewComponentResult Invoke()
         {
-            var itemCount = _cartRepository.GetCartItemCount();
+            var userId = "guest";
+            if(HttpContext.User?.Identity?.IsAuthenticated == true)
+            {
+                userId = HttpContext.User.Identity.Name;
+            }
+            var itemCount = _cartRepository.GetCartItemCount(userId);
             return View("Cart", itemCount);
         }
     }

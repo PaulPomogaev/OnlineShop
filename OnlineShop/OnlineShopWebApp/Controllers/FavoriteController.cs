@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShopWebApp.Controllers
 {
-    [Authorize]
     public class FavoriteController : Controller
     {
         private readonly IFavoriteRepository _favoriteRepository;
@@ -19,9 +18,24 @@ namespace OnlineShopWebApp.Controllers
             _productRepository = productRepository;
         }
 
+        private string GetUserId()
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return "guest";
+            }
+
+            if (string.IsNullOrEmpty(User.Identity.Name))
+            {
+                return "guest";
+            }
+
+            return User.Identity.Name;
+        }
+
         public IActionResult Index()
         {
-            var favorite = _favoriteRepository.Get();
+            var favorite = _favoriteRepository.Get(GetUserId());
             if (favorite == null)
             {
                 return View(new List<ProductViewModel>());
@@ -36,19 +50,19 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Add(int productId)
         {
-            _favoriteRepository.Add(productId);
+            _favoriteRepository.Add(productId, GetUserId());
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int productId)
         {
-            _favoriteRepository.Remove(productId);
+            _favoriteRepository.Remove(productId, GetUserId());
             return RedirectToAction("Index");
         }
 
         public IActionResult Clear()
         {
-            _favoriteRepository.Clear();
+            _favoriteRepository.Clear(GetUserId());
             return RedirectToAction("Index");
         }
     }

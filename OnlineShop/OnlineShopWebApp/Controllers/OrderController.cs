@@ -23,7 +23,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            var cart = _cartRepository.GetCart();
+            var cart = _cartRepository.GetCart(User.Identity.Name);
 
             if (cart.Items.Count == 0)
             {
@@ -40,7 +40,7 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public IActionResult Buy(OrderViewModel orderViewModel)
         {
-            var cart = _cartRepository.GetCart();
+            var cart = _cartRepository.GetCart(User.Identity.Name);
             if (cart.Items.Count == 0)
             {
                 return RedirectToAction("Index", "Cart");
@@ -61,7 +61,7 @@ namespace OnlineShopWebApp.Controllers
 
             _orderRepository.Add(order);
 
-            _cartRepository.ClearCart();
+            _cartRepository.ClearCart(User.Identity.Name);
 
             return RedirectToAction("Success");
         }

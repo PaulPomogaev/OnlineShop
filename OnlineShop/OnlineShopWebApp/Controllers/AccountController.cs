@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
 
@@ -47,6 +48,8 @@ namespace OnlineShopWebApp.Controllers
 
             if (result.Succeeded)
             {
+                MigrateGuestCart(user.UserName);
+
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
@@ -113,6 +116,8 @@ namespace OnlineShopWebApp.Controllers
                    
                 _signInManager.SignInAsync(user, isPersistent: false).Wait();
 
+                MigrateGuestCart(user.UserName);
+
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
@@ -128,6 +133,21 @@ namespace OnlineShopWebApp.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
+        }
+
+        private void MigrateGuestCart(string userName)
+        {
+            var cartRepo = HttpContext.RequestServices.GetRequiredService<ICartRepository>();
+            var guestCart = cartRepo.GetCart("guest");
+
+            if (guestCart.Items.Any())
+            {
+                foreach (var item in guestCart.Items.ToList())
+                {
+                    cartRepo.AddToCart(item.ProductId, item.Quantity, userName);
+                }
+                cartRepo.ClearCart("guest");
+            }
         }
     }
 }
