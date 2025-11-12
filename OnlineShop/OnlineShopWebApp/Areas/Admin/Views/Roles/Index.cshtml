@@ -9,7 +9,12 @@
         <div class="text-center text-uppercase text-success mb-5 mt-5">
             <h2 class="row-title">Роли</h2>
         </div>
-
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger text-center">
+                @TempData["Error"]
+            </div>
+        }
         @if (Model != null && Model.Count > 0)
         {
             <div class="row justify-content-center mt-3">
