@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = Constants.AdminRoleName)]
+    [Authorize(Roles = Constants.AdminRoleName)] 
     public class RolesController : Controller
     {
         private readonly RoleManager<Role> _roleManager;
