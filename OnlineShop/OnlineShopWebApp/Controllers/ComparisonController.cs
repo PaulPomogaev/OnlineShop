@@ -3,10 +3,12 @@ using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace OnlineShopWebApp.Controllers
 {
+    [Authorize]
     public class ComparisonController : Controller
     {
         private readonly IComparisonRepository _comparisonRepository;
