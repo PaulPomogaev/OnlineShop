@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShopWebApp.Controllers
 {
-    public class ComparisonController : BaseController
+    public class ComparisonController : Controller
     {
         private readonly IComparisonRepository _comparisonRepository;
         private readonly IProductRepository _productRepository;
