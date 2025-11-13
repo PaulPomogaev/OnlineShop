@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
 using OnlineShop.Db.Interfaces;
-using OnlineShopWebApp.Interfaces;
-using OnlineShopWebApp.Services;
 using Serilog;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
@@ -67,10 +65,8 @@ namespace OnlineShopWebApp
             builder.Services.AddScoped<IOrderRepository, OrderDbRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteDbRepository>();
             builder.Services.AddScoped<IComparisonRepository, ComparisonDbRepository>();
-            builder.Services.AddScoped<IRolesRepository, RolesDbRepository>();
             builder.Services.AddScoped<IUserRepository, UserDbRepository>();
-            builder.Services.AddScoped<IUserService, UserService>();
-
+            
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
