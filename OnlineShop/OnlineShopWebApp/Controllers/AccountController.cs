@@ -11,12 +11,16 @@ namespace OnlineShopWebApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ICartRepository _cartRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
+        private readonly IComparisonRepository _comparisonRepository;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository, IFavoriteRepository favoriteRepository, IComparisonRepository comparisonRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _cartRepository = cartRepository;
+            _favoriteRepository = favoriteRepository;
+            _comparisonRepository = comparisonRepository;
         }
 
         [HttpGet]
@@ -50,7 +54,7 @@ namespace OnlineShopWebApp.Controllers
 
             if (result.Succeeded)
             {
-                MigrateGuestCart(user.UserName);
+                MigrateGuestData(user.UserName);
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -118,7 +122,7 @@ namespace OnlineShopWebApp.Controllers
                    
                 _signInManager.SignInAsync(user, isPersistent: false).Wait();
 
-                MigrateGuestCart(user.UserName);
+                MigrateGuestData(user.UserName);
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -137,17 +141,57 @@ namespace OnlineShopWebApp.Controllers
             return View(model);
         }
 
-        private void MigrateGuestCart(string userName)
+        private void MigrateGuestData(string userName)
         {
-            var guestCart = _cartRepository.GetCart("guest");
+            var sessionId = HttpContext.Session.Id;
 
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                return;
+            }
+            var guestId = $"guest_{sessionId}";
+
+            MigrateCart(guestId, userName);
+            MigrateFavorite(guestId, userName);
+            MigrateComparison(guestId, userName);
+        }
+
+        private void MigrateComparison(string guestId, string userName)
+        {
+            var guestCart = _cartRepository.GetCart(userName);
             if (guestCart.Items.Any())
             {
                 foreach (var item in guestCart.Items.ToList())
                 {
-                    _cartRepository.AddToCart(item.ProductId, item.Quantity, userName);
+                    _cartRepository.AddToCart(item.ProductId, item.Quantity, guestId);
                 }
-                _cartRepository.ClearCart("guest");
+                _cartRepository.ClearCart(userName);
+            }
+        }
+
+        private void MigrateFavorite(string guestId, string userName)
+        {
+            var guestFav = _favoriteRepository.Get(userName);
+            if (guestFav?.Products.Any() == true)
+            {
+                foreach (var product in guestFav.Products.ToList())
+                {
+                    _favoriteRepository.Add(product.Id, guestId);
+                }
+                _favoriteRepository.Clear(userName);
+            }
+        }
+
+        private void MigrateCart(string guestId, string userName)
+        {
+            var guestComp = _comparisonRepository.Get(userName);
+            if (guestComp?.Products.Any() == true)
+            {
+                foreach (var product in guestComp.Products.ToList())
+                {
+                    _comparisonRepository.Add(product.Id, guestId);
+                }
+                _comparisonRepository.Clear(userName);
             }
         }
     }

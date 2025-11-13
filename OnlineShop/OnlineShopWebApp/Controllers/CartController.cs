@@ -8,7 +8,7 @@ using System.Security.Principal;
 
 namespace OnlineShopWebApp.Controllers
 {
-    public class CartController : Controller
+    public class CartController : BaseController
     {
         private readonly ICartRepository _cartRepository;
 
@@ -16,22 +16,7 @@ namespace OnlineShopWebApp.Controllers
         {
             _cartRepository = cartRepository;
         }
-
-        private string GetUserId()
-        {
-            if (User?.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return "guest";
-            }
-
-            if (string.IsNullOrEmpty(User.Identity.Name))
-            {
-                return "guest";
-            }
-
-            return User.Identity.Name;
-        }
-
+        
         public IActionResult Index()
         {
             var cart = _cartRepository.GetCart(GetUserId());

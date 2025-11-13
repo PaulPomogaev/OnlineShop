@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace OnlineShopWebApp.Controllers
 {
     [Authorize]
-    public class FavoriteController : Controller
+    public class FavoriteController : BaseController
     {
         private readonly IFavoriteRepository _favoriteRepository;
         private readonly IProductRepository _productRepository;
@@ -19,21 +19,7 @@ namespace OnlineShopWebApp.Controllers
             _productRepository = productRepository;
         }
 
-        private string GetUserId()
-        {
-            if (User?.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return "guest";
-            }
-
-            if (string.IsNullOrEmpty(User.Identity.Name))
-            {
-                return "guest";
-            }
-
-            return User.Identity.Name;
-        }
-
+        
         public IActionResult Index()
         {
             var favorite = _favoriteRepository.Get(GetUserId());

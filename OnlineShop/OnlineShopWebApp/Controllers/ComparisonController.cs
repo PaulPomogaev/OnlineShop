@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace OnlineShopWebApp.Controllers
 {
     [Authorize]
-    public class ComparisonController : Controller
+    public class ComparisonController : BaseController
     {
         private readonly IComparisonRepository _comparisonRepository;
         private readonly IProductRepository _productRepository;
@@ -20,21 +20,7 @@ namespace OnlineShopWebApp.Controllers
             _productRepository = productRepository;
         }
 
-        private string GetUserId()
-        {
-            if (User?.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return "guest";
-            }
-
-            if (string.IsNullOrEmpty(User.Identity.Name))
-            {
-                return "guest";
-            }
-
-            return User.Identity.Name;
-        }
-
+        
         public IActionResult Index()
         {
             var comparison = _comparisonRepository.Get(GetUserId());

@@ -24,6 +24,14 @@ namespace OnlineShopWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.Name = "OnlineShop.Session";
+            });
+
             string connection = builder.Configuration.GetConnectionString("online_shop");
 
             builder.Services.AddDbContext<DatabaseContext>(options =>
@@ -85,6 +93,8 @@ namespace OnlineShopWebApp
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
