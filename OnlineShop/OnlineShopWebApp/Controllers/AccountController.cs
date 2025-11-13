@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -11,7 +12,7 @@ namespace OnlineShopWebApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ICartRepository _cartRepository;
-        private readonly IFavoriteRepository _favoriteRepository;
+        private readonly IFavoriteRepository _favoriteRepository; 
         private readonly IComparisonRepository _comparisonRepository;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository, IFavoriteRepository favoriteRepository, IComparisonRepository comparisonRepository)
@@ -54,15 +55,21 @@ namespace OnlineShopWebApp.Controllers
 
             if (result.Succeeded)
             {
-                MigrateGuestData(user.UserName);
+                var migrator = new GuestMigrator(
+                    _cartRepository,
+                    _favoriteRepository,
+                    _comparisonRepository,
+                    HttpContext);
+                migrator.MigrateGuestData(user.UserName);
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
                 }
-                    
+
                 return RedirectToAction("Index", "Home");
             }
+                       
 
             ModelState.AddModelError("", "Неверный логин или пароль");
 
@@ -119,10 +126,15 @@ namespace OnlineShopWebApp.Controllers
                 {
                     _userManager.AddToRoleAsync(user, "User").Wait();
                 }
-                   
+
                 _signInManager.SignInAsync(user, isPersistent: false).Wait();
 
-                MigrateGuestData(user.UserName);
+                var migrator = new GuestMigrator(
+                    _cartRepository,
+                    _favoriteRepository,
+                    _comparisonRepository,
+                    HttpContext);
+                migrator.MigrateGuestData(user.UserName);
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -141,58 +153,5 @@ namespace OnlineShopWebApp.Controllers
             return View(model);
         }
 
-        private void MigrateGuestData(string userName)
-        {
-            var sessionId = HttpContext.Session.Id;
-
-            if (string.IsNullOrEmpty(sessionId))
-            {
-                return;
-            }
-            var guestId = $"guest_{sessionId}";
-
-            MigrateCart(guestId, userName);
-            MigrateFavorite(guestId, userName);
-            MigrateComparison(guestId, userName);
-        }
-
-        private void MigrateComparison(string guestId, string userName)
-        {
-            var guestCart = _cartRepository.GetCart(userName);
-            if (guestCart.Items.Any())
-            {
-                foreach (var item in guestCart.Items.ToList())
-                {
-                    _cartRepository.AddToCart(item.ProductId, item.Quantity, guestId);
-                }
-                _cartRepository.ClearCart(userName);
-            }
-        }
-
-        private void MigrateFavorite(string guestId, string userName)
-        {
-            var guestFav = _favoriteRepository.Get(userName);
-            if (guestFav?.Products.Any() == true)
-            {
-                foreach (var product in guestFav.Products.ToList())
-                {
-                    _favoriteRepository.Add(product.Id, guestId);
-                }
-                _favoriteRepository.Clear(userName);
-            }
-        }
-
-        private void MigrateCart(string guestId, string userName)
-        {
-            var guestComp = _comparisonRepository.Get(userName);
-            if (guestComp?.Products.Any() == true)
-            {
-                foreach (var product in guestComp.Products.ToList())
-                {
-                    _comparisonRepository.Add(product.Id, guestId);
-                }
-                _comparisonRepository.Clear(userName);
-            }
-        }
     }
 }

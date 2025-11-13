@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShopWebApp.Controllers
 {
-    [Authorize]
     public class FavoriteController : BaseController
     {
         private readonly IFavoriteRepository _favoriteRepository;

@@ -3,8 +3,6 @@ using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Helpers;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Principal;
 
 namespace OnlineShopWebApp.Controllers
 {
