@@ -10,11 +10,13 @@ namespace OnlineShopWebApp.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ICartRepository _cartRepository;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _cartRepository = cartRepository;
         }
 
         [HttpGet]
@@ -137,16 +139,15 @@ namespace OnlineShopWebApp.Controllers
 
         private void MigrateGuestCart(string userName)
         {
-            var cartRepo = HttpContext.RequestServices.GetRequiredService<ICartRepository>();
-            var guestCart = cartRepo.GetCart("guest");
+            var guestCart = _cartRepository.GetCart("guest");
 
             if (guestCart.Items.Any())
             {
                 foreach (var item in guestCart.Items.ToList())
                 {
-                    cartRepo.AddToCart(item.ProductId, item.Quantity, userName);
+                    _cartRepository.AddToCart(item.ProductId, item.Quantity, userName);
                 }
-                cartRepo.ClearCart("guest");
+                _cartRepository.ClearCart("guest");
             }
         }
     }
