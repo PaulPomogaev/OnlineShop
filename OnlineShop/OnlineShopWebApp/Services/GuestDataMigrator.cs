@@ -70,14 +70,21 @@ namespace OnlineShopWebApp.Services
 
         private void MigrateFavorite(string guestId, string userName)
         {
-            var guestFav = _favoriteRepository.Get(guestId);
+            var guestFavourite = _favoriteRepository.Get(guestId);
+            var userFavourite = _favoriteRepository.Get(userName);
 
-            if (guestFav?.Products.Any() == true)
+            if (guestFavourite?.Products?.Any() == true)
             {
-                foreach (var product in guestFav.Products.ToList())
+                var userProductIds = userFavourite?.Products?.Select(p => p.Id).ToHashSet() ?? new HashSet<int>();
+
+                foreach (var product in guestFavourite.Products)
                 {
-                    _favoriteRepository.Add(product.Id, userName);
+                    if (!userProductIds.Contains(product.Id))
+                    {
+                        _favoriteRepository.Add(product.Id, userName);
+                    }
                 }
+                                
                 _favoriteRepository.Clear(guestId);
             }
         }
@@ -85,13 +92,20 @@ namespace OnlineShopWebApp.Services
         private void MigrateComparison(string guestId, string userName)
         {
             var guestComp = _comparisonRepository.Get(guestId);
+            var userComp = _comparisonRepository.Get(userName);
 
-            if (guestComp?.Products.Any() == true)
+            if (guestComp?.Products?.Any() == true)
             {
-                foreach (var product in guestComp.Products.ToList())
+                var userProductIds = userComp?.Products?.Select(p => p.Id).ToHashSet() ?? new HashSet<int>();
+
+                foreach (var product in guestComp.Products)
                 {
-                    _comparisonRepository.Add(product.Id, userName);
+                    if (!userProductIds.Contains(product.Id))
+                    {
+                        _comparisonRepository.Add(product.Id, userName);
+                    }
                 }
+
                 _comparisonRepository.Clear(guestId);
             }
         }
