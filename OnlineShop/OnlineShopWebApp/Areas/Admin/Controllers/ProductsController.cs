@@ -24,7 +24,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = _productRepository.GetAll();
-
             return View(products.ToViewModels());
         }
 
@@ -50,7 +49,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(int id, ProductViewModel model) 
         {
-            Console.WriteLine($"[DEBUG] POST Edit: id={id}, model.Id={model.Id}");
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -89,7 +87,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             _productRepository.Edit(existingProduct);
-            Console.WriteLine($"[DEBUG] Успешно сохранено. Перенаправление на Index...");
             return RedirectToAction("Index");
         }
 
