@@ -11,4 +11,5 @@ public class Product : IBaseId
     public string? Description { get; set; }
     public List<CartItem>? CartItems { get; set; }
     public List<OrderItem>? OrderItems { get; set; }
+    public string? PhotoPath { get; set; }
 }

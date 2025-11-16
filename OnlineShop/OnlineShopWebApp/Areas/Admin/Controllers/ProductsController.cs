@@ -13,10 +13,12 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
         {
             _productRepository = productRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -48,13 +50,33 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 return View(model);
             }
-                        
+
             var existingProduct = _productRepository.GetById(model.Id);
             if (existingProduct == null) return NotFound();
 
             existingProduct.Name = model.Name;
             existingProduct.Cost = model.Cost;
             existingProduct.Description = model.Description;
+
+            if (model.UploadedFile != null)
+            {
+                string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+                if (!Directory.Exists(productImagesPath))
+                {
+                    Directory.CreateDirectory(productImagesPath);
+                }
+
+                var fileName = Guid.NewGuid() + "." + model.UploadedFile.FileName.Split('.').Last();
+                var filePath = Path.Combine(productImagesPath, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.UploadedFile.CopyTo(fileStream);
+                }
+
+                existingProduct.PhotoPath = $"/images/products/{fileName}";
+            }
+            
 
             _productRepository.Edit(existingProduct);
             return RedirectToAction("Index");
@@ -80,11 +102,33 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 return View(model);
             }
 
+            string photoPath = "/img/whey-protein.jpg";
+
+            if (model.UploadedFile != null)
+            {
+                string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+                if (!Directory.Exists(productImagesPath))
+                {
+                    Directory.CreateDirectory(productImagesPath);
+                }
+
+                var fileName = Guid.NewGuid() + "." + model.UploadedFile.FileName.Split('.').Last();
+                var filePath = Path.Combine(productImagesPath, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.UploadedFile.CopyTo(fileStream);
+                }
+
+                photoPath = $"/images/products/{fileName}";
+            }
+            
             var dbProduct = new Product
             {
                 Name = model.Name,
                 Cost = model.Cost,
-                Description = model.Description
+                Description = model.Description,
+                PhotoPath = photoPath
             };
 
             _productRepository.Add(dbProduct);

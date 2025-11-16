@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
 using System.Text;
+using OnlineShopWebApp.Helpers;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -21,7 +22,8 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index()
         {
             var products = _productRepository.GetAll();
-            return View(products);
+            var productViewModels = products.ToViewModels(); 
+            return View(productViewModels);
         }
 
         public IActionResult Search(string query)

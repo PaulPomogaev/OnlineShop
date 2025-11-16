@@ -14,7 +14,7 @@
         {
             <div class="col-3 mb-3">
                 <div class="card shadow">
-                    <img class="card-img-top" src="@("/" + product.PhotoPath.TrimStart('/'))" alt="@product.Name" />
+                    <img class="card-img-top" src="@product.PhotoPath" alt="@product.Name" />
                     <div class="card-body text-center">
                         <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">
                             <h5>@product.Name</h5>

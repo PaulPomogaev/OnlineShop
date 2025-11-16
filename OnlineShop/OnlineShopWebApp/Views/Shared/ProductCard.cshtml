@@ -1,8 +1,8 @@
-﻿@model OnlineShop.Db.Models.Product
+﻿@model OnlineShopWebApp.Models.ProductViewModel
 
 <div class="col-3 mb-3">
     <div class="card shadow">
-        <img class="card-img-top" src="/img/whey-protein.jpg" alt="@Model.Name" />
+        <img class="card-img-top" src="@Model.PhotoPath" alt="@Model.Name" />
         <div class="card-body text-center">
             <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@Model.Id">
                 <h5>@Model.Name</h5>

@@ -5,7 +5,11 @@ namespace OnlineShopWebApp.Models
 {
     public class ProductViewModel
     {
-        public string PhotoPath { get; set; } = "img/whey-protein.jpg";
+        public string PhotoPath { get; set; } = "/img/whey-protein.jpg";
+
+        [Display(Name = "Загрузить новое изображение")]
+        public IFormFile? UploadedFile { get; set; }
+
         public required int Id { get; set; }
 
         [Required(ErrorMessage = "Поле наименования товара обязательно к заполнению")]

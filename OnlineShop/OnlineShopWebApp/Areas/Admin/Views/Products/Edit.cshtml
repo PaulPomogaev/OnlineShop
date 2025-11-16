@@ -10,7 +10,7 @@
             <h2 class="row-title">Редактирование товара</h2>
         </div>
 
-        <form method="post" asp-area="Admin" asp-controller="Products" asp-action="Edit">
+        <form method="post" asp-area="Admin" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger fw-bold text-uppercase mb-3"></div>
             <div class="row justify-content-center mt-3">
                 <div class="col-6 mb-3">
@@ -32,6 +32,20 @@
                         <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
+
+                    <div class="mb-3">
+                        <label asp-for="UploadedFile" class="form-label">Загрузить новое изображение</label>
+                        <input asp-for="UploadedFile" type="file" class="form-control" />
+                        <span asp-validation-for="UploadedFile" class="text-danger"></span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                    {
+                        <div class="mb-3">
+                            <label>Текущее изображение:</label>
+                            <br />
+                            <img src="@Model.PhotoPath" alt="Текущее изображение" style="max-width: 200px; max-height: 200px;" />
+                        </div>
+                    }
                 </div>
             </div>
             <div class="text-center m-3">

@@ -14,7 +14,7 @@ namespace OnlineShopWebApp.Helpers
                 Name = product.Name,
                 Cost = product.Cost,
                 Description = product.Description,
-                PhotoPath = "/images/products/whey-protein.jpg"
+                PhotoPath = !string.IsNullOrEmpty(product.PhotoPath) ? product.PhotoPath : "/img/whey-protein.jpg"
             };
         }
 
