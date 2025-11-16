@@ -10,11 +10,17 @@
             <h2 class="row-title">Редактирование товара</h2>
         </div>
 
-        <form method="post" asp-area="Admin" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
+        <form method="post"
+              asp-area="Admin"
+              asp-controller="Products"
+              asp-action="Edit"
+              enctype="multipart/form-data"
+              id="editForm">
             <div asp-validation-summary="All" class="text-danger fw-bold text-uppercase mb-3"></div>
             <div class="row justify-content-center mt-3">
                 <div class="col-6 mb-3">
                     <input type="hidden" asp-for="Id" />
+
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label"></label>
                         <input asp-for="Name" class="form-control" />
@@ -34,24 +40,78 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="UploadedFile" class="form-label">Загрузить новое изображение</label>
-                        <input asp-for="UploadedFile" type="file" class="form-control" />
+                        <label asp-for="UploadedFile" class="form-label">Заменить основное изображение</label>
+                        <input asp-for="UploadedFile" type="file" class="form-control" accept="image/*" />
                         <span asp-validation-for="UploadedFile" class="text-danger"></span>
                     </div>
-                    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+
+                    <div class="mb-3">
+                        <label asp-for="UploadedFiles" class="form-label">Добавить дополнительные изображения</label>
+                        <input asp-for="UploadedFiles" type="file" class="form-control" multiple accept="image/*" />
+                        <span asp-validation-for="UploadedFiles" class="text-danger"></span>
+                        <small class="form-text text-muted">Можно выбрать несколько файлов</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <div class="col-6 mb-3">
+                    <h5>Текущие изображения:</h5>
+                    @if (Model.ImagePaths?.Any() == true)
+                    {
+                        <div class="row g-2 mb-3">
+                            @foreach (var imagePath in Model.ImagePaths)
+                            {
+                                <div class="col-auto">
+                                    <div class="border p-2 text-center">
+                                        <img src="@imagePath" alt="Изображение" style="max-width:100px; max-height:100px;" />
+                                        <div class="mt-2">
+                                            <form method="post" asp-area="Admin" asp-controller="Products" asp-action="DeleteImage"
+                                                  asp-route-productId="@Model.Id" asp-route-imagePath="@imagePath"
+                                                  class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Удалить это изображение?')">
+                                                    Удалить
+                                                </button>
+                                            </form>
+
+                                            @if (Model.PhotoPath != imagePath)
+                                            {
+                                                <form method="post" asp-area="Admin" asp-controller="Products" asp-action="SetAsMainImage"
+                                                      asp-route-productId="@Model.Id" asp-route-imagePath="@imagePath"
+                                                      class="d-inline ms-1">
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                        Основное
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success ms-1">Основное</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.PhotoPath) && (Model.ImagePaths == null || !Model.ImagePaths.Contains(Model.PhotoPath)))
                     {
                         <div class="mb-3">
-                            <label>Текущее изображение:</label>
-                            <br />
-                            <img src="@Model.PhotoPath" alt="Текущее изображение" style="max-width: 200px; max-height: 200px;" />
+                            <label>Основное изображение:</label><br />
+                            <img src="@Model.PhotoPath" alt="Основное изображение" style="max-width: 200px; max-height: 200px;" />
+                            <span class="badge bg-success ms-2">Основное</span>
                         </div>
                     }
                 </div>
             </div>
+
             <div class="text-center m-3">
-                <button class="btn btn-outline-success" type="submit">
+                <button type="button" class="btn btn-outline-success" onclick="document.getElementById('editForm').submit()">
                     Редактировать
                 </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Отмена</a>
             </div>
         </form>
     </div>

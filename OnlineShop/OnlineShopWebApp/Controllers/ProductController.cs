@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db.Interfaces;
+using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
 using System.Text;
 
@@ -18,8 +19,12 @@ namespace OnlineShopWebApp.Controllers
         public IActionResult Index(int id)
         {
             var product = _productRepository.GetById(id);
-            
-            return View(product);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            var productViewModel = product.ToViewModel();
+            return View(productViewModel);
         }
     }
 }
