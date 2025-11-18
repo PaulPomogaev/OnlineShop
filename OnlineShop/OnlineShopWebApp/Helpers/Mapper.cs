@@ -77,5 +77,27 @@ namespace OnlineShopWebApp.Helpers
                 Items = cart.Items?.Select(item => item.ToViewModel()).ToList() ?? new List<CartItemViewModel>()
             };
         }
+
+        public static UserEdit ToEditModel(this User user)
+        {
+            return new UserEdit
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                AvatarPath = user.AvatarPath 
+            };
+        }
+
+        public static void UpdateFromEditModel(this User user, UserEdit model)
+        {
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.UserName = model.Email; 
+        }
     }
 }

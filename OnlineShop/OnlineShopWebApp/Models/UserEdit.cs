@@ -21,5 +21,11 @@ namespace OnlineShopWebApp.Models
         [Required(ErrorMessage = "Телефон обязателен")]
         [Phone(ErrorMessage = "Неверный формат телефона")]
         public string PhoneNumber { get; set; } = string.Empty;
+
+        [Display(Name = "Новый Аватар")]
+        public IFormFile? AvatarFile { get; set; }
+
+        [Display(Name = "Текущий аватар")]
+        public string? AvatarPath { get; set; }
     }
 }

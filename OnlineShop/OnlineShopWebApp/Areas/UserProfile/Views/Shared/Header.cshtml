@@ -31,6 +31,8 @@
                         <li class="nav-item">
                             <span class="nav-link text-dark">Привет, @User.Identity.Name!</span>
                         </li>
+
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="UserProfile" asp-controller="UserProfile" asp-action="Index">
                                 👤 Личный кабинет
@@ -45,7 +47,7 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Выход</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
                         </li>
                     }
                     else

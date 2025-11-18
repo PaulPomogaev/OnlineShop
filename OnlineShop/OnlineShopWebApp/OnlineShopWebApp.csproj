@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\images\avatars\" />
   </ItemGroup>
 
   <ItemGroup>
