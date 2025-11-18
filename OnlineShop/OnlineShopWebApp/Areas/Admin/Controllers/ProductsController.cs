@@ -60,24 +60,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             if (model.UploadedFile != null)
             {
-                string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
-                if (!Directory.Exists(productImagesPath))
-                {
-                    Directory.CreateDirectory(productImagesPath);
-                }
-
-                var fileName = Guid.NewGuid() + "." + model.UploadedFile.FileName.Split('.').Last();
-                var filePath = Path.Combine(productImagesPath, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.UploadedFile.CopyTo(fileStream);
-                }
-
-                existingProduct.PhotoPath = $"/images/products/{fileName}";
+                existingProduct.PhotoPath = SaveImage(model.UploadedFile);
             }
             
-
             _productRepository.Edit(existingProduct);
             return RedirectToAction("Index");
         }
@@ -106,21 +91,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             if (model.UploadedFile != null)
             {
-                string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
-                if (!Directory.Exists(productImagesPath))
-                {
-                    Directory.CreateDirectory(productImagesPath);
-                }
-
-                var fileName = Guid.NewGuid() + "." + model.UploadedFile.FileName.Split('.').Last();
-                var filePath = Path.Combine(productImagesPath, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.UploadedFile.CopyTo(fileStream);
-                }
-
-                photoPath = $"/images/products/{fileName}";
+                photoPath = SaveImage(model.UploadedFile);
             }
             
             var dbProduct = new Product
@@ -133,6 +104,25 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             _productRepository.Add(dbProduct);
             return RedirectToAction("Index");
+        }
+
+        private string SaveImage(IFormFile imageFile)
+        {
+            string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+            if (!Directory.Exists(productImagesPath))
+            {
+                Directory.CreateDirectory(productImagesPath);
+            }
+
+            var fileName = Guid.NewGuid() + "." + imageFile.FileName.Split('.').Last();
+            var filePath = Path.Combine(productImagesPath, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                imageFile.CopyTo(fileStream);
+            }
+
+            return $"/images/products/{fileName}";
         }
     }
 }
