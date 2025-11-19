@@ -36,9 +36,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="UploadedFile" class="form-label">Загрузить изображение</label>
+                        <label asp-for="UploadedFile" class="form-label">Загрузить основное изображение</label>
                         <input asp-for="UploadedFile" type="file" class="form-control" />
                         <span asp-validation-for="UploadedFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="UploadedFiles" class="form-label">Загрузить дополнительные изображения</label>
+                        <input asp-for="UploadedFiles" type="file" multiple class="form-control" />
+                        <small class="form-text text-muted">Можно выбрать несколько файлов</small>
+                        <span asp-validation-for="UploadedFiles" class="text-danger"></span>
                     </div>
                 </div>
             </div>

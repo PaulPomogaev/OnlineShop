@@ -30,7 +30,10 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public IActionResult Detail(int id)
         {
             var product = _productRepository.GetById(id);
-            if (product == null) return NotFound();
+            if (product == null)
+            {
+                return NotFound();
+            }
 
             var viewModel = product.ToViewModel();
             return View(viewModel);
@@ -44,10 +47,16 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductViewModel model) 
+        public IActionResult Edit(int id, ProductViewModel model) 
         {
             if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            if (id != model.Id)
+            {
+                ModelState.AddModelError("", "Несоответствие идентификаторов");
                 return View(model);
             }
 
@@ -62,7 +71,21 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 existingProduct.PhotoPath = SaveImage(model.UploadedFile);
             }
-            
+
+            if (model.UploadedFiles != null && model.UploadedFiles.Any())
+            {
+                existingProduct.ImagePaths ??= new List<string>();
+
+                foreach (var imageFile in model.UploadedFiles)
+                {
+                    if (imageFile.Length > 0)
+                    {
+                        var imagePath = SaveImage(imageFile);
+                        existingProduct.ImagePaths.Add(imagePath);
+                    }
+                }
+            }
+
             _productRepository.Edit(existingProduct);
             return RedirectToAction("Index");
         }
@@ -88,18 +111,32 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             string photoPath = "/img/whey-protein.jpg";
+            var imagePaths = new List<string>();
 
             if (model.UploadedFile != null)
             {
                 photoPath = SaveImage(model.UploadedFile);
             }
-            
+
+            if(model.UploadedFiles != null && model.UploadedFiles.Any())
+            {
+                foreach(var imageFile in model.UploadedFiles)
+                {
+                    if(imageFile.Length >0)
+                    {
+                        var imagePath = SaveImage(imageFile);
+                        imagePaths.Add(imagePath); 
+                    }
+                }
+            }
+
             var dbProduct = new Product
             {
                 Name = model.Name,
                 Cost = model.Cost,
                 Description = model.Description,
-                PhotoPath = photoPath
+                PhotoPath = photoPath,
+                ImagePaths = imagePaths
             };
 
             _productRepository.Add(dbProduct);
@@ -123,6 +160,45 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             return $"/images/products/{fileName}";
+        }
+
+        [HttpPost]
+        public IActionResult DeleteImage(int productId, string imagePath)
+        {
+            var product = _productRepository.GetById(productId);
+            if (product == null) return NotFound();
+
+            if (product.ImagePaths != null && product.ImagePaths.Contains(imagePath))
+            {
+                product.ImagePaths.Remove(imagePath);
+                _productRepository.Edit(product);
+
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    var fullPath = Path.Combine(_webHostEnvironment.WebRootPath, imagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
+            }
+
+            return RedirectToAction("Edit", new { id = productId });
+        }
+
+        [HttpPost]
+        public IActionResult SetAsMainImage(int productId, string imagePath)
+        {
+            var product = _productRepository.GetById(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.PhotoPath = imagePath;
+            _productRepository.Edit(product);
+
+            return RedirectToAction("Edit", new { id = productId });
         }
     }
 }

@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
 using OnlineShop.Db.Interfaces;
-using OnlineShopWebApp.Services;
-using OnlineShopWebApp.Services;
 using Serilog;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
@@ -105,6 +103,11 @@ namespace OnlineShopWebApp
             app.UseAuthorization();
 
             app.MapStaticAssets();
+
+            app.MapAreaControllerRoute(
+                name: "admin",
+                areaName: "Admin",
+                pattern: "Admin/{controller=Products}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "MyArea",

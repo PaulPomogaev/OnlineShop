@@ -7,8 +7,13 @@ namespace OnlineShopWebApp.Models
     {
         public string PhotoPath { get; set; } = "/img/whey-protein.jpg";
 
-        [Display(Name = "Загрузить новое изображение")]
+        [Display(Name = "Загрузить основное изображение")]
         public IFormFile? UploadedFile { get; set; }
+
+        [Display(Name = "Загрузить дополнительные изображения")]
+        public List<IFormFile>? UploadedFiles { get; set; }
+
+        public List<string> ImagePaths { get; set; } = new List<string>();
 
         public required int Id { get; set; }
 
