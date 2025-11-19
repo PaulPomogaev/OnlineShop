@@ -35,16 +35,9 @@ namespace OnlineShop.Db.Repostories
 
         public Order Create(Cart cart, OrderInputModel input)
         {
-            var orderItems = cart.Items.Select(item => new OrderItem
-            {
-                Product = item.Product,
-                Quantity = item.Quantity
-            }).ToList();
-
-            return new Order
+            var order = new Order
             {
                 UserId = cart.UserId,
-                Items = orderItems,
                 Customer = new CustomerInfo
                 {
                     Name = input.CustomerName,
@@ -53,8 +46,28 @@ namespace OnlineShop.Db.Repostories
                 },
                 DeliveryDate = input.DeliveryDate,
                 Comment = input.Comment,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                Status = OrderStatus.Created,
+                Items = new List<OrderItem>() 
             };
+                        
+            foreach (var cartItem in cart.Items)
+            {
+                if (cartItem?.Product == null) continue;
+
+                var orderItem = new OrderItem
+                {
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity,
+                    Product = cartItem.Product 
+                };
+                order.Items.Add(orderItem);
+            }
+                        
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+            return order;
         }
 
         public void Edit(Order updateOrder)

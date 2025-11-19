@@ -1,0 +1,100 @@
+﻿@model OrderViewModel
+@{
+    ViewData["Title"] = $"Заказ №{Model.Id}";
+}
+
+<div class="row mt-3">
+    @await Html.PartialAsync("UserProfileMenu")
+    <div class="col-9 mb-3">
+        <div class="text-center text-uppercase text-success mb-5 mt-5">
+            <h2 class="row-title">Заказ №@Model.Id</h2>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5>Информация о заказе</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Дата создания:</strong> @Model.CreatedDate</p>
+                        <p>
+                            <strong>Статус:</strong>
+                            @switch (Model.Status)
+                            {
+                                case OnlineShop.Core.Models.OrderStatus.Created:
+                                    <span class="badge bg-warning text-dark">Создан</span>
+                                    break;
+                                case OnlineShop.Core.Models.OrderStatus.Processed:
+                                    <span class="badge bg-info text-dark">Оплачен</span>
+                                    break;
+                                case OnlineShop.Core.Models.OrderStatus.InTransit:
+                                    <span class="badge bg-primary">Отправлен</span>
+                                    break;
+                                case OnlineShop.Core.Models.OrderStatus.Delivered:
+                                    <span class="badge bg-success">Доставлен</span>
+                                    break;
+                                case OnlineShop.Core.Models.OrderStatus.Cancelled:
+                                    <span class="badge bg-danger">Отменён</span>
+                                    break;
+                            }
+                        </p>
+                        @if (Model.DeliveryDate.HasValue)
+                        {
+                            <p><strong>Дата доставки:</strong> @Model.DeliveryDate.Value.ToString("dd.MM.yyyy")</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Comment))
+                        {
+                            <p><strong>Комментарий:</strong> @Model.Comment</p>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Покупатель</h6>
+                        <p><strong>Имя:</strong> @Model.Customer.Name</p>
+                        <p><strong>Телефон:</strong> @Model.Customer.Phone</p>
+                        <p><strong>Адрес:</strong> @Model.Customer.Address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mt-4">
+            <div class="card-header bg-light">
+                <h5>Состав заказа</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Товар</th>
+                            <th>Цена</th>
+                            <th>Кол-во</th>
+                            <th>Сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Product.Cost.ToString("C")</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold">@item.Cost.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-success">
+                            <td colspan="3" class="text-end fw-bold">Итого:</td>
+                            <td class="fw-bold">@Model.TotalCost.ToString("C")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-action="Index" class="btn btn-outline-secondary">Назад к заказам</a>
+        </div>
+    </div>
+</div>

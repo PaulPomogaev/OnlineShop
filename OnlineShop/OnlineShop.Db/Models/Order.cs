@@ -7,6 +7,7 @@ namespace OnlineShop.Db.Models
 {
     public class Order : IBaseId
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string UserId { get; set; } = "guest";
          public List<OrderItem> Items { get; set; } = new();
