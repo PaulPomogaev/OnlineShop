@@ -20,7 +20,7 @@ namespace OnlineShopWebApp.Areas.UserProfile.Controllers
         public IActionResult Index()
         {
             var userId = GetUserId();
-            var orders = _orderRepository.GetAll().Where(o => o.UserId == userId).OrderByDescending(o => o.CreatedDate).ToList();
+            var orders = _orderRepository.GetUserOrders(userId);
             var viewModel = orders.Select(o => o.ToViewModel()).ToList();
             return View(viewModel);
         }
@@ -34,7 +34,7 @@ namespace OnlineShopWebApp.Areas.UserProfile.Controllers
             {
                 return Forbid();
             }
-
+            
             return View(order.ToViewModel());
         }
     }

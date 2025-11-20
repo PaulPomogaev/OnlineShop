@@ -36,6 +36,10 @@ namespace OnlineShop.Db
                 .Property(p => p.Cost)
                 .HasPrecision(18, 2);
 
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.Price)
+                .HasPrecision(18, 2);
+
             modelBuilder.Entity<Favorite>()
                 .HasMany(f => f.Products)
                 .WithMany()

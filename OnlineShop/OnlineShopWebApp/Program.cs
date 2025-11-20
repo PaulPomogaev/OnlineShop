@@ -32,6 +32,8 @@ namespace OnlineShopWebApp
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = "OnlineShop.Session";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; 
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
             string connection = builder.Configuration.GetConnectionString("online_shop");
@@ -63,10 +65,13 @@ namespace OnlineShopWebApp
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromHours(720);
                 options.SlidingExpiration = true;
-                                
+
                 options.Cookie = new CookieBuilder
                 {
-                    IsEssential = true
+                    IsEssential = true,
+                    SameSite = SameSiteMode.Lax, 
+                    HttpOnly = true,
+                    SecurePolicy = CookieSecurePolicy.SameAsRequest 
                 };
             });
 

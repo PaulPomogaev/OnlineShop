@@ -72,9 +72,9 @@
                                             <tr align="center" class="align-baseline">
                                                 <td class="fw-bold">@(i + 1)</td>
                                                 <td align="left">@Model.Items[i].Product.Name</td>
-                                                <td align="left">@Model.Items[i].Product.Cost.ToString("C")</td>
+                                                <td align="left">@Model.Items[i].Price.ToString("C")</td>
                                                 <td>@Model.Items[i].Quantity</td>
-                                                <td class="fw-bold">@Model.Items[i].Cost.ToString("C")</td>
+                                                <td class="fw-bold">@((Model.Items[i].Price * Model.Items[i].Quantity).ToString("C"))</td>
                                             </tr>
                                         }
                                     </tbody>

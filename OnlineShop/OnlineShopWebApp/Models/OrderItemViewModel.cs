@@ -11,7 +11,8 @@ namespace OnlineShopWebApp.Models
         Name = string.Empty,
         Cost = 0m
         };
+        public decimal Price { get; set; }  // покажет историю покупок по фиксированной цене на момент покупки
         public int Quantity { get; set; }
-        public decimal Cost => Product.Cost * Quantity;
+        public decimal Cost => Price * Quantity;
     }
 }
