@@ -76,6 +76,8 @@ namespace OnlineShopWebApp.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync().Wait();

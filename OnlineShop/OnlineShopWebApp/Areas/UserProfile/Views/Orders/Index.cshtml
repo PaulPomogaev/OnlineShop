@@ -31,24 +31,7 @@
                                 <td>@order.Id</td>
                                 <td>@order.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
                                 <td>
-                                    @switch (order.Status)
-                                    {
-                                        case OnlineShop.Core.Models.OrderStatus.Created:
-                                            <span class="badge bg-warning text-dark">Создан</span>
-                                            break;
-                                        case OnlineShop.Core.Models.OrderStatus.Processed:
-                                            <span class="badge bg-info text-dark">Оплачен</span>
-                                            break;
-                                        case OnlineShop.Core.Models.OrderStatus.InTransit:
-                                            <span class="badge bg-primary">Отправлен</span>
-                                            break;
-                                        case OnlineShop.Core.Models.OrderStatus.Delivered:
-                                            <span class="badge bg-success">Доставлен</span>
-                                            break;
-                                        case OnlineShop.Core.Models.OrderStatus.Cancelled:
-                                            <span class="badge bg-danger">Отменён</span>
-                                            break;
-                                    }
+                                    @Html.DisplayFor(m => order.Status, "OrderStatus")
                                 </td>
                                 <td class="fw-bold">@order.TotalCost.ToString("C")</td>
                                 <td>@order.Items.Count</td>

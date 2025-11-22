@@ -1,0 +1,17 @@
+﻿@model OnlineShop.Core.Models.OrderStatus
+
+@{
+    var badgeClass = Model switch
+    {
+        OnlineShop.Core.Models.OrderStatus.Created => "bg-warning text-dark",
+        OnlineShop.Core.Models.OrderStatus.Processed => "bg-info text-dark",
+        OnlineShop.Core.Models.OrderStatus.InTransit => "bg-primary",
+        OnlineShop.Core.Models.OrderStatus.Delivered => "bg-success",
+        OnlineShop.Core.Models.OrderStatus.Cancelled => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<span class="badge @badgeClass">
+    @Html.DisplayForModel()
+</span>

@@ -21,24 +21,7 @@
                         <p><strong>Дата создания:</strong> @Model.CreatedDate</p>
                         <p>
                             <strong>Статус:</strong>
-                            @switch (Model.Status)
-                            {
-                                case OnlineShop.Core.Models.OrderStatus.Created:
-                                    <span class="badge bg-warning text-dark">Создан</span>
-                                    break;
-                                case OnlineShop.Core.Models.OrderStatus.Processed:
-                                    <span class="badge bg-info text-dark">Оплачен</span>
-                                    break;
-                                case OnlineShop.Core.Models.OrderStatus.InTransit:
-                                    <span class="badge bg-primary">Отправлен</span>
-                                    break;
-                                case OnlineShop.Core.Models.OrderStatus.Delivered:
-                                    <span class="badge bg-success">Доставлен</span>
-                                    break;
-                                case OnlineShop.Core.Models.OrderStatus.Cancelled:
-                                    <span class="badge bg-danger">Отменён</span>
-                                    break;
-                            }
+                            @Html.DisplayFor(m => m.Status, "OrderStatus")
                         </p>
                         @if (Model.DeliveryDate.HasValue)
                         {
