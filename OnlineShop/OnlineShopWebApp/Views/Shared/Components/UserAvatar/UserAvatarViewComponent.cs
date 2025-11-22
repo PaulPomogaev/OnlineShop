@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
+using OnlineShopWebApp.Models;
 
 namespace OnlineShopWebApp.Views.Shared.Components.UserAvatar
 {
@@ -38,7 +39,12 @@ namespace OnlineShopWebApp.Views.Shared.Components.UserAvatar
                 ? $"{user.FirstName} {user.LastName}".Trim()
                 : user.UserName ?? "Пользователь";
 
-            var model = new { AvatarPath = avatarPath, DisplayName = displayName };
+            var model = new UserAvatarViewModel
+            {
+                AvatarPath = avatarPath,
+                DisplayName = displayName
+            };
+
             return View(model);
         }
     }
