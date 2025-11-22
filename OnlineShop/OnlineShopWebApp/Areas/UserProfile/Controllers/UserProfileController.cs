@@ -22,7 +22,7 @@ namespace OnlineShopWebApp.Areas.UserProfile.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Edit()
         {
             string userId = GetUserId();
             var user = _userManager.FindByNameAsync(userId).Result;
@@ -35,7 +35,7 @@ namespace OnlineShopWebApp.Areas.UserProfile.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(UserEdit model)
+        public IActionResult Edit(UserEdit model)
         {
             if(!ModelState.IsValid)
             {
