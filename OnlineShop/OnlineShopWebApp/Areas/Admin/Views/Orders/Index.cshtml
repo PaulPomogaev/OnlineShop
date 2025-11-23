@@ -32,7 +32,7 @@
                                 <tr align="center" class="align-baseline">
                                     <td class="fw-bold">@(i + 1)</td>
                                     <td>@Model[i].TotalCost.ToString("C")</td>
-                                    <td>@Html.DisplayFor(m => Model[i].Status)</td>
+                                    <td>@Html.DisplayFor(m => Model[i].Status, "OrderStatus")</td>
                                     <td>@Model[i].UserId</td>
                                     <td>@Model[i].CreatedDate.Date.ToShortDateString()</td>
                                     <td>@Model[i].CreatedDate.ToShortTimeString()</td>

@@ -1,4 +1,6 @@
-﻿@model OnlineShop.Core.Models.OrderStatus
+﻿@using OnlineShopWebApp.Helpers;
+
+@model OnlineShop.Core.Models.OrderStatus
 
 @{
     var badgeClass = Model switch
@@ -10,8 +12,10 @@
         OnlineShop.Core.Models.OrderStatus.Cancelled => "bg-danger",
         _ => "bg-secondary"
     };
+
+    var displayName = Model.GetDisplayName();
 }
 
 <span class="badge @badgeClass">
-    @Html.DisplayForModel()
+    @displayName
 </span>

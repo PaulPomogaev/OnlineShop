@@ -75,7 +75,7 @@ namespace OnlineShop.Db.Repostories
 
         public void Edit(Order updateOrder)
         {
-            var existingOrder = _context.Orders.FirstOrDefault(o => o.Id == updateOrder.Id);
+            var existingOrder = _context.Orders.Include(o => o.Items).ThenInclude(oi => oi.Product).FirstOrDefault(o => o.Id == updateOrder.Id);
 
             if (existingOrder != null)
             {
@@ -83,6 +83,7 @@ namespace OnlineShop.Db.Repostories
                 _context.SaveChanges();
             }
         }
+
 
         public override Order? GetById(int id)
         {
@@ -95,7 +96,7 @@ namespace OnlineShop.Db.Repostories
 
         public List<Order> GetUserOrders(string userId)
         {
-            return _context.Orders.Where(o => o.UserId == userId).Include(o => o.Items).ThenInclude(oi => oi.Product).OrderByDescending(o => o.CreatedDate).ToList();
+            return _context.Orders.Where(o => o.UserId == userId).Include(o => o.Items).ThenInclude(oi => oi.Product).OrderBy(o => o.CreatedDate).ToList();
         }
     }
 }

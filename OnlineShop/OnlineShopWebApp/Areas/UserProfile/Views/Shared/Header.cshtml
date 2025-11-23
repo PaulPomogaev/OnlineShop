@@ -42,9 +42,9 @@
                         }
 
                         <li class="nav-item">
-                            <form asp-controller="Account" asp-action="Logout" method="post">
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="nav-link btn btn-link text-dark" style="border: none; background: none; padding: 0;">
+                                <button type="submit" class="nav-link btn btn-link text-dark p-0 m-0 border-0 bg-transparent">
                                     Выход
                                 </button>
                             </form>
