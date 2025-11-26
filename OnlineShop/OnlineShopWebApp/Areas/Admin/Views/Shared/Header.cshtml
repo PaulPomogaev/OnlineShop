@@ -29,18 +29,25 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <span class="nav-link text-dark">Привет, @User.Identity.Name!</span>
+                            @await Component.InvokeAsync("UserAvatar")
                         </li>
 
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Панель администратора</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">
+                                    Панель администратора
+                                </a>
                             </li>
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
+                             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="nav-link btn btn-link text-dark p-0 m-0 border-0 bg-transparent">
+                                    Выход
+                                </button>
+                            </form>
                         </li>
                     }
                     else

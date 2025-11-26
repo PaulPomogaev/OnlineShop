@@ -1,0 +1,58 @@
+﻿@model List<OrderViewModel>
+
+@{
+    ViewData["Title"] = "Мои заказы";
+}
+
+<div class="row mt-3">
+    @await Html.PartialAsync("UserProfileMenu")
+    <div class="col-9 mb-3">
+        <div class="text-center text-uppercase text-success mb-5 mt-5">
+            <h2 class="row-title">Мои заказы</h2>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Дата</th>
+                            <th>Статус</th>
+                            <th>Сумма</th>
+                            <th>Позиций</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    @Html.DisplayFor(m => order.Status, "OrderStatus")
+                                </td>
+                                <td class="fw-bold">@order.TotalCost.ToString("C")</td>
+                                <td>@order.Items.Count</td>
+                                <td>
+                                    <a asp-action="Detail" asp-route-id="@order.Id"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        Подробнее
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                У вас пока нет заказов.
+            </div>
+        }
+    </div>
+</div>

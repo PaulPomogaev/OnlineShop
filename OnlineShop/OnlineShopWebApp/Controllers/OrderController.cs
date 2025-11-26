@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace OnlineShopWebApp.Controllers
 {
     [Authorize]
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         private readonly ICartRepository _cartRepository;
         private readonly IOrderRepository _orderRepository;
@@ -23,24 +23,32 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Index()
         {
-            var cart = _cartRepository.GetCart(User.Identity.Name);
-
-            if (cart.Items.Count == 0)
+            try
             {
-                return RedirectToAction("Index", "Cart");
+                var userId = GetUserId();
+                var cart = _cartRepository.GetCart(userId);
+
+                if (cart == null || cart.Items.Count == 0)
+                {
+                    return RedirectToAction("Index", "Cart");
+                }
+
+                var order = _orderRepository.Create(cart);
+                var viewModel = order.ToViewModel();
+                                
+                return View(viewModel);
             }
-
-            var order = _orderRepository.Create(cart);
-
-            var viewModel = order.ToViewModel();
-            
-            return View(viewModel);
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public IActionResult Buy(OrderViewModel orderViewModel)
         {
-            var cart = _cartRepository.GetCart(User.Identity.Name);
+            var userId = GetUserId();
+            var cart = _cartRepository.GetCart(userId);
             if (cart.Items.Count == 0)
             {
                 return RedirectToAction("Index", "Cart");
@@ -48,7 +56,7 @@ namespace OnlineShopWebApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                var orderForView = _orderRepository.Create(cart);
+                var orderForView = _orderRepository.Create(cart, orderViewModel.InputModel);
 
                 orderViewModel = orderForView.ToViewModel();
 
@@ -58,10 +66,10 @@ namespace OnlineShopWebApp.Controllers
             }
 
             var order = _orderRepository.Create(cart, orderViewModel.InputModel);
+                        
+            _orderRepository.SaveOrder(order);
 
-            _orderRepository.Add(order);
-
-            _cartRepository.ClearCart(User.Identity.Name);
+            _cartRepository.ClearCart(userId);
 
             return RedirectToAction("Success");
         }
@@ -70,5 +78,6 @@ namespace OnlineShopWebApp.Controllers
         {
             return View();
         }
+                
     }
 }

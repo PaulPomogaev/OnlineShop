@@ -35,11 +35,20 @@ namespace OnlineShopWebApp.Helpers
                 Comment = order.Comment,
                 Status = order.Status,
                 Customer = order.Customer,
-                Items = order.Items.Where(item => item.Product != null).Select(item => new OrderItemViewModel
+                Items = order.Items.Select(item => new OrderItemViewModel
                 {
                     Id = item.Id,
                     Quantity = item.Quantity,
-                    Product = item.Product.ToViewModel()
+                    Price = item.Price,
+                    Product = item.Product?.ToViewModel() ?? new ProductViewModel
+                    {
+                        Id = 0, 
+                        Name = "Товар не найден",
+                        Cost = 0,
+                        Description = string.Empty, 
+                        PhotoPath = "/img/whey-protein.jpg", 
+                        ImagePaths = new List<string>() 
+                    }
                 }).ToList(),
                 InputModel = new OrderInputModel()
             };
