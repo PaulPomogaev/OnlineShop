@@ -1,0 +1,87 @@
+﻿@model ChangePassword
+@{
+    ViewData["Title"] = "Смена пароля";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sidebar">
+                <ul class="sidebar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="UserProfile" asp-controller="UserProfile" asp-action="Index">
+                            📊 Обзор профиля
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-area="" asp-controller="ChangePassword" asp-action="Index">
+                            🔐 Сменить пароль
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">
+                            📦 Мои заказы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Favorite" asp-action="Index">
+                            ❤️ Избранное
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="text-center text-uppercase text-success mb-4">
+                <h2 class="row-title">Смена пароля</h2>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label asp-for="OldPassword" class="form-label"></label>
+                                    <input asp-for="OldPassword" type="password" class="form-control"
+                                           placeholder="Введите текущий пароль" />
+                                    <span asp-validation-for="OldPassword" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="NewPassword" class="form-label"></label>
+                                    <input asp-for="NewPassword" type="password" class="form-control"
+                                           placeholder="Введите новый пароль" />
+                                    <span asp-validation-for="NewPassword" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control"
+                                           placeholder="Подтвердите новый пароль" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-outline-success">Сменить пароль</button>
+                                    <a asp-area="UserProfile" asp-controller="UserProfile" asp-action="Index"
+                                       class="btn btn-outline-secondary ms-2">Отмена</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
