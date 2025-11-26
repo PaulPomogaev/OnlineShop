@@ -2,7 +2,7 @@
     <div class="sidebar">
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Edit" ? "active" : "")"
                    asp-area="UserProfile" asp-controller="UserProfile" asp-action="Edit">
                     📊 Обзор профиля
                 </a>
