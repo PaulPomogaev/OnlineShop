@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Core.Interfaces;
+using OnlineShop.Core.Models.Reviews;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWebApp.Models
@@ -30,6 +31,10 @@ namespace OnlineShopWebApp.Models
         [StringLength(4096, ErrorMessage = "Длина описания товара не должна быть более 4096 символов")]
         [Display(Name = "Описание товара", Prompt = "Введите описание товара")]
         public  string? Description { get; set; }
-                
+
+        public List<Review> Reviews { get; set; } = new();
+        public double Rating { get; set; }
+        public int ReviewCount { get; set; }
+
     }
 }

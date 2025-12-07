@@ -1,17 +1,15 @@
 ﻿@model OnlineShopWebApp.Models.ProductViewModel
 
-<div class="col-3 mb-3">
-    <div class="card shadow">
-        
+<div class="col-3 mb-4">
+    <div class="card shadow product-card h-100">
+
         @if (Model.ImagePaths.Any())
         {
             <div id="carousel-@Model.Id" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    
                     <div class="carousel-item active">
                         <img class="card-img-top" src="@Model.PhotoPath" alt="@Model.Name" style="height: 200px; object-fit: cover;" />
                     </div>
-                    
                     @foreach (var imagePath in Model.ImagePaths)
                     {
                         <div class="carousel-item">
@@ -35,23 +33,70 @@
             <img class="card-img-top" src="@Model.PhotoPath" alt="@Model.Name" style="height: 200px; object-fit: cover;" />
         }
 
-        <div class="card-body text-center">
-            <a class="text-success" asp-controller="Product" asp-action="Index" asp-route-id="@Model.Id">
-                <h5>@Model.Name</h5>
+        <div class="card-body text-center d-flex flex-column">
+            <a class="text-success text-decoration-none" asp-controller="Product" asp-action="Index" asp-route-id="@Model.Id">
+                <h5 class="card-title" style="min-height: 48px;">@Model.Name</h5>
             </a>
-            <h2 class="text-danger">@Model.Cost.ToString("C")</h2>
-            <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success w-100">
-                Добавить в корзину
-            </a>
-            <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-outline-primary w-100 mt-2">
-                В избранное
-            </a>
-            <a asp-controller="Comparison"
-               asp-action="Add"
-               asp-route-productId="@Model.Id"
-               class="btn btn-outline-info w-100 mt-2">
-                В сравнение
-            </a>
+
+            <div class="product-rating mb-2 flex-grow-0">
+                @if (Model.ReviewCount > 0)
+                {
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="rating-stars me-1">
+                            @{
+                                var rating = Model.Rating;
+                                var fullStars = (int)rating;
+                                var hasHalfStar = rating - fullStars >= 0.5;
+                            }
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                if (i < fullStars)
+                                {
+                                    <span class="text-warning">★</span>
+                                }
+                                else if (i == fullStars && hasHalfStar)
+                                {
+                                    <!-- Используем CSS класс для половинчатой звезды -->
+                                    <span class="half-star"></span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">☆</span>
+                                }
+                            }
+                        </div>
+                        <div class="ms-1">
+                            <small><strong>@rating.ToString("0.0")</strong></small>
+                            <small class="text-muted"> (@Model.ReviewCount)</small>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-muted">
+                        <small>Нет оценок</small>
+                    </div>
+                }
+            </div>
+
+            <div class="mt-auto">
+                <h4 class="text-danger fw-bold mb-3">@Model.Cost.ToString("C")</h4>
+
+                <div class="d-grid gap-2">
+                    <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id"
+                       class="btn btn-success">
+                        <i class="fas fa-shopping-cart"></i> В корзину
+                    </a>
+                    <a asp-controller="Favorite" asp-action="Add" asp-route-productId="@Model.Id"
+                       class="btn btn-outline-primary">
+                        <i class="far fa-heart"></i> Избранное
+                    </a>
+                    <a asp-controller="Comparison" asp-action="Add" asp-route-productId="@Model.Id"
+                       class="btn btn-outline-info">
+                        <i class="fas fa-balance-scale"></i> Сравнить
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

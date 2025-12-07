@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Core.Interfaces;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
@@ -14,7 +15,7 @@ namespace OnlineShopWebApp.Controllers
         private readonly ICartRepository _cartRepository;
         private readonly IFavoriteRepository _favoriteRepository; 
         private readonly IComparisonRepository _comparisonRepository;
-
+        
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository, IFavoriteRepository favoriteRepository, IComparisonRepository comparisonRepository)
         {
             _userManager = userManager;
@@ -22,6 +23,7 @@ namespace OnlineShopWebApp.Controllers
             _cartRepository = cartRepository;
             _favoriteRepository = favoriteRepository;
             _comparisonRepository = comparisonRepository;
+            
         }
 
         [HttpGet]

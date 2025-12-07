@@ -9,7 +9,7 @@
         <div class="col-3 mb-3">
             <div class="card h-100">
                 <img class="card-img-top" src="@Model.PhotoPath" alt="@Model.Name" id="mainProductImage" style="height: 300px; object-fit: cover;">
-                                
+
                 @if (Model.ImagePaths.Any())
                 {
                     <div class="card-body">
@@ -30,6 +30,46 @@
 
                 <div class="card-body text-center">
                     <h4>@Model.Name</h4>
+
+                    <!-- РЕЙТИНГ ПРОДУКТА - ДОБАВЬТЕ ЭТО -->
+                    <div class="product-rating mb-3">
+                        @if (Model.ReviewCount > 0)
+                        {
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="rating-stars me-2">
+                                    @{
+                                        var rating = Model.Rating;
+                                        var fullStars = (int)rating;
+                                        var hasHalfStar = rating - fullStars >= 0.5;
+                                    }
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < fullStars)
+                                        {
+                                            <span class="text-warning" style="font-size: 1.2rem;">★</span>
+                                        }
+                                        else if (i == fullStars && hasHalfStar)
+                                        {
+                                            <span class="text-warning" style="font-size: 1.2rem;">½</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted" style="font-size: 1.2rem;">☆</span>
+                                        }
+                                    }
+                                </div>
+                                <div>
+                                    <strong>@rating.ToString("0.0")</strong>
+                                    <small class="text-muted"> (@Model.ReviewCount отзывов)</small>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-muted">Нет оценок</div>
+                        }
+                    </div>
+
                     <h2 class="text-danger">@Model.Cost.ToString("C")</h2>
 
                     <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success">
@@ -51,6 +91,78 @@
                     <p class="card-text">@Model.Description</p>
                 </div>
             </div>
+                        
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Отзывы о товаре</h5>
+
+                    @if (Model.Reviews.Any())
+                    {
+                        <div class="reviews-list">
+                            @foreach (var review in Model.Reviews)
+                            {
+                                <div class="review-item border-bottom pb-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">Пользователь #@review.UserId</h6>
+                                            <small class="text-muted">@review.CreateDate.ToString("dd.MM.yyyy HH:mm")</small>
+                                        </div>
+                                        <div class="rating">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                <span class="@(i < review.Grade ? "text-warning" : "text-muted")">★</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 mb-0">@review.Text</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Пока нет отзывов. Будьте первым!</p>
+                    }
+                                        
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="add-review-form mt-4">
+                            <h6>Оставить отзыв</h6>
+                            <form method="post" asp-action="AddReview" asp-controller="Product">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+
+                                <div class="mb-3">
+                                    <label class="form-label">Оценка</label>
+                                    <select class="form-select" name="grade" required>
+                                        <option value="">Выберите оценку</option>
+                                        <option value="5">5 - Отлично</option>
+                                        <option value="4">4 - Хорошо</option>
+                                        <option value="3">3 - Удовлетворительно</option>
+                                        <option value="2">2 - Плохо</option>
+                                        <option value="1">1 - Очень плохо</option>
+                                        <option value="0">0 - Ужасно</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Текст отзыва</label>
+                                    <textarea class="form-control" name="text" rows="3"
+                                              maxlength="1000" placeholder="Напишите ваш отзыв здесь..." required></textarea>
+                                    <div class="form-text">Максимум 1000 символов</div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mt-3">
+                            <a asp-controller="Account" asp-action="Login" class="alert-link">Войдите</a>, чтобы оставить отзыв.
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     }
     else
@@ -61,8 +173,44 @@
     }
 </div>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-9">
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-9">
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="row justify-content-center">
     <div class="col-auto m-5">
         <a asp-controller="Home" asp-action="Index" class="btn btn-outline-success">Продолжить покупки</a>
     </div>
 </div>
+
+<style>
+    .rating-stars span {
+        font-size: 1.2rem;
+    }
+
+    .review-item:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+</style>

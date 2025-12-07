@@ -1,4 +1,5 @@
-﻿using OnlineShop.Db.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
 using OnlineShop.Db.Repostories;
 
@@ -37,6 +38,10 @@ namespace OnlineShop.Db
                         
             return _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
-                
+
+        public async Task<Product?> GetByIdAsync(int id)
+        {
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

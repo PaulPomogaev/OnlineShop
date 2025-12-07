@@ -5,6 +5,8 @@ using OnlineShop.Db.Interfaces;
 using Serilog;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
+using OnlineShop.Core.Interfaces;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp
 {
@@ -36,6 +38,21 @@ namespace OnlineShopWebApp
                 options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
+            builder.Services.AddHttpClient<TokenService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["ReviewsApi:BaseUrl"] ?? "https://localhost:7274");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            builder.Services.AddHttpClient<IReviewsApiService, ReviewsApiService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["ReviewsApi:BaseUrl"] ?? "https://localhost:7274");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+           
             string connection = builder.Configuration.GetConnectionString("online_shop");
 
             builder.Services.AddDbContext<DatabaseContext>(options =>
@@ -81,7 +98,6 @@ namespace OnlineShopWebApp
             builder.Services.AddScoped<IFavoriteRepository, FavoriteDbRepository>();
             builder.Services.AddScoped<IComparisonRepository, ComparisonDbRepository>();
           
-
 
             var app = builder.Build();
 
