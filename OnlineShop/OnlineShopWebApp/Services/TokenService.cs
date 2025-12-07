@@ -48,7 +48,7 @@ namespace OnlineShopWebApp.Services
                 return _cachedToken;
             }
 
-            throw new Exception($"Failed to get token: {response.StatusCode}");
+            throw new Exception($"Не смог получить токен: {response.StatusCode}");
         }
     }
 
