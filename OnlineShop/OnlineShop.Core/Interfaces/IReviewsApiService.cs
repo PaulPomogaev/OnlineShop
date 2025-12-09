@@ -10,5 +10,6 @@ namespace OnlineShop.Core.Interfaces
         Task<Review> GetReviewByIdAsync(int reviewId);
         Task<Review> AddReviewAsync(AddReviewRequest request);
         Task<ProductRatingDto> GetProductRatingAsync(int productId);
+        Task<List<ProductRatingDtoWithId>> GetProductRatingsAsync(List<int> productIds);
     }
 }

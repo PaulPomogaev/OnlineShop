@@ -5,6 +5,7 @@ using OnlineShopWebApp.Models;
 using System.Text;
 using OnlineShopWebApp.Helpers;
 using OnlineShop.Core.Interfaces;
+using OnlineShop.Db.Models;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -26,23 +27,30 @@ namespace OnlineShopWebApp.Controllers
         {
             var products = _productRepository.GetAll();
             var productViewModels = products.ToViewModels();
-                        
-            foreach (var product in productViewModels)
+            try
             {
-                try
+               var productIds = productViewModels.Select(p => p.Id).ToList();
+               var ratings = await _reviewsApiService.GetProductRatingsAsync(productIds);
+               foreach(var product in productViewModels)
                 {
-                    var rating = await _reviewsApiService.GetProductRatingAsync(product.Id);
-                    product.Rating = rating.Rating;
-                    product.ReviewCount = rating.ReviewCount;
-                }
-                catch (Exception ex)
-                {
-                     product.Rating = 0;
-                    product.ReviewCount = 0;
-                    _logger.LogWarning(ex, "Ќе удалось получить рейтинг дл€ продукта {ProductId}", product.Id);
+                    var ratingDto = ratings.FirstOrDefault(r => r.ProductId == product.Id);
+                    if(ratingDto!=null)
+                    {
+                        product.Rating = ratingDto.Rating;
+                        product.ReviewCount = ratingDto.ReviewCount;
+                    }
                 }
             }
-
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Ќе удалось получить рейтинги дл€ списка продуктов");
+                foreach(var product in productViewModels)
+                {
+                    product.Rating = 0;
+                    product.ReviewCount = 0;
+                }    
+            }
+           
             return View(productViewModels);
         }
 

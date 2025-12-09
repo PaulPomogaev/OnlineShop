@@ -87,5 +87,24 @@ namespace OnlineShopWebApp.Services
 
             return new ProductRatingDto { Rating = 0, ReviewCount = 0 };
         }
+
+        public async Task<List<ProductRatingDtoWithId>> GetProductRatingsAsync(List<int> productIds)
+        {
+            if(productIds == null || productIds.Count == 0)
+            {
+                return new List<ProductRatingDtoWithId>();
+            }
+
+            var ids = string.Join(",", productIds.Distinct().Where(id => id > 0));
+            var response = await _httpClient.GetAsync($"/api/Product/ratings?ids={ids}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<List<ProductRatingDtoWithId>>();
+                return result ?? new List<ProductRatingDtoWithId>();
+            }
+
+            return new List<ProductRatingDtoWithId>();
+        }
     }
 }
