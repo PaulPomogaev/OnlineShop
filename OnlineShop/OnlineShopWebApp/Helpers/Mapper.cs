@@ -1,6 +1,8 @@
 ﻿using OnlineShop.Core.Models;
+using OnlineShop.Core.Models.Reviews;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
+using OnlineShop.Core.Models.Reviews;
 
 namespace OnlineShopWebApp.Helpers
 {
@@ -17,6 +19,14 @@ namespace OnlineShopWebApp.Helpers
                 PhotoPath = !string.IsNullOrEmpty(product.PhotoPath) ? product.PhotoPath : "/img/whey-protein.jpg",
                 ImagePaths = product.ImagePaths ?? new List<string>()
             };
+        }
+
+        public static ProductViewModel WithReviews(this ProductViewModel viewModel, List<Review> reviews, ProductRatingDto rating)
+        {
+            viewModel.Reviews = reviews?.Where(r => r.Status == "Actual").ToList() ?? new();
+            viewModel.Rating = rating.Rating;
+            viewModel.ReviewCount = rating.ReviewCount;
+            return viewModel;
         }
 
         public static List<ProductViewModel> ToViewModels(this List<Product> products)

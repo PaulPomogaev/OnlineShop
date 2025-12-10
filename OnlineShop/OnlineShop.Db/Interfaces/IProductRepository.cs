@@ -7,5 +7,7 @@ namespace OnlineShop.Db.Interfaces
     {
         void Edit(Product product);
         List<Product> SearchEngine(string qwery);
+
+        Task<Product?> GetByIdAsync(int id);
     }
 }

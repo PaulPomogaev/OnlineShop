@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <Folder Include="logs\" />
     <Folder Include="wwwroot\images\avatars\" />
   </ItemGroup>
 
