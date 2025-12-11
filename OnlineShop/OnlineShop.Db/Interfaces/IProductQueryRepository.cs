@@ -9,6 +9,6 @@ namespace OnlineShop.Db.Interfaces
         List<Product> GetAll();
         Product? GetById(int id);
         Task<Product?> GetByIdAsync(int id);
-        List<Product> SearchEngine(string qwery);
+        List<Product> SearchEngine(string query);
     }
 }

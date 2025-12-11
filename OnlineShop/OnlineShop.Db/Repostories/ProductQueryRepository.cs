@@ -29,14 +29,14 @@ namespace OnlineShop.Db.Repostories
             return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public List<Product> SearchEngine(string qwery)
+        public List<Product> SearchEngine(string query)
         {
-           if(string.IsNullOrWhiteSpace(qwery))
+           if(string.IsNullOrWhiteSpace(query))
             {
                 return GetAll();
             }
 
-            return _context.Products.Where(p => p.Name.Contains(qwery, StringComparison.OrdinalIgnoreCase)).ToList();
+            return _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 }
