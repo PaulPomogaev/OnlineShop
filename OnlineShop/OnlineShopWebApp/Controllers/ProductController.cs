@@ -8,26 +8,27 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
 using Microsoft.AspNetCore.Authorization;
+using OnlineShop.Db.Repostories;
 
 namespace OnlineShopWebApp.Controllers
 
 {
     public class ProductController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductQueryRepository _productQueryRepository; 
         private readonly IReviewsApiService _reviewsApiService;
         private readonly UserManager<User> _userManager;
 
-       public ProductController(IProductRepository productRepository, IReviewsApiService reviewsApiService, UserManager<User> userManager)
+       public ProductController(IProductQueryRepository productQueryRepository, IReviewsApiService reviewsApiService, UserManager<User> userManager)
         {
-            _productRepository = productRepository;
+            _productQueryRepository = productQueryRepository;
             _reviewsApiService = reviewsApiService;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productQueryRepository.GetByIdAsync(id);
             if(product == null)
             {
                 return NotFound();

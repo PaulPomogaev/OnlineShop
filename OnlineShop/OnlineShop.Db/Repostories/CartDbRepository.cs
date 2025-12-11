@@ -7,12 +7,10 @@ namespace OnlineShop.Db.Repostories
     public class CartDbRepository : ICartRepository
     {
         private readonly DatabaseContext _context;
-        private readonly IProductRepository _productRepository;
-
-        public CartDbRepository(DatabaseContext context, IProductRepository productJsonRepository)
+       
+        public CartDbRepository(DatabaseContext context)
         {
             _context = context;
-            _productRepository = productJsonRepository;
         }
 
         public Cart GetCart(string userId = "guest")

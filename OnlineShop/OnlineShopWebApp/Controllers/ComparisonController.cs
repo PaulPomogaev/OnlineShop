@@ -11,12 +11,12 @@ namespace OnlineShopWebApp.Controllers
     public class ComparisonController : BaseController
     {
         private readonly IComparisonRepository _comparisonRepository;
-        private readonly IProductRepository _productRepository;
+        
 
-        public ComparisonController(IComparisonRepository comparisonRepository, IProductRepository productRepository)
+        public ComparisonController(IComparisonRepository comparisonRepository)
         {
             _comparisonRepository = comparisonRepository;
-            _productRepository = productRepository;
+            
         }
 
         

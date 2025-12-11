@@ -10,12 +10,12 @@ namespace OnlineShopWebApp.Controllers
     public class FavoriteController : BaseController
     {
         private readonly IFavoriteRepository _favoriteRepository;
-        private readonly IProductRepository _productRepository;
+       
         
-        public FavoriteController(IFavoriteRepository favoriteRepository, IProductRepository productRepository)
+        public FavoriteController(IFavoriteRepository favoriteRepository)
         {
             _favoriteRepository = favoriteRepository;
-            _productRepository = productRepository;
+            
         }
 
         

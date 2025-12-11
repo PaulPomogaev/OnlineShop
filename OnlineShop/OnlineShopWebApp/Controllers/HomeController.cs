@@ -6,18 +6,19 @@ using System.Text;
 using OnlineShopWebApp.Helpers;
 using OnlineShop.Core.Interfaces;
 using OnlineShop.Db.Models;
+using OnlineShop.Db.Repostories;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductQueryRepository _productQueryRepository;
         private readonly IReviewsApiService _reviewsApiService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IProductRepository productRepository, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
+        public HomeController(IProductQueryRepository productQueryRepository, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
         {
-            _productRepository = productRepository;
+            _productQueryRepository = productQueryRepository;
             _reviewsApiService = reviewsApiService;
             _logger = logger;
         }
@@ -25,7 +26,7 @@ namespace OnlineShopWebApp.Controllers
 
         public async Task<IActionResult> Index() 
         {
-            var products = _productRepository.GetAll();
+            var products = _productQueryRepository.GetAll();
             var productViewModels = products.ToViewModels();
             try
             {
@@ -56,7 +57,7 @@ namespace OnlineShopWebApp.Controllers
 
         public IActionResult Search(string query)
         {
-            var products = _productRepository.SearchEngine(query);
+            var products = _productQueryRepository.SearchEngine(query);
             return View(products);
         }
 

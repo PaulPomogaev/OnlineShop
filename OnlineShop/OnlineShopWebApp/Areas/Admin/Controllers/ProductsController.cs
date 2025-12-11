@@ -5,6 +5,7 @@ using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using OnlineShop.Db;
+using OnlineShop.Db.Repostories;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -12,24 +13,26 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductQueryRepository _productQueryRepository; 
+        private readonly IProductCommandRepository _productCommandRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
+        public ProductsController(IProductQueryRepository productQueryRepository, IProductCommandRepository productCommandRepository, IWebHostEnvironment webHostEnvironment)
         {
-            _productRepository = productRepository;
+            _productQueryRepository = productQueryRepository;
+            _productCommandRepository = productCommandRepository;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            var products = _productRepository.GetAll();
+            var products = _productQueryRepository.GetAll();
             return View(products.ToViewModels());
         }
 
         public IActionResult Detail(int id)
         {
-            var product = _productRepository.GetById(id);
+            var product = _productQueryRepository.GetById(id);
             if (product == null)
             {
                 return NotFound();
@@ -41,7 +44,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
-            var product = _productRepository.GetById(id);
+            var product = _productQueryRepository.GetById(id);
             if (product == null) return NotFound();
             return View(product.ToViewModel());
         }
@@ -60,7 +63,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 return View(model);
             }
 
-            var existingProduct = _productRepository.GetById(model.Id);
+            var existingProduct = _productQueryRepository.GetById(model.Id);
             if (existingProduct == null) return NotFound();
 
             existingProduct.Name = model.Name;
@@ -86,14 +89,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 }
             }
 
-            _productRepository.Edit(existingProduct);
+            _productCommandRepository.Edit(existingProduct);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _productRepository.Delete(id);
+            _productCommandRepository.Delete(id);
             return RedirectToAction("Index");
         }
 
@@ -139,7 +142,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 ImagePaths = imagePaths
             };
 
-            _productRepository.Add(dbProduct);
+            _productCommandRepository.Add(dbProduct);
             return RedirectToAction("Index");
         }
 
@@ -165,13 +168,13 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteImage(int productId, string imagePath)
         {
-            var product = _productRepository.GetById(productId);
+            var product = _productQueryRepository.GetById(productId);
             if (product == null) return NotFound();
 
             if (product.ImagePaths != null && product.ImagePaths.Contains(imagePath))
             {
                 product.ImagePaths.Remove(imagePath);
-                _productRepository.Edit(product);
+                _productCommandRepository.Edit(product);
 
                 if (!string.IsNullOrEmpty(imagePath))
                 {
@@ -189,14 +192,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SetAsMainImage(int productId, string imagePath)
         {
-            var product = _productRepository.GetById(productId);
+            var product = _productQueryRepository.GetById(productId);
             if (product == null)
             {
                 return NotFound();
             }
 
             product.PhotoPath = imagePath;
-            _productRepository.Edit(product);
+            _productCommandRepository.Edit(product);
 
             return RedirectToAction("Edit", new { id = productId });
         }
