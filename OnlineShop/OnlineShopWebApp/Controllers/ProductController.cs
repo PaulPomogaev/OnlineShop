@@ -9,27 +9,30 @@ using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
 using Microsoft.AspNetCore.Authorization;
 using OnlineShop.Db.Repostories;
+using OnlineShop.Core.Interfaces.Cqrs;
+using OnlineShop.Core.Models.Products.Queries;
+using OnlineShop.Core.Models.Products;
 
 namespace OnlineShopWebApp.Controllers
 
 {
     public class ProductController : Controller
     {
-        private readonly IProductQueryRepository _productQueryRepository; 
+        private readonly IQueryHandler<GetProductByIdQuery, ProductDto?> _getProductByIdHandler;
         private readonly IReviewsApiService _reviewsApiService;
         private readonly UserManager<User> _userManager;
 
-       public ProductController(IProductQueryRepository productQueryRepository, IReviewsApiService reviewsApiService, UserManager<User> userManager)
+       public ProductController(IQueryHandler<GetProductByIdQuery, ProductDto?> getProductByIdHandler, IReviewsApiService reviewsApiService, UserManager<User> userManager)
         {
-            _productQueryRepository = productQueryRepository;
+            _getProductByIdHandler = getProductByIdHandler;
             _reviewsApiService = reviewsApiService;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int id)
         {
-            var product = await _productQueryRepository.GetByIdAsync(id);
-            if(product == null)
+            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            if (product == null)
             {
                 return NotFound();
             }

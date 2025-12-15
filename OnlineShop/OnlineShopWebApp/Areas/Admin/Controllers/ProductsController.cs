@@ -10,8 +10,8 @@ using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Threading.Tasks;
-using OnlineShop.Db.Handlers.Products.Queries;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -32,35 +32,41 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _getProductByIdHandler = getProductByIdHandler;
             _createProductHandler = createProductHandler;
             _editProductHandler = editProductHandler;
+            _deleteProductHandler = deleteProductHandler;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
         {
-            
+            var products = await _getAllProductsHandler.Handle(new GetAllProductsQuery());
+           
+            return View(products.ToViewModels());
         }
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            var product = _productQueryRepository.GetById(id);
+            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
             if (product == null)
             {
                 return NotFound();
             }
-
-            var viewModel = product.ToViewModel();
-            return View(viewModel);
+                        
+            return View(product.ToViewModel());
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var product = _productQueryRepository.GetById(id);
-            if (product == null) return NotFound();
+            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+
+            if (product == null)
+            {
+                return NotFound();
+            }
             return View(product.ToViewModel());
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, ProductViewModel model) 
+        public async Task<IActionResult> Edit(int id, ProductViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -73,16 +79,18 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 return View(model);
             }
 
-            var existingProduct = _productQueryRepository.GetById(model.Id);
-            if (existingProduct == null) return NotFound();
-
-            existingProduct.Name = model.Name;
-            existingProduct.Cost = model.Cost;
-            existingProduct.Description = model.Description;
-
-            if (model.UploadedFile != null)
+            var existingProduct = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            if (existingProduct == null)
             {
-                existingProduct.PhotoPath = SaveImage(model.UploadedFile);
+                return NotFound();
+            }
+
+            string photoPath = existingProduct.PhotoPath;
+            List<string> imagePaths = existingProduct.ImagePaths ?? new List<string>();
+
+            if (model.UploadedFile != null && model.UploadedFile.Length > 0)
+            {
+                photoPath =  await SaveImageAsync(model.UploadedFile);
             }
 
             if (model.UploadedFiles != null && model.UploadedFiles.Any())
@@ -93,20 +101,29 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 {
                     if (imageFile.Length > 0)
                     {
-                        var imagePath = SaveImage(imageFile);
+                        var imagePath = await SaveImageAsync(imageFile);
                         existingProduct.ImagePaths.Add(imagePath);
                     }
                 }
             }
 
-            _productCommandRepository.Edit(existingProduct);
+            var command = new EditProductCommand(
+                model.Id,
+                model.Name,
+                model.Cost,
+                model.Description,
+                photoPath,
+                imagePaths
+            );
+
+            await _editProductHandler.Handle(command);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _productCommandRepository.Delete(id);
+            await _deleteProductHandler.Handle(new DeleteProductCommand(id));
             return RedirectToAction("Index");
         }
 
@@ -116,7 +133,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(ProductViewModel model)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -128,35 +145,34 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             if (model.UploadedFile != null)
             {
-                photoPath = SaveImage(model.UploadedFile);
+                photoPath = await SaveImageAsync(model.UploadedFile);
             }
 
-            if(model.UploadedFiles != null && model.UploadedFiles.Any())
+            if (model.UploadedFiles != null && model.UploadedFiles.Any())
             {
-                foreach(var imageFile in model.UploadedFiles)
+                foreach (var imageFile in model.UploadedFiles)
                 {
-                    if(imageFile.Length >0)
+                    if (imageFile.Length > 0)
                     {
-                        var imagePath = SaveImage(imageFile);
-                        imagePaths.Add(imagePath); 
+                        var imagePath = await SaveImageAsync(imageFile);
+                        imagePaths.Add(imagePath);
                     }
                 }
             }
 
-            var dbProduct = new Product
-            {
-                Name = model.Name,
-                Cost = model.Cost,
-                Description = model.Description,
-                PhotoPath = photoPath,
-                ImagePaths = imagePaths
-            };
+            var command = new CreateProductCommand(
+                model.Name,
+                model.Cost,
+                model.Description,
+                photoPath,
+                imagePaths
+            );
 
-            _productCommandRepository.Add(dbProduct);
+            await _createProductHandler.Handle(command);
             return RedirectToAction("Index");
         }
 
-        private string SaveImage(IFormFile imageFile)
+        private async Task<string> SaveImageAsync(IFormFile imageFile)
         {
             string productImagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
             if (!Directory.Exists(productImagesPath))
@@ -169,22 +185,35 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                imageFile.CopyTo(fileStream);
+                await imageFile.CopyToAsync(fileStream);
             }
 
             return $"/images/products/{fileName}";
         }
 
         [HttpPost]
-        public IActionResult DeleteImage(int productId, string imagePath)
+        public async Task<IActionResult> DeleteImage(int productId, string imagePath)
         {
-            var product = _productQueryRepository.GetById(productId);
-            if (product == null) return NotFound();
+            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(productId));
+            if (product == null)
+            {
+                return NotFound();
+            }
 
             if (product.ImagePaths != null && product.ImagePaths.Contains(imagePath))
             {
-                product.ImagePaths.Remove(imagePath);
-                _productCommandRepository.Edit(product);
+                var updatedImagePaths = product.ImagePaths.Where(p => p != imagePath).ToList();
+
+                var command = new EditProductCommand(
+                    productId,
+                    product.Name,
+                    product.Cost,
+                    product.Description,
+                    product.PhotoPath,
+                    updatedImagePaths
+                );
+
+                await _editProductHandler.Handle(command);
 
                 if (!string.IsNullOrEmpty(imagePath))
                 {
@@ -200,16 +229,24 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetAsMainImage(int productId, string imagePath)
+        public async Task<IActionResult> SetAsMainImage(int productId, string imagePath)
         {
-            var product = _productQueryRepository.GetById(productId);
+            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(productId));
             if (product == null)
             {
                 return NotFound();
             }
+            var command = new EditProductCommand(
+                productId,
+                product.Name,
+                product.Cost,
+                product.Description,
+                imagePath,
+                product.ImagePaths
+            );
 
-            product.PhotoPath = imagePath;
-            _productCommandRepository.Edit(product);
+
+            await _editProductHandler.Handle(command);
 
             return RedirectToAction("Edit", new { id = productId });
         }

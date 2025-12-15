@@ -3,6 +3,7 @@ using OnlineShop.Core.Models.Reviews;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Models;
 using OnlineShop.Core.Models.Reviews;
+using OnlineShop.Core.Models.Products;
 
 namespace OnlineShopWebApp.Helpers
 {
@@ -117,6 +118,26 @@ namespace OnlineShopWebApp.Helpers
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.UserName = model.Email; 
+        }
+
+        public static ProductViewModel ToViewModel(this ProductDto productDto)
+        {
+            return new ProductViewModel
+            {
+                Id = productDto.Id,
+                Name = productDto.Name,
+                Cost = productDto.Cost,
+                Description = productDto.Description,
+                PhotoPath = !string.IsNullOrEmpty(productDto.PhotoPath)
+                    ? productDto.PhotoPath
+                    : "/img/whey-protein.jpg",
+                ImagePaths = productDto.ImagePaths ?? new List<string>()
+            };
+        }
+
+        public static List<ProductViewModel> ToViewModels(this List<ProductDto> productDtos)
+        {
+            return productDtos.Select(p => p.ToViewModel()).ToList();
         }
     }
 }
