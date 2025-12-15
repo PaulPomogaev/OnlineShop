@@ -6,6 +6,12 @@ using OnlineShopWebApp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
+using OnlineShop.Core.Interfaces.Cqrs;
+using OnlineShop.Core.Models.Products.Commands;
+using OnlineShop.Core.Models.Products.Queries;
+using OnlineShop.Core.Models.Products;
+using System.Threading.Tasks;
+using OnlineShop.Db.Handlers.Products.Queries;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -13,21 +19,25 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductsController : Controller
     {
-        private readonly IProductQueryRepository _productQueryRepository; 
-        private readonly IProductCommandRepository _productCommandRepository;
+        private readonly IQueryHandler<GetAllProductsQuery, List<ProductDto>> _getAllProductsHandler;
+        private readonly IQueryHandler<GetProductByIdQuery, ProductDto?> _getProductByIdHandler;
+        private readonly ICommandHandler<CreateProductCommand, int> _createProductHandler;
+        private readonly ICommandHandler<EditProductCommand, bool> _editProductHandler;
+        private readonly ICommandHandler<DeleteProductCommand, bool> _deleteProductHandler;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(IProductQueryRepository productQueryRepository, IProductCommandRepository productCommandRepository, IWebHostEnvironment webHostEnvironment)
+        public ProductsController(IQueryHandler<GetAllProductsQuery, List<ProductDto>> getAllProductsHandler, IQueryHandler<GetProductByIdQuery, ProductDto?> getProductByIdHandler, ICommandHandler<CreateProductCommand, int> createProductHandler, ICommandHandler<EditProductCommand, bool> editProductHandler, ICommandHandler<DeleteProductCommand, bool> deleteProductHandler, IWebHostEnvironment webHostEnvironment)
         {
-            _productQueryRepository = productQueryRepository;
-            _productCommandRepository = productCommandRepository;
+            _getAllProductsHandler = getAllProductsHandler;
+            _getProductByIdHandler = getProductByIdHandler;
+            _createProductHandler = createProductHandler;
+            _editProductHandler = editProductHandler;
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productQueryRepository.GetAll();
-            return View(products.ToViewModels());
+            
         }
 
         public IActionResult Detail(int id)

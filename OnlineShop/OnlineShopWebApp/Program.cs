@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
 using OnlineShop.Core.Interfaces;
 using OnlineShopWebApp.Services;
+using OnlineShop.Core.Interfaces.Cqrs;
+using OnlineShop.Core.Models.Products.Commands;
+using OnlineShop.Db.Handlers.Products.Commands;
+using OnlineShop.Core.Models.Products.Queries;
+using OnlineShop.Core.Models.Products;
+using OnlineShop.Db.Handlers.Products.Queries;
 
 namespace OnlineShopWebApp
 {
@@ -98,7 +104,17 @@ namespace OnlineShopWebApp
             builder.Services.AddScoped<IOrderRepository, OrderDbRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteDbRepository>();
             builder.Services.AddScoped<IComparisonRepository, ComparisonDbRepository>();
-          
+
+            // Команды
+            builder.Services.AddScoped<ICommandHandler<CreateProductCommand, int>, CreateProductCommandHandler>();
+            builder.Services.AddScoped<ICommandHandler<EditProductCommand, bool>, EditProductCommandHandler>();
+            builder.Services.AddScoped<ICommandHandler<DeleteProductCommand, bool>, DeleteProductCommandHandler>();
+
+            // Запросы
+            builder.Services.AddScoped<IQueryHandler<GetAllProductsQuery, List<ProductDto>>, GetAllProductsQueryHandler>();
+            builder.Services.AddScoped<IQueryHandler<GetProductByIdQuery, ProductDto?>, GetProductByIdQueryHandler>();
+            builder.Services.AddScoped<IQueryHandler<SearchProductsQuery, List<ProductDto>>, SearchProductsQueryHandler>();
+
 
             var app = builder.Build();
 

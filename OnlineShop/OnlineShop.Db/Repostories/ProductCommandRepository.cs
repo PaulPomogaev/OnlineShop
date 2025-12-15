@@ -14,26 +14,26 @@ namespace OnlineShop.Db.Repostories
             _context = context;
         }
 
-        public void Add(Product product)
+        public async Task AddAsync(Product product)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if(product != null)
             {
                 _context.Products.Remove(product);
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
 
-        public void Edit(Product updateProduct)
+        public async Task EditAsync(Product updateProduct)
         {
-            var existingProduct = _context.Products.FirstOrDefault(p => p.Id == updateProduct.Id);
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == updateProduct.Id);
 
             if(existingProduct != null)
             {
@@ -43,7 +43,7 @@ namespace OnlineShop.Db.Repostories
                 existingProduct.PhotoPath = updateProduct.PhotoPath;
                 existingProduct.ImagePaths = updateProduct.ImagePaths;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

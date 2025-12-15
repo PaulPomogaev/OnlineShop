@@ -14,29 +14,24 @@ namespace OnlineShop.Db.Repostories
             _context = context;
         }
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAllAsync()
         {
-            return _context.Products.ToList();
+            return await _context.Products.ToListAsync();
         }
-
-        public Product? GetById(int id)
-        {
-            return _context.Products.FirstOrDefault(p => p.Id == id);
-        }
-
+               
         public async Task<Product?> GetByIdAsync(int id)
         {
             return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public List<Product> SearchEngine(string query)
+        public async Task<List<Product>> SearchEngineAsync(string query)
         {
            if(string.IsNullOrWhiteSpace(query))
             {
-                return GetAll();
+                return await GetAllAsync();
             }
 
-            return _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+            return await _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToListAsync();
         }
     }
 }

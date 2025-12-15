@@ -9,8 +9,8 @@ namespace OnlineShop.Db.Interfaces
 {
     public interface IProductCommandRepository
     {
-        void Add(Product product);
-        void Edit(Product updateProduct);
-        void Delete(int id);
+        Task AddAsync(Product product);
+        Task EditAsync(Product updateProduct);
+        Task DeleteAsync(int id);
     }
 }

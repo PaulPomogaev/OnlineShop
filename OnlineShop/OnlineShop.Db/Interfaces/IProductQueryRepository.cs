@@ -6,9 +6,8 @@ namespace OnlineShop.Db.Interfaces
 {
     public interface IProductQueryRepository
     {
-        List<Product> GetAll();
-        Product? GetById(int id);
+        Task<List<Product>> GetAllAsync();
         Task<Product?> GetByIdAsync(int id);
-        List<Product> SearchEngine(string query);
+        Task<List<Product>> SearchEngineAsync(string query);
     }
 }
