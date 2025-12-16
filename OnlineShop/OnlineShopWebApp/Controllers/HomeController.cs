@@ -7,6 +7,7 @@ using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
+using OnlineShop.Db.Models;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -41,6 +42,11 @@ namespace OnlineShopWebApp.Controllers
                         product.Rating = ratingDto.Rating;
                         product.ReviewCount = ratingDto.ReviewCount;
                     }
+                    else
+                    {
+                        product.Rating = 0;
+                        product.ReviewCount = 0;
+                    }
                 }
             }
             catch (Exception ex)
@@ -58,9 +64,9 @@ namespace OnlineShopWebApp.Controllers
 
         public async Task<IActionResult> Search(string query)
         {
-            var productsDtos = await _searchProductsHandler.Handle(new SearchProductsQuery(query));
-            var productEntities = productsDtos.Select(p => p.ToEntity()).ToList();
-            return View(productEntities);
+            var products = await _searchProductsHandler.Handle(new SearchProductsQuery(query));
+            var productViewModels = products.Select(p => p.ToViewModel()).ToList();
+            return View(productViewModels);
         }
 
         public IActionResult Privacy()
