@@ -86,6 +86,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
 
             string photoPath = existingProduct.PhotoPath;
+
             List<string> imagePaths = existingProduct.ImagePaths ?? new List<string>();
 
             if (model.UploadedFile != null && model.UploadedFile.Length > 0)
@@ -95,14 +96,12 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             if (model.UploadedFiles != null && model.UploadedFiles.Any())
             {
-                existingProduct.ImagePaths ??= new List<string>();
-
                 foreach (var imageFile in model.UploadedFiles)
                 {
                     if (imageFile.Length > 0)
                     {
                         var imagePath = await SaveImageAsync(imageFile);
-                        existingProduct.ImagePaths.Add(imagePath);
+                        imagePaths.Add(imagePath);
                     }
                 }
             }

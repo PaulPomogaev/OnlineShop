@@ -84,7 +84,6 @@ namespace OnlineShop.Db.Repostories
             }
         }
 
-
         public override Order? GetById(int id)
         {
             
@@ -92,7 +91,6 @@ namespace OnlineShop.Db.Repostories
                         
             return order;
         }
-
 
         public List<Order> GetUserOrders(string userId)
         {

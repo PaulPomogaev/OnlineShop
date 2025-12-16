@@ -1,32 +1,33 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using OnlineShop.Db.Interfaces;
 using OnlineShopWebApp.Models;
-using System.Text;
 using OnlineShopWebApp.Helpers;
 using OnlineShop.Core.Interfaces;
-using OnlineShop.Db.Models;
-using OnlineShop.Db.Repostories;
+using OnlineShop.Core.Interfaces.Cqrs;
+using OnlineShop.Core.Models.Products.Queries;
+using OnlineShop.Core.Models.Products;
+using OnlineShop.Db.Mapping;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProductQueryRepository _productQueryRepository;
+        private readonly IQueryHandler<GetAllProductsQuery, List<ProductDto>> _getAllProductsHandler;
+        private readonly IQueryHandler<SearchProductsQuery, List<ProductDto>> _searchProductsHandler;
         private readonly IReviewsApiService _reviewsApiService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IProductQueryRepository productQueryRepository, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
+        public HomeController(IQueryHandler<GetAllProductsQuery, List<ProductDto>> getAllProductsHandler, IQueryHandler<SearchProductsQuery, List<ProductDto>> searchProductsHandler, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
         {
-            _productQueryRepository = productQueryRepository;
+            _getAllProductsHandler = getAllProductsHandler;
+            _searchProductsHandler = searchProductsHandler;
             _reviewsApiService = reviewsApiService;
             _logger = logger;
         }
 
-
         public async Task<IActionResult> Index() 
         {
-            var products = _productQueryRepository.GetAll();
+            var products = await _getAllProductsHandler.Handle(new GetAllProductsQuery());
             var productViewModels = products.ToViewModels();
             try
             {
@@ -55,10 +56,11 @@ namespace OnlineShopWebApp.Controllers
             return View(productViewModels);
         }
 
-        public IActionResult Search(string query)
+        public async Task<IActionResult> Search(string query)
         {
-            var products = _productQueryRepository.SearchEngine(query);
-            return View(products);
+            var productsDtos = await _searchProductsHandler.Handle(new SearchProductsQuery(query));
+            var productEntities = productsDtos.Select(p => p.ToEntity()).ToList();
+            return View(productEntities);
         }
 
         public IActionResult Privacy()

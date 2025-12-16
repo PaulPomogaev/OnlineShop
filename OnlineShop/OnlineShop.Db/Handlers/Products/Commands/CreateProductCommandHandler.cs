@@ -2,12 +2,6 @@
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
-using OnlineShop.Db.Repostories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {

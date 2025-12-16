@@ -17,8 +17,7 @@ namespace OnlineShopWebApp.Controllers
             _favoriteRepository = favoriteRepository;
             
         }
-
-        
+                
         public IActionResult Index()
         {
             var favorite = _favoriteRepository.Get(GetUserId());
