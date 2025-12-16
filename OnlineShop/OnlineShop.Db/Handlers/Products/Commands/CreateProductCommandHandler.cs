@@ -3,7 +3,7 @@ using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
-using Microsoft.Extensions.Caching.Memory;
+
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {
@@ -23,7 +23,7 @@ namespace OnlineShop.Db.Handlers.Products.Commands
         public async Task<int> Handle(CreateProductCommand command, CancellationToken cancellationToken = default)
         {
             var existingProducts = await _productQueryRepository.SearchEngineAsync(command.Name);
-            if (existingProducts.Any(p => p.Name.Equals(command.Name, StringComparison.OrdinalIgnoreCase)))
+            if (existingProducts.Any())
             {
                 throw new InvalidOperationException("Продукт с таким названием уже существует");
             }

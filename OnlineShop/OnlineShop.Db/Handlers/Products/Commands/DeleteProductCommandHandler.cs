@@ -2,11 +2,6 @@
 using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {

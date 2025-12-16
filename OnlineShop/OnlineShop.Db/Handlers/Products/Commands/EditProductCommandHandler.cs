@@ -2,11 +2,6 @@
 using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {
@@ -33,7 +28,7 @@ namespace OnlineShop.Db.Handlers.Products.Commands
             }
 
             var existingProducts = await _productQueryRepository.SearchEngineAsync(command.Name);
-            if (existingProducts.Any(p => p.Name.Equals(command.Name, StringComparison.OrdinalIgnoreCase) && p.Id != command.Id))
+            if (existingProducts.Any(p => p.Id != command.Id))
             {
                 throw new InvalidOperationException("Продукт с таким названием уже существует");
             }
