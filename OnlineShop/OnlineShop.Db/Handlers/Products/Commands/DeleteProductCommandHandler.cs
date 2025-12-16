@@ -1,7 +1,8 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using Microsoft.Extensions.Caching.Memory;
+using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
-using System;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,13 @@ namespace OnlineShop.Db.Handlers.Products.Commands
     {
         private readonly IProductCommandRepository _productCommandRepository;
         private readonly IProductQueryRepository _productQueryRepository;
+        private readonly IMemoryCache _cache;
 
-        public DeleteProductCommandHandler(IProductCommandRepository productCommandRepository, IProductQueryRepository productQueryRepository)
+        public DeleteProductCommandHandler(IProductCommandRepository productCommandRepository, IProductQueryRepository productQueryRepository, IMemoryCache cache)
         {
             _productCommandRepository = productCommandRepository;
             _productQueryRepository = productQueryRepository;
+            _cache = cache;
         }
 
         public async Task<bool> Handle(DeleteProductCommand command, CancellationToken cancellationToken = default)
@@ -30,6 +33,10 @@ namespace OnlineShop.Db.Handlers.Products.Commands
             }
 
             await _productCommandRepository.DeleteAsync(command.Id);
+
+            _cache.Remove("all_products");
+            _cache.Remove($"product_{command.Id}");
+
             return true;
         }
     }
