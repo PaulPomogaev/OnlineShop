@@ -98,6 +98,7 @@ namespace OnlineShopWebApp
                 };
             });
 
+            builder.Services.AddMemoryCache();
             builder.Services.AddScoped<IProductQueryRepository, ProductQueryRepository>();
             builder.Services.AddScoped<IProductCommandRepository, ProductCommandRepository>();
             builder.Services.AddScoped<ICartRepository, CartDbRepository>();
