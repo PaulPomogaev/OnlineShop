@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
@@ -7,7 +7,7 @@ using OnlineShop.Db.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Queries
 {
-    public class SearchProductsQueryHandler : IQueryHandler<SearchProductsQuery, List<ProductDto>>
+    public class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, List<ProductDto>>
     {
         private readonly IProductQueryRepository _productQueryRepository;
         private readonly IMemoryCache _cache;
@@ -18,16 +18,17 @@ namespace OnlineShop.Db.Handlers.Products.Queries
             _cache = cache;
         }
 
-        public async Task<List<ProductDto>> Handle(SearchProductsQuery query, CancellationToken cancellationToken = default)
+        public async Task<List<ProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"search_{query.query?.Trim().ToLowerInvariant() ?? "empty"}";
+            var query = request;
+            var cacheKey = $"search_{query.Query?.Trim().ToLowerInvariant() ?? "empty"}";
 
             if (_cache.TryGetValue(cacheKey, out List<ProductDto> cachedResults))
             {
                 return cachedResults;
             }
 
-            var products = await _productQueryRepository.SearchEngineAsync(query.query);
+            var products = await _productQueryRepository.SearchEngineAsync(query.Query);
 
             var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(2)).SetPriority(CacheItemPriority.Low);
 

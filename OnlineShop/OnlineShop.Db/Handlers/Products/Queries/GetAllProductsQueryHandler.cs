@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using Microsoft.Extensions.Caching.Memory;
@@ -7,7 +7,7 @@ using OnlineShop.Db.Mapping;
 
 namespace OnlineShop.Db.Handlers.Products.Queries
 {
-    public class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQuery, List<ProductDto>>
+    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductDto>>
     {
         private readonly IProductQueryRepository _productQueryRepository;
         private readonly IMemoryCache _cache;
@@ -18,8 +18,9 @@ namespace OnlineShop.Db.Handlers.Products.Queries
             _cache = cache;
         }
 
-        public async Task<List<ProductDto>> Handle(GetAllProductsQuery query, CancellationToken cancellationToken = default)
+        public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
+            var query = request;
             const string cacheKey = "all_products";
 
             if (_cache.TryGetValue(cacheKey, out List<ProductDto> cachedProducts))

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using OnlineShop.Core.Interfaces.Cqrs;
+using MediatR;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {
-    public class EditProductCommandHandler : ICommandHandler<EditProductCommand, bool>
+    public class EditProductCommandHandler : IRequestHandler<EditProductCommand, bool>
     {
         private readonly IProductCommandRepository _productCommandRepository;
         private readonly IProductQueryRepository _productQueryRepository;
@@ -18,8 +18,9 @@ namespace OnlineShop.Db.Handlers.Products.Commands
             _cache = cache;
         }
 
-        public async Task<bool> Handle(EditProductCommand command, CancellationToken cancellationToken = default)
+        public async Task<bool> Handle(EditProductCommand request, CancellationToken cancellationToken)
         {
+            var command = request;
             var existingProduct = await _productQueryRepository.GetByIdAsync(command.Id);
 
             if(existingProduct == null)

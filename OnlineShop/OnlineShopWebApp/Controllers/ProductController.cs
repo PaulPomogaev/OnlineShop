@@ -1,37 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShop.Db.Interfaces;
 using OnlineShop.Core.Interfaces;
 using OnlineShop.Core.Models.Reviews;
 using OnlineShopWebApp.Helpers;
-using OnlineShopWebApp.Models;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
 using Microsoft.AspNetCore.Authorization;
-using OnlineShop.Db.Repostories;
-using OnlineShop.Core.Interfaces.Cqrs;
+using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
-using OnlineShop.Core.Models.Products;
 
 namespace OnlineShopWebApp.Controllers
 
 {
     public class ProductController : Controller
     {
-        private readonly IQueryHandler<GetProductByIdQuery, ProductDto?> _getProductByIdHandler;
+        private readonly IMediator _mediator;
         private readonly IReviewsApiService _reviewsApiService;
         private readonly UserManager<User> _userManager;
 
-       public ProductController(IQueryHandler<GetProductByIdQuery, ProductDto?> getProductByIdHandler, IReviewsApiService reviewsApiService, UserManager<User> userManager)
+       public ProductController(IMediator mediator, IReviewsApiService reviewsApiService, UserManager<User> userManager)
         {
-            _getProductByIdHandler = getProductByIdHandler;
+            _mediator = mediator;
             _reviewsApiService = reviewsApiService;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int id)
         {
-            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            var product = await _mediator.Send(new GetProductByIdQuery(id));
             if (product == null)
             {
                 return NotFound();

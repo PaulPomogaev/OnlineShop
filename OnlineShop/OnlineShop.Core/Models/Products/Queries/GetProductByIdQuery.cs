@@ -1,6 +1,6 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using MediatR;
 
 namespace OnlineShop.Core.Models.Products.Queries
 {
- public record GetProductByIdQuery(int id) : IQuery<ProductDto?>;
+ public record GetProductByIdQuery(int Id) : IRequest<ProductDto?>;
 }

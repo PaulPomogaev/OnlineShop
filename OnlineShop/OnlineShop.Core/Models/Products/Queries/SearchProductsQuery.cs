@@ -1,7 +1,7 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using MediatR;
 
 namespace OnlineShop.Core.Models.Products.Queries
 {
-    public record SearchProductsQuery(string query) : IQuery<List<ProductDto>>;
+    public record SearchProductsQuery(string Query) : IRequest<List<ProductDto>>;
 
 }

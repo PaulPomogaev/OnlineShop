@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Interfaces.Cqrs;
+﻿using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
@@ -7,7 +7,7 @@ using OnlineShop.Db.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Queries
 {
-    public class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, ProductDto?>
+    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         private readonly IProductQueryRepository _productQueryRepository;
         private readonly IMemoryCache _cache; 
@@ -18,16 +18,17 @@ namespace OnlineShop.Db.Handlers.Products.Queries
             _cache = cache;
         }
 
-        public async Task<ProductDto?> Handle(GetProductByIdQuery query, CancellationToken cancellationToken = default)
+        public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"product_{query.id}";
+            var query = request;
+            var cacheKey = $"product_{query.Id}";
 
             if(_cache.TryGetValue(cacheKey, out ProductDto? cachedProduct))
             {
                 return cachedProduct;
             }
 
-            var product = await _productQueryRepository.GetByIdAsync(query.id);
+            var product = await _productQueryRepository.GetByIdAsync(query.Id);
             if (product == null)
             {
                return null;

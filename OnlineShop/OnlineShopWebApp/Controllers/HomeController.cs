@@ -3,32 +3,31 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShopWebApp.Models;
 using OnlineShopWebApp.Helpers;
 using OnlineShop.Core.Interfaces;
-using OnlineShop.Core.Interfaces.Cqrs;
+using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
 using OnlineShop.Db.Models;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IQueryHandler<GetAllProductsQuery, List<ProductDto>> _getAllProductsHandler;
-        private readonly IQueryHandler<SearchProductsQuery, List<ProductDto>> _searchProductsHandler;
+        private readonly IMediator _mediator;
         private readonly IReviewsApiService _reviewsApiService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IQueryHandler<GetAllProductsQuery, List<ProductDto>> getAllProductsHandler, IQueryHandler<SearchProductsQuery, List<ProductDto>> searchProductsHandler, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
+        public HomeController(IMediator mediator, IReviewsApiService reviewsApiService, ILogger<HomeController> logger)
         {
-            _getAllProductsHandler = getAllProductsHandler;
-            _searchProductsHandler = searchProductsHandler;
+            _mediator = mediator;
             _reviewsApiService = reviewsApiService;
             _logger = logger;
         }
 
         public async Task<IActionResult> Index() 
         {
-            var products = await _getAllProductsHandler.Handle(new GetAllProductsQuery());
+            var products = await _mediator.Send(new GetAllProductsQuery());
             var productViewModels = products.ToViewModels();
             try
             {
@@ -62,9 +61,9 @@ namespace OnlineShopWebApp.Controllers
             return View(productViewModels);
         }
 
-        public async Task<IActionResult> Search(string query)
+        public async Task<IActionResult> Search(string Query)
         {
-            var products = await _searchProductsHandler.Handle(new SearchProductsQuery(query));
+            var products = await _mediator.Send(new SearchProductsQuery(Query));
             var productViewModels = products.Select(p => p.ToViewModel()).ToList();
             try
             {

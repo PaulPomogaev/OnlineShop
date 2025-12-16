@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using OnlineShop.Core.Interfaces.Cqrs;
+using MediatR;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
@@ -7,7 +7,7 @@ using OnlineShop.Db.Models;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {
-    public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, int>
+    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
     {
         private readonly IProductCommandRepository _productCommandRepository;
         private readonly IProductQueryRepository _productQueryRepository;
@@ -20,8 +20,9 @@ namespace OnlineShop.Db.Handlers.Products.Commands
             _cache = cache;
         }
 
-        public async Task<int> Handle(CreateProductCommand command, CancellationToken cancellationToken = default)
+        public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            var command = request;
             var existingProducts = await _productQueryRepository.SearchEngineAsync(command.Name);
             if (existingProducts.Any())
             {
