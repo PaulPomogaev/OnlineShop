@@ -30,7 +30,7 @@ namespace OnlineShop.Db.Repostories
                 return await GetAllAsync();
             }
 
-            return await _context.Products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToListAsync();
+            return await _context.Products.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
         }
     }
 }

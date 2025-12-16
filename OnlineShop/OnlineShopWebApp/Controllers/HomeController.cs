@@ -66,6 +66,35 @@ namespace OnlineShopWebApp.Controllers
         {
             var products = await _searchProductsHandler.Handle(new SearchProductsQuery(query));
             var productViewModels = products.Select(p => p.ToViewModel()).ToList();
+            try
+            {
+                var productIds = productViewModels.Select(p => p.Id).ToList();
+                var ratings = await _reviewsApiService.GetProductRatingsAsync(productIds);
+
+                foreach (var product in productViewModels)
+                {
+                    var ratingDto = ratings.FirstOrDefault(r => r.ProductId == product.Id);
+                    if (ratingDto != null)
+                    {
+                        product.Rating = ratingDto.Rating;
+                        product.ReviewCount = ratingDto.ReviewCount;
+                    }
+                    else
+                    {
+                        product.Rating = 0;
+                        product.ReviewCount = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Не удалось получить рейтинги для найденных продуктов");
+                foreach (var product in productViewModels)
+                {
+                    product.Rating = 0;
+                    product.ReviewCount = 0;
+                }
+            }
             return View(productViewModels);
         }
 
