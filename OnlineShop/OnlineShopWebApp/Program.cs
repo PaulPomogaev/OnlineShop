@@ -1,3 +1,6 @@
+using FluentValidation;
+using OnlineShop.Core.Validators;
+using OnlineShop.Db.Behaviors;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
@@ -12,6 +15,7 @@ using OnlineShop.Db.Handlers.Products.Commands;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using OnlineShop.Db.Services;
+using MediatR;
 
 namespace OnlineShopWebApp
 {
@@ -129,15 +133,18 @@ namespace OnlineShopWebApp
                     DeadTimeout = TimeSpan.FromSeconds(10)
                 };
             });
-
-            
+                        
             builder.Services.AddScoped<ICacheService, MemcachedCacheService>();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateProductCommandValidator>(); // Регистрируем валидатор из OnlineShop.Core
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies( // регистрируем MediatR
                typeof(Program).Assembly,                    
                typeof(CreateProductCommand).Assembly,       
                typeof(CreateProductCommandHandler).Assembly 
             ));
+
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>)); // Регистрируем PipelineBehavior
 
             builder.Services.AddScoped<IProductQueryRepository, ProductQueryRepository>();
             builder.Services.AddScoped<IProductCommandRepository, ProductCommandRepository>();

@@ -133,34 +133,49 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             string photoPath = "/img/whey-protein.jpg";
             var imagePaths = new List<string>();
-
-            if (model.UploadedFile != null)
+            try
             {
-                photoPath = await SaveImageAsync(model.UploadedFile);
-            }
-
-            if (model.UploadedFiles != null && model.UploadedFiles.Any())
-            {
-                foreach (var imageFile in model.UploadedFiles)
+                if (model.UploadedFile != null)
                 {
-                    if (imageFile.Length > 0)
+                    photoPath = await SaveImageAsync(model.UploadedFile);
+                }
+
+                if (model.UploadedFiles != null && model.UploadedFiles.Any())
+                {
+                    foreach (var imageFile in model.UploadedFiles)
                     {
-                        var imagePath = await SaveImageAsync(imageFile);
-                        imagePaths.Add(imagePath);
+                        if (imageFile.Length > 0)
+                        {
+                            var imagePath = await SaveImageAsync(imageFile);
+                            imagePaths.Add(imagePath);
+                        }
                     }
                 }
+
+                var command = new CreateProductCommand(
+                    model.Name,
+                    model.Cost,
+                    model.Description,
+                    photoPath,
+                    imagePaths
+                );
+
+                await _mediator.Send(command);
+                return RedirectToAction("Index");
             }
-
-            var command = new CreateProductCommand(
-                model.Name,
-                model.Cost,
-                model.Description,
-                photoPath,
-                imagePaths
-            );
-
-            await _mediator.Send(command);
-            return RedirectToAction("Index");
+            catch (FluentValidation.ValidationException ex)
+            {
+                foreach (var error in ex.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Произошла ошибка при создании товара: {ex.Message}");
+                return View(model);
+            }
         }
 
         private async Task<string> SaveImageAsync(IFormFile imageFile)
