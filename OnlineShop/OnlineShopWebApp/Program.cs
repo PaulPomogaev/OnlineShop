@@ -9,6 +9,9 @@ using OnlineShop.Core.Interfaces;
 using OnlineShopWebApp.Services;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Handlers.Products.Commands;
+using Enyim.Caching.Configuration;
+using Enyim.Caching.Memcached;
+using OnlineShop.Db.Services;
 
 namespace OnlineShopWebApp
 {
@@ -25,7 +28,7 @@ namespace OnlineShopWebApp
                     .Enrich.WithProperty("ApplicationName", "OnlineShopWebApp");
             });
 
-            builder.Logging.AddFilter("LuckyPennySoftware.MediatR.License", LogLevel.None); //// Фильтрация предупреждений о лицензии MediatR
+            builder.Logging.AddFilter("LuckyPennySoftware.MediatR.License", LogLevel.None); // Фильтрация предупреждений о лицензии MediatR
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -96,7 +99,39 @@ namespace OnlineShopWebApp
                 };
             });
 
-            builder.Services.AddMemoryCache();
+            var memcachedSection = builder.Configuration.GetSection("Memcached");
+            string memcachedAddress = memcachedSection["Address"] ?? "localhost";
+            string portStr = memcachedSection["Port"] ?? "11211";
+            int memcachedPort = 11211;
+
+            if (!int.TryParse(portStr, out memcachedPort))
+            {
+                memcachedPort = 11211; 
+            }
+
+            builder.Services.AddEnyimMemcached(options =>
+            {
+                options.Servers = new List<Server>
+                {
+                   new Server
+                   {
+                     Address = memcachedAddress,
+                     Port = memcachedPort
+                   }
+                };
+                options.Protocol = MemcachedProtocol.Binary;
+                options.SocketPool = new SocketPoolOptions
+                {
+                    MinPoolSize = 5,
+                    MaxPoolSize = 100,
+                    ConnectionTimeout = TimeSpan.FromSeconds(10),
+                    ReceiveTimeout = TimeSpan.FromSeconds(10),
+                    DeadTimeout = TimeSpan.FromSeconds(10)
+                };
+            });
+
+            
+            builder.Services.AddScoped<ICacheService, MemcachedCacheService>();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies( // регистрируем MediatR
                typeof(Program).Assembly,                    

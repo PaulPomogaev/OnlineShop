@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using MediatR;
+﻿using MediatR;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Db.Interfaces;
+using OnlineShop.Core.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Commands
 {
@@ -9,9 +9,9 @@ namespace OnlineShop.Db.Handlers.Products.Commands
     {
         private readonly IProductCommandRepository _productCommandRepository;
         private readonly IProductQueryRepository _productQueryRepository;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
 
-        public EditProductCommandHandler(IProductCommandRepository productCommandRepository, IProductQueryRepository productQueryRepository, IMemoryCache cache)
+        public EditProductCommandHandler(IProductCommandRepository productCommandRepository, IProductQueryRepository productQueryRepository, ICacheService cache)
         {
             _productCommandRepository = productCommandRepository;
             _productQueryRepository = productQueryRepository;
@@ -42,8 +42,8 @@ namespace OnlineShop.Db.Handlers.Products.Commands
 
             await _productCommandRepository.EditAsync(existingProduct);
 
-            _cache.Remove("all_products");
-            _cache.Remove($"product_{command.Id}");
+            await _cache.RemoveAsync("all_products");
+            await _cache.RemoveAsync($"product_{command.Id}");
 
             return true;
         }

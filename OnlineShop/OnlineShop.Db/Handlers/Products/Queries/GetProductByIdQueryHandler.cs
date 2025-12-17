@@ -2,17 +2,17 @@
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
-using Microsoft.Extensions.Caching.Memory;
 using OnlineShop.Db.Interfaces;
+using OnlineShop.Core.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Queries
 {
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         private readonly IProductQueryRepository _productQueryRepository;
-        private readonly IMemoryCache _cache; 
+        private readonly ICacheService _cache; 
 
-        public GetProductByIdQueryHandler(IProductQueryRepository productQueryRepository, IMemoryCache cache)
+        public GetProductByIdQueryHandler(IProductQueryRepository productQueryRepository, ICacheService cache)
         {
             _productQueryRepository = productQueryRepository;
             _cache = cache;
@@ -23,7 +23,8 @@ namespace OnlineShop.Db.Handlers.Products.Queries
             var query = request;
             var cacheKey = $"product_{query.Id}";
 
-            if(_cache.TryGetValue(cacheKey, out ProductDto? cachedProduct))
+            var cachedProduct = await _cache.GetAsync<ProductDto?>(cacheKey);
+            if (cachedProduct != null)
             {
                 return cachedProduct;
             }
@@ -33,12 +34,11 @@ namespace OnlineShop.Db.Handlers.Products.Queries
             {
                return null;
             }
-
-            var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)).SetPriority(CacheItemPriority.Normal);
+                       
 
             var productDto = product.ToDto();
 
-            _cache.Set(cacheKey, productDto, cacheOptions);
+            await _cache.SetAsync(cacheKey, productDto, TimeSpan.FromMinutes(10));
 
             return productDto;
         }

@@ -13,7 +13,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="EnyimMemcachedCore" Version="3.4.5" />
 	  <PackageReference Include="MediatR" Version="14.0.0" />
+	  <PackageReference Include="System.Text.Json" Version="9.0.10" />
 	</ItemGroup>
 
 </Project>

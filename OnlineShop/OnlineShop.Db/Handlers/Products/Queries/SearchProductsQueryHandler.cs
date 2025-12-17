@@ -2,17 +2,17 @@
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Mapping;
-using Microsoft.Extensions.Caching.Memory;
 using OnlineShop.Db.Interfaces;
+using OnlineShop.Core.Interfaces;
 
 namespace OnlineShop.Db.Handlers.Products.Queries
 {
     public class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, List<ProductDto>>
     {
         private readonly IProductQueryRepository _productQueryRepository;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
 
-       public SearchProductsQueryHandler(IProductQueryRepository productQueryRepository, IMemoryCache cache)
+       public SearchProductsQueryHandler(IProductQueryRepository productQueryRepository, ICacheService cache)
         {
             _productQueryRepository = productQueryRepository;
             _cache = cache;
@@ -21,20 +21,20 @@ namespace OnlineShop.Db.Handlers.Products.Queries
         public async Task<List<ProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
         {
             var query = request;
-            var cacheKey = $"search_{query.Query?.Trim().ToLowerInvariant() ?? "empty"}";
+            var normalizedQuery = query.Query?.Trim().ToLowerInvariant() ?? "empty";
+            var cacheKey = $"search_{normalizedQuery}";
 
-            if (_cache.TryGetValue(cacheKey, out List<ProductDto> cachedResults))
+            var cachedResults = await _cache.GetAsync<List<ProductDto>>(cacheKey);
+            if (cachedResults != null)
             {
                 return cachedResults;
             }
 
             var products = await _productQueryRepository.SearchEngineAsync(query.Query);
-
-            var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(2)).SetPriority(CacheItemPriority.Low);
-
+                        
             var productDtos = products.ToDtoList();
 
-            _cache.Set(cacheKey, productDtos, cacheOptions);
+            await _cache.SetAsync(cacheKey, productDtos, TimeSpan.FromMinutes(2));
 
             return productDtos;
         }
