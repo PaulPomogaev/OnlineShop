@@ -42,7 +42,7 @@ namespace OnlineShop.Db.Handlers.Products.Commands
 
             await _productCommandRepository.EditAsync(existingProduct);
 
-            await _cache.RemoveAsync("all_products");
+            await _cache.RemoveAsync(Constants.AllProducts);
             await _cache.RemoveAsync($"product_{command.Id}");
 
             return true;

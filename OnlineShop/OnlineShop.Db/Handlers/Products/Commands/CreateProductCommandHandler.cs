@@ -39,7 +39,7 @@ namespace OnlineShop.Db.Handlers.Products.Commands
             };
 
             await _productCommandRepository.AddAsync(product);
-            await _cache.RemoveAsync("all_products");
+            await _cache.RemoveAsync(Constants.AllProducts);
             return product.Id;
         }
     }

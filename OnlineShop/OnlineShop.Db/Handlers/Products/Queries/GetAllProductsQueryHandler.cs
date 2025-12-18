@@ -22,7 +22,7 @@ namespace OnlineShop.Db.Handlers.Products.Queries
         public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var query = request;
-            const string cacheKey = "all_products";
+            const string cacheKey = Constants.AllProducts;
 
             var cachedProducts = await _cache.GetAsync<List<ProductDto>>(cacheKey);
             if (cachedProducts != null)

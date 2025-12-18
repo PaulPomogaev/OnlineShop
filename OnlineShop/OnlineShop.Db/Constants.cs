@@ -10,5 +10,6 @@ namespace OnlineShop.Db
     {
         public const string AdminRoleName = "Admin";
         public const string UserRoleName = "User";
+        public const string AllProducts = "all_products";
     }
 }
