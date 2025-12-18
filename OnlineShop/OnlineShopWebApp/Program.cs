@@ -13,6 +13,7 @@ using OnlineShop.Db.Handlers.Products.Commands;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using OnlineShop.Db.Handlers.Products.Queries;
+using OnlineShop.Core.Cqrs;
 
 namespace OnlineShopWebApp
 {
@@ -105,6 +106,8 @@ namespace OnlineShopWebApp
             builder.Services.AddScoped<IOrderRepository, OrderDbRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteDbRepository>();
             builder.Services.AddScoped<IComparisonRepository, ComparisonDbRepository>();
+
+            builder.Services.AddScoped<IMediator, Mediator>();
 
             // Команды
             builder.Services.AddScoped<ICommandHandler<CreateProductCommand, int>, CreateProductCommandHandler>();

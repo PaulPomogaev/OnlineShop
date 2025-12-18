@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShop.Db.Interfaces;
+using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShopWebApp.Models;
 using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using OnlineShop.Db;
 using OnlineShop.Db.Repostories;
-using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Threading.Tasks;
+using OnlineShop.Core.Cqrs;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -19,33 +19,25 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductsController : Controller
     {
-        private readonly IQueryHandler<GetAllProductsQuery, List<ProductDto>> _getAllProductsHandler;
-        private readonly IQueryHandler<GetProductByIdQuery, ProductDto?> _getProductByIdHandler;
-        private readonly ICommandHandler<CreateProductCommand, int> _createProductHandler;
-        private readonly ICommandHandler<EditProductCommand, bool> _editProductHandler;
-        private readonly ICommandHandler<DeleteProductCommand, bool> _deleteProductHandler;
+        private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(IQueryHandler<GetAllProductsQuery, List<ProductDto>> getAllProductsHandler, IQueryHandler<GetProductByIdQuery, ProductDto?> getProductByIdHandler, ICommandHandler<CreateProductCommand, int> createProductHandler, ICommandHandler<EditProductCommand, bool> editProductHandler, ICommandHandler<DeleteProductCommand, bool> deleteProductHandler, IWebHostEnvironment webHostEnvironment)
+        public ProductsController(IMediator mediator, IWebHostEnvironment webHostEnvironment)
         {
-            _getAllProductsHandler = getAllProductsHandler;
-            _getProductByIdHandler = getProductByIdHandler;
-            _createProductHandler = createProductHandler;
-            _editProductHandler = editProductHandler;
-            _deleteProductHandler = deleteProductHandler;
+            _mediator = mediator;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products = await _getAllProductsHandler.Handle(new GetAllProductsQuery());
+            var products = await _mediator.Send(new GetAllProductsQuery());
            
             return View(products.ToViewModels());
         }
 
         public async Task<IActionResult> Detail(int id)
         {
-            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            var product = await _mediator.Send(new GetProductByIdQuery(id));
             if (product == null)
             {
                 return NotFound();
@@ -56,7 +48,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            var product = await _mediator.Send(new GetProductByIdQuery(id));
 
             if (product == null)
             {
@@ -79,7 +71,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 return View(model);
             }
 
-            var existingProduct = await _getProductByIdHandler.Handle(new GetProductByIdQuery(id));
+            var existingProduct = await _mediator.Send(new GetProductByIdQuery(id));
             if (existingProduct == null)
             {
                 return NotFound();
@@ -115,14 +107,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 imagePaths
             );
 
-            await _editProductHandler.Handle(command);
+            await _mediator.Send(command);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _deleteProductHandler.Handle(new DeleteProductCommand(id));
+            await _mediator.Send(new DeleteProductCommand(id));
             return RedirectToAction("Index");
         }
 
@@ -167,7 +159,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 imagePaths
             );
 
-            await _createProductHandler.Handle(command);
+            await _mediator.Send(command);
             return RedirectToAction("Index");
         }
 
@@ -193,7 +185,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteImage(int productId, string imagePath)
         {
-            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(productId));
+            var product = await _mediator.Send(new GetProductByIdQuery(productId));
             if (product == null)
             {
                 return NotFound();
@@ -212,7 +204,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                     updatedImagePaths
                 );
 
-                await _editProductHandler.Handle(command);
+                await _mediator.Send(command);
 
                 if (!string.IsNullOrEmpty(imagePath))
                 {
@@ -230,7 +222,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SetAsMainImage(int productId, string imagePath)
         {
-            var product = await _getProductByIdHandler.Handle(new GetProductByIdQuery(productId));
+            var product = await _mediator.Send(new GetProductByIdQuery(productId));
             if (product == null)
             {
                 return NotFound();
@@ -245,7 +237,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             );
 
 
-            await _editProductHandler.Handle(command);
+            await _mediator.Send(command);
 
             return RedirectToAction("Edit", new { id = productId });
         }
