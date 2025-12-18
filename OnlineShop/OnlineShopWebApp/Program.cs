@@ -103,15 +103,8 @@ namespace OnlineShopWebApp
                 };
             });
 
-            var memcachedSection = builder.Configuration.GetSection("Memcached");
-            string memcachedAddress = memcachedSection["Address"] ?? "localhost";
-            string portStr = memcachedSection["Port"] ?? "11211";
-            int memcachedPort = 11211;
-
-            if (!int.TryParse(portStr, out memcachedPort))
-            {
-                memcachedPort = 11211; 
-            }
+            string memcachedAddress = builder.Configuration["Memcached:Address"] ?? "localhost";
+            int memcachedPort = builder.Configuration.GetValue<int>("Memcached:Port", 11211);
 
             builder.Services.AddEnyimMemcached(options =>
             {
