@@ -5,10 +5,6 @@ using OnlineShopWebApp.Helpers;
 using OnlineShop.Core.Interfaces;
 using MediatR;
 using OnlineShop.Core.Models.Products.Queries;
-using OnlineShop.Core.Models.Products;
-using OnlineShop.Db.Mapping;
-using OnlineShop.Db.Models;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace OnlineShopWebApp.Controllers
 {
