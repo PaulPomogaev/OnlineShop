@@ -6,8 +6,6 @@ using OnlineShop.Core.Interfaces;
 using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
-using OnlineShop.Db.Mapping;
-using OnlineShop.Db.Models;
 
 namespace OnlineShopWebApp.Controllers
 {

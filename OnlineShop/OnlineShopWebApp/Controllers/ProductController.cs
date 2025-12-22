@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShop.Db.Interfaces;
 using OnlineShop.Core.Interfaces;
 using OnlineShop.Core.Models.Reviews;
 using OnlineShopWebApp.Helpers;
-using OnlineShopWebApp.Models;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
 using Microsoft.AspNetCore.Authorization;
-using OnlineShop.Db.Repostories;
 using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShop.Core.Models.Products.Queries;
 using OnlineShop.Core.Models.Products;
