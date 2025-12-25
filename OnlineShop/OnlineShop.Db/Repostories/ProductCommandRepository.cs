@@ -1,7 +1,5 @@
 ﻿using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
-using OnlineShop.Core.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace OnlineShop.Db.Repostories
 {
