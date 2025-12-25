@@ -1,17 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Core.Interfaces.Cqrs;
 using OnlineShopWebApp.Models;
-using OnlineShop.Db.Models;
 using OnlineShopWebApp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using OnlineShop.Db;
-using OnlineShop.Db.Repostories;
 using OnlineShop.Core.Models.Products.Commands;
 using OnlineShop.Core.Models.Products.Queries;
-using OnlineShop.Core.Models.Products;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Threading.Tasks;
-using OnlineShop.Core.Cqrs;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
