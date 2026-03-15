@@ -1,49 +1,92 @@
-🛒 OnlineShop — учебный интернет-магазин на ASP.NET Core MVC
-<div align="center"> <img src="https://github.com/user-attachments/assets/39738078-89b3-4b3e-b98e-55842b35b813" alt="ASP.NET Core разработка" width="80%"> <br> <sub>Полноценный веб-сайт интернет-магазина с корзиной, избранным, заказами и админ-панелью</sub> </div>
-📂 Содержание
-Архитектура репозитория
+# 🛒 OnlineShop — учебный интернет-магазин на ASP.NET Core MVC
 
-Ключевые возможности
+<div align="center">
+  <img src="screenshots/1.jpg" alt="ASP.NET Core разработка" width="80%">
+  <br>
+  <sub>Полноценный веб-сайт интернет-магазина с корзиной, избранным, заказами и админ-панелью</sub>
+</div>
 
-Технологический стек
+---
 
-Архитектурные решения и примеры кода
+## 📂 Содержание
+- [О проекте](#о-проекте)
+- [Архитектура репозитория](#архитектура-репозитория)
+- [Ключевые возможности](#ключевые-возможности)
+- [Технологический стек](#технологический-стек)
+- [Архитектурные решения и примеры кода](#архитектурные-решения-и-примеры-кода)
+- [Демонстрация](#демонстрация)
+- [Запуск проекта](#запуск-проекта)
+- [Контакты](#контакты)
 
-Демонстрация
+---
 
-Запуск проекта
+## 🏛️ О проекте
 
-🏛️ Архитектура репозитория
-text
+<div align="center">
+  <sub><i>Для HR: кратко и по делу</i></sub>
+</div>
+
+**OnlineShop** — это учебный проект, созданный в рамках курса по ASP.NET Core. Он представляет собой полнофункциональный интернет-магазин с корзиной, избранным, сравнением товаров, оформлением заказов, личным кабинетом и админ-панелью. Проект демонстрирует навыки работы с ASP.NET Core MVC, Entity Framework Core, ASP.NET Core Identity, а также реализацию сложной бизнес-логики с помощью паттернов CQRS и MediatR. Кроме того, он интегрируется с отдельным микросервисом отзывов, что показывает понимание микросервисной архитектуры.
+
+<div align="center">
+  <sub><i>Для техлидов и разработчиков: технические детали</i></sub>
+</div>
+
+Проект построен на многослойной архитектуре с чётким разделением ответственности:
+- **OnlineShop.Core** — модели предметной области, интерфейсы репозиториев, DTO, команды и запросы CQRS.
+- **OnlineShop.Db** — реализация репозиториев, контекст базы данных, миграции, обработчики CQRS (с использованием MediatR).
+- **OnlineShopWebApp** — MVC-приложение, содержащее контроллеры, представления Razor, вспомогательные сервисы (`ReviewsApiService`, `GuestDataMigrator`), хелперы для маппинга и работы с идентификатором пользователя.
+
+Основные архитектурные решения:
+- **CQRS и MediatR** — все операции с товарами (создание, редактирование, удаление, получение) реализованы через команды и запросы, что обеспечивает единую точку входа и упрощает тестирование.
+- **Репозитории** — абстрагируют доступ к данным, позволяя легко менять источник (например, перейти с JSON-файлов на БД).
+- **Кеширование** — через интерфейс `ICacheService` (реализация на Memcached) для часто запрашиваемых данных (список товаров, товар по ID).
+- **Миграция данных гостя** — сервис `GuestDataMigrator` при входе пользователя переносит его корзину, избранное и сравнение из сессии в постоянную учётную запись.
+- **Интеграция с микросервисом** — через `HttpClient` и сервис `ReviewsApiService` с автоматической авторизацией (JWT).
+
+---
+
+## 📂 Архитектура репозитория
+
+```text
 📁 OnlineShop
-├── 📁 OnlineShop.Core               # Модели, DTO, интерфейсы, команды/запросы CQRS
-├── 📁 OnlineShop.Db                  # Контекст БД, миграции, репозитории, обработчики CQRS
-├── 📁 OnlineShopWebApp                # MVC-приложение
-│   ├── 📁 Areas                       # Admin и UserProfile области
-│   ├── 📁 Controllers                  # Cart, Product, Order, Account и др.
-│   ├── 📁 Helpers                      # Мапперы, UserIdHelper, EnumExtensions
-│   ├── 📁 Models                       # ViewModel'и
-│   ├── 📁 Services                      # ReviewsApiService, GuestDataMigrator, TokenService
-│   └── 📁 Views                         # Razor-представления
-└── 📄 OnlineShopWebApp.sln               # Файл решения
-💡 Ключевые возможности
-📦 Управление товарами и каталог
-Просмотр товаров с пагинацией и поиском
+├── 📁 OnlineShop.Core
+│   ├── 📁 Interfaces          # ICacheService, IRepository, IReviewsApiService и др.
+│   ├── 📁 Models               # Сущности (ProductDto, OrderInputModel и др.)
+│   └── 📁 Products             # Команды/запросы CQRS для товаров
+├── 📁 OnlineShop.Db
+│   ├── 📁 Handlers             # Обработчики CQRS (Products, ...)
+│   ├── 📁 Interfaces           # Интерфейсы репозиториев (IProductQueryRepository и др.)
+│   ├── 📁 Migrations           # Миграции EF Core
+│   ├── 📁 Models               # Сущности БД (Product, Cart, Order, User и др.)
+│   ├── 📁 Repositories         # Реализации репозиториев
+│   └── 📁 Services             # MemcachedCacheService
+└── 📁 OnlineShopWebApp
+    ├── 📁 Areas
+    │   ├── 📁 Admin             # Контроллеры и представления для администратора
+    │   └── 📁 UserProfile       # Личный кабинет пользователя
+    ├── 📁 Controllers           # CartController, ProductController, OrderController и др.
+    ├── 📁 Helpers               # MappingExtensions, UserIdHelper, EnumExtensions
+    ├── 📁 Models                # ViewModel'и (CartViewModel, OrderViewModel и др.)
+    ├── 📁 Services              # ReviewsApiService, TokenService, GuestDataMigrator
+    ├── 📁 Views                 # Razor-представления
+    └── 📁 wwwroot               # CSS, JS, изображения
+```
 
-Детальная карточка товара с фото и описанием
+## 💡 Ключевые возможности
 
-Полный CRUD для администратора (область Admin)
+### 📦 Товары и каталог
+- Просмотр списка товаров с пагинацией и поиском.
+- Детальная карточка товара с фото и описанием.
+- Администрирование товаров (CRUD) через админ-панель.
 
-🛍️ Корзина, избранное, сравнение
-Добавление/удаление товаров в корзину, изменение количества
+### 🛍️ Корзина, избранное, сравнение
+- Добавление/удаление товаров в корзину, изменение количества.
+- Сохранение списков избранного и сравнения для авторизованных и гостевых пользователей.
+- Автоматическая миграция данных гостя после входа (`GuestDataMigrator`).
 
-Сохранение списков избранного и сравнения для гостей и авторизованных
-
-Автоматическая миграция данных гостя при входе (GuestDataMigrator)
-
-🔧 Пример кода (репозиторий корзины):
-
-csharp
+**Пример кода (репозиторий корзины):**
+```csharp
 public void AddToCart(int productId, int quantity, string userId)
 {
     var cart = GetCart(userId);
@@ -54,31 +97,26 @@ public void AddToCart(int productId, int quantity, string userId)
         cart.Items.Add(new CartItem { ProductId = productId, Quantity = quantity });
     _context.SaveChanges();
 }
-📦 Оформление заказов
-Создание заказа из корзины с валидацией данных
+```
+### 📦 Оформление заказов
+- Создание заказа из корзины с валидацией данных покупателя.
+- Просмотр истории заказов в личном кабинете.
+- Управление статусами заказов для администратора.
 
-Просмотр истории заказов в личном кабинете
+### 👤 Аутентификация и авторизация
+- Регистрация и вход с использованием ASP.NET Core Identity.
+- Поддержка ролей (администратор, пользователь).
+- Личный кабинет с возможностью редактирования профиля и смены пароля.
 
-Управление статусами заказов для администратора
+### 🔧 Администрирование
+- Отдельная область `/Admin` с управлением товарами, заказами, пользователями и ролями.
 
-👤 Аутентификация и авторизация
-Регистрация и вход с ASP.NET Core Identity
+### 💬 Интеграция с микросервисом отзывов
+- Асинхронное получение отзывов и рейтингов товаров через `ReviewsApiService`.
+- Микросервис `Reviews` запускается отдельно и предоставляет REST API.
 
-Разделение ролей: пользователь / администратор
-
-Личный кабинет с редактированием профиля и сменой пароля
-
-🔧 Администрирование
-Отдельная область /Admin с управлением товарами, заказами, пользователями и ролями
-
-💬 Интеграция с микросервисом отзывов
-Асинхронное получение отзывов и рейтингов через ReviewsApiService
-
-Микросервис Reviews запускается отдельно, общение по HTTP
-
-🔧 Пример кода (сервис для отзывов):
-
-csharp
+**Пример кода (сервис для отзывов):**
+```csharp
 public async Task<List<Review>> GetReviewsByProductIdAsync(int productId)
 {
     await AddAuthorizationHeader();
@@ -87,42 +125,31 @@ public async Task<List<Review>> GetReviewsByProductIdAsync(int productId)
         return await response.Content.ReadFromJsonAsync<List<Review>>();
     return new List<Review>();
 }
-🔧 Технологический стек
-ASP.NET Core 8 MVC (контроллеры, представления, middleware)
+```
 
-Entity Framework Core 8 (Code First, миграции)
+## 🧠 Архитектурные решения и примеры кода
 
-SQL Server (LocalDB / Express)
-
-ASP.NET Core Identity (аутентификация, роли)
-
-CQRS + MediatR (разделение команд и запросов)
-
-Кеширование (Memcached через ICacheService)
-
-FluentValidation (валидация моделей)
-
-Serilog (логирование в файл и консоль)
-
-Bootstrap 5, jQuery (фронтенд)
-
-Git / GitHub
-
-🧠 Архитектурные решения и примеры кода
-1. Чистая архитектура и CQRS с MediatR
+### 1. Разделение на слои и CQRS с MediatR
 Команды и запросы вынесены в Core, обработчики — в Db. Кеширование прозрачно добавляется в обработчики.
 
-Запрос:
-
-csharp
+**Запрос:**
+```csharp
 public record GetProductByIdQuery(int Id) : IRequest<ProductDto?>;
-Обработчик с кешированием:
+```
 
-csharp
+**Обработчик с кешированием:**
+
+```csharp
 public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
 {
     private readonly IProductQueryRepository _productQueryRepository;
     private readonly ICacheService _cache;
+
+    public GetProductByIdQueryHandler(IProductQueryRepository productQueryRepository, ICacheService cache)
+    {
+        _productQueryRepository = productQueryRepository;
+        _cache = cache;
+    }
 
     public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
@@ -138,18 +165,23 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         return productDto;
     }
 }
-2. Репозитории и работа с корзиной
-Используется паттерн Repository для инкапсуляции доступа к данным.
+```
 
-csharp
+### 2. Паттерн Repository и работа с корзиной
+Используется для инкапсуляции логики доступа к данным. Вот фрагмент из `CartDbRepository`:
+
+```csharp
 public class CartDbRepository : ICartRepository
 {
     private readonly DatabaseContext _context;
 
     public Cart GetCart(string userId)
     {
-        var cart = _context.Carts.Include(c => c.Items).ThenInclude(i => i.Product)
-                   .FirstOrDefault(c => c.UserId == userId);
+        var cart = _context.Carts
+            .Include(c => c.Items)
+            .ThenInclude(i => i.Product)
+            .FirstOrDefault(c => c.UserId == userId);
+
         if (cart == null)
         {
             cart = new Cart { UserId = userId };
@@ -159,20 +191,24 @@ public class CartDbRepository : ICartRepository
         return cart;
     }
 }
-3. Миграция данных гостя при входе
-Сервис GuestDataMigrator переносит корзину, избранное и сравнение из сессии гостя в постоянного пользователя.
+```
 
-csharp
+### 3. Event-driven миграция данных гостя
+При входе пользователя сервис `GuestDataMigrator` переносит его корзину, избранное и сравнение из гостевой сессии в постоянный профиль:
+
+```csharp
 public void MigrateGuestData(string userName)
 {
     MigrateCart(guestId, userName);
     MigrateFavorite(guestId, userName);
     MigrateComparison(guestId, userName);
 }
-4. Интеграция с микросервисом отзывов
-Клиент для HTTP-API микросервиса отзывов с автоматическим добавлением JWT-токена.
+```
 
-csharp
+### 4. Интеграция с микросервисом отзывов
+Клиент для HTTP-API микросервиса отзывов с автоматическим добавлением JWT-токена:
+
+```csharp
 public async Task<ProductRatingDto> GetProductRatingAsync(int productId)
 {
     await AddAuthorizationHeader();
@@ -181,34 +217,47 @@ public async Task<ProductRatingDto> GetProductRatingAsync(int productId)
         return await response.Content.ReadFromJsonAsync<ProductRatingDto>();
     return new ProductRatingDto { Rating = 0, ReviewCount = 0 };
 }
-📸 Демонстрация
-Главная страница каталога	Корзина покупателя	Админ-панель управления
-https://github.com/user-attachments/assets/%D1%81%D1%81%D0%BB%D1%8B%D0%BA%D0%B0-%D0%BD%D0%B0-%D1%81%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-1	https://github.com/user-attachments/assets/%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0-%D0%BD%D0%B0-%D1%81%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-2	https://github.com/user-attachments/assets/%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0-%D0%BD%D0%B0-%D1%81%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-3
-(Замени ссылки на свои реальные скриншоты, загрузив их в Issues или создав папку /screenshots в репозитории.)
+```
 
-🚀 Запуск проекта
-Клонировать репозиторий:
+## 📸 Демонстрация
 
-bash
+| Главная страница каталога | Корзина покупателя | Админ-панель управления |
+|---------------------------|---------------------|--------------------------|
+| ![Catalog](screenshots/main.jpg) | ![Cart](screenshots/cart.jpg) | ![Admin](screenshots/admin-panel.jpg) |
+
+## 🚀 Запуск проекта
+
+**Клонировать репозиторий:**
+```bash
 git clone https://github.com/PaulPomogaev/OnlineShop.git
 cd OnlineShop
-Настроить строку подключения в OnlineShopWebApp/appsettings.json (по умолчанию — LocalDB).
-
-Применить миграции для создания базы данных:
-
-bash
+```
+**Настроить строку подключения к БД** в `OnlineShopWebApp/appsettings.json`:
+```json
+"ConnectionStrings": {
+  "online_shop": "Server=.;Database=onlineshop_pomogaev;Integrated Security=true;TrustServerCertificate=true;"
+}
+```
+**Применить миграции:**
+```bash
 cd OnlineShop.Db
 dotnet ef database update --startup-project ../OnlineShopWebApp
+```
 (Если dotnet ef не установлен: dotnet tool install --global dotnet-ef)
 
-Запустить микросервис отзывов (опционально, но рекомендуется для полной функциональности).
+**Запустить микросервис отзывов** (опционально, но для полной функциональности рекомендуется).
 
-Запустить веб-приложение:
-
-bash
+**Запустить веб-приложение:**
+```bash
 cd ../OnlineShopWebApp
 dotnet run
-Открыть браузер по адресу https://localhost:5001.
+```
+Открыть браузер по адресу https://localhost:5001
 
-🔑 Ключевые слова
+## 📬 Контакты
+- **Автор:** Paul Pomogaev
+- **Email:** paulslock1@gmail.com
+- **GitHub:** [@PaulPomogaev](https://github.com/PaulPomogaev)
+
+## 🔑 Ключевые слова
 ASP.NET Core | MVC | Entity Framework Core | CQRS | MediatR | Identity | SQL Server | Корзина | Избранное | Сравнение товаров | Админ-панель | Микросервисы | Clean Architecture | Репозиторий | Кеширование | Memcached | FluentValidation | Serilog | Bootstrap
