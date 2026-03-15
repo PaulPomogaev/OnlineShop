@@ -127,6 +127,19 @@ public async Task<List<Review>> GetReviewsByProductIdAsync(int productId)
 }
 ```
 
+## 🔧 Технологический стек
+- **ASP.NET Core 8 MVC** (контроллеры, представления, middleware)
+- **Entity Framework Core 8** (Code First, миграции)
+- **SQL Server** (LocalDB / Express)
+- **ASP.NET Core Identity** (аутентификация, роли)
+- **CQRS + MediatR** (разделение команд и запросов)
+- **Кеширование** (Memcached через `ICacheService`)
+- **FluentValidation** (валидация моделей)
+- **Serilog** (логирование в файл и консоль)
+- **Bootstrap 5, jQuery** (фронтенд)
+- **Git / GitHub**
+
+
 ## 🧠 Архитектурные решения и примеры кода
 
 ### 1. Разделение на слои и CQRS с MediatR
